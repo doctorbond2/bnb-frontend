@@ -1,9 +1,9 @@
 import { Property } from './property';
 import { Booking } from './booking';
 
-export type UserId = string;
+import { UserId } from '../types/User';
 export interface User {
-  id: UserId;
+  id: UserId | null;
   firstName: string;
   lastName: string;
   fullName?: string;
@@ -11,8 +11,8 @@ export interface User {
   email: string;
   phone?: string;
   avatar?: string;
-  properties: Property[];
-  bookings: Booking[];
+  properties?: Property[];
+  bookings?: Booking[];
 }
 export interface RegisterFormData {
   firstName: string;

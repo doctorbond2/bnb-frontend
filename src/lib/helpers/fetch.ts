@@ -3,14 +3,20 @@ type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export const sendRequest = async <T>(
   url: string,
   method: RequestMethod,
-  body?: T
+  body?: T,
+  token?: string
 ) => {
   const URL = `${BaseUrl}${url}`;
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
   const options: RequestInit = {
     method: method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
   };
   if (body && method !== 'GET') {
     options.body = JSON.stringify(body);

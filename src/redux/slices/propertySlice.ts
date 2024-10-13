@@ -1,39 +1,45 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-export interface PropertyState {
-  id: string;
-  name: string;
-  description: string;
-  address: string;
-  city: string;
-  price: number;
-  images?: string[];
+import { getHostedProperties } from '../thunks/property';
+import { Property } from '@/models/interfaces/property';
+export interface HostedPropertiesState {
+  // id: string;
+  // name: string;
+  // description: string;
+  // address: string;
+  // city: string;
+  // price: number;
+  // images?: string[];
+  isLoading?: boolean;
+  error?: string | null;
+  list: Property[];
   //   rating: number;
   //   zip: string;
   //   state: string;
 }
-const initialState: PropertyState = {
-  id: '',
-  name: '',
-  description: '',
-  address: '',
-  city: '',
-  price: 0,
-  images: [],
+
+const initialState: HostedPropertiesState = {
+  isLoading: false,
+  error: null,
+  list: [],
 };
 
 export const propertySlice = createSlice({
-  name: 'property',
+  name: 'hostedProperties',
   initialState,
-  reducers: {
-    setProperty: (state, action: PayloadAction<PropertyState>) => {
-      state.id = action.payload.id;
-      state.name = action.payload.name;
-      state.description = action.payload.description;
-      state.address = action.payload.address;
-      state.city = action.payload.city;
-      state.price = action.payload.price;
-      state.images = action.payload.images;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getHostedProperties.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getHostedProperties.fulfilled, (state, action) => {
+        state.list = action.payload || [];
+      })
+      .addCase(getHostedProperties.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      });
   },
 });
+export default propertySlice.reducer;

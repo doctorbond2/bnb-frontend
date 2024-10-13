@@ -1,17 +1,24 @@
-import { Property } from './property';
-export type BookingId = string;
+import { BookingId } from '../types/Booking';
+import { UserId } from '../types/User';
+import { PropertyId } from '../types/Property';
 export interface Customer {
-  id: string;
+  id: UserId;
   name: string;
   email: string;
   phoneNumber: string;
-  avatar: string;
+  avatar?: string;
 }
 export interface Booking {
-  id: string;
-  property: Property;
+  id: BookingId;
+  property: PropertyId;
   customer: Customer;
-  checkIn: string;
-  checkOut: string;
-  created_by: BookingId;
+  startDate: Date;
+  endDate: Date;
+  created_by: UserId;
+}
+export interface BookingFormData {
+  property: PropertyId;
+  customer: Customer;
+  startDate: Date;
+  endDate: Date;
 }

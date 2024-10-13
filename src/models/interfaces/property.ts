@@ -1,7 +1,7 @@
 import { User } from './user';
 import { Booking } from './booking';
 import { PropertyImage } from './general';
-export type PropertyId = string;
+import { PropertyId } from '../types/Property';
 export interface Property {
   id: PropertyId;
   name: string;

@@ -1,56 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser } from '../thunks/user';
+import { userExtraReducers } from '../extraReducers/user';
+import { User } from '@/models/interfaces/user';
+import { reducer_logout } from '../reducers/user';
 export interface UserState {
-  id: string | null;
-  firstName: string;
-  lastName: string;
-  fullName?: string;
-  email: string;
-  admin: boolean;
+  user: User;
   loggedIn: boolean;
   isLoading: boolean;
-  token: string | null;
   error: string | null;
 }
-const initialState: UserState = {
-  id: null,
-  firstName: '',
-  lastName: '',
-  fullName: '',
-  email: '',
-  admin: false,
+export const user_initialState: UserState = {
+  user: {
+    id: null,
+    firstName: '',
+    lastName: '',
+    fullName: '',
+    email: '',
+    admin: false,
+  },
   loggedIn: false,
   isLoading: false,
-  token: null,
   error: null,
 };
 export const userSlice = createSlice({
   name: 'user',
-  initialState,
+  initialState: user_initialState,
   reducers: {
-    logout: () => {
-      return initialState;
-    },
+    logout: reducer_logout,
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.id = action.payload.user.id;
-        state.firstName = action.payload.user.firstName;
-        state.lastName = action.payload.user.lastName;
-        state.email = action.payload.user.email;
-        state.token = action.payload.token;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      });
-  },
+  extraReducers: (builder) => userExtraReducers(builder),
 });
 export const { logout } = userSlice.actions;
 

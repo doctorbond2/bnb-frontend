@@ -1,0 +1,4 @@
+
+
+När man definierar en modulär lösning på extrareducers:
+:(builder) => functionName(builder)
