@@ -14,12 +14,12 @@ export const getBookings = createAsyncThunk(
   ) => {
     const { userId, token } = credentials;
     try {
-      const data: GetBookingsApiResponse = await sendRequest(
-        '/api/users/bookings/' + userId,
-        'GET',
-        undefined,
-        token
-      );
+      const data: GetBookingsApiResponse = await sendRequest({
+        url: '/api/users/bookings/' + userId,
+        method: 'GET',
+        token,
+        x_api_key: 'API_KEY',
+      });
       console.warn(data);
       localStorageHandler.setInStorage(key.BOOKINGS_LIST, data);
       return data;

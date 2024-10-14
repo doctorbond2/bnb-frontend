@@ -13,12 +13,12 @@ export const getHostedProperties = createAsyncThunk(
   ) => {
     const { hostId, token } = credentials;
     try {
-      const data: GetPropertiesApiResponse = await sendRequest(
-        '/api/protected/property/host/' + hostId,
-        'GET',
-        undefined,
-        token
-      );
+      const data: GetPropertiesApiResponse = await sendRequest({
+        url: '/api/protected/property/host/' + hostId,
+        method: 'GET',
+        token,
+        x_api_key: 'API_KEY',
+      });
       console.warn(data);
       localStorageHandler.setInStorage(key.PROPERTY_LIST, data);
       return data;

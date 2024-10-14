@@ -21,8 +21,8 @@ export const handleLogin = async (
     const response: LoginApiResponse = await dispatch(
       loginUser({ username, password })
     ).unwrap();
-
-    if (!response || !response.user.id || response.token) {
+    console.log(response);
+    if (!response || !response.user.id || !response.token) {
       throw new Error('Login response is missing user ID or token');
     }
     userId = response.user.id;
@@ -38,7 +38,7 @@ export const handleLogin = async (
     console.error('Failed to retrieve properties', err);
   }
   try {
-    await dispatch(getBookings({ userId }));
+    await dispatch(getBookings({ userId, token }));
   } catch (err) {
     console.error('Failed to retrieve bookings', err);
   }

@@ -1,14 +1,13 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { UserState } from '../slices/userSlice';
 import { loginUser } from '../thunks/user';
+import { refreshToken } from '../thunks/user';
+import { handlePending, handleRejected } from '@/lib/handlers/thunk';
 export async function userExtraReducers(
   builder: ActionReducerMapBuilder<UserState>
 ) {
   builder
-    .addCase(loginUser.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
-    })
+    .addCase(loginUser.pending, handlePending)
     .addCase(loginUser.fulfilled, (state, action) => {
       if (action.payload) {
         state.isLoading = false;
@@ -20,8 +19,12 @@ export async function userExtraReducers(
         return;
       }
     })
-    .addCase(loginUser.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload as string;
-    });
+    .addCase(loginUser.rejected, handleRejected)
+    .addCase(refreshToken.pending, handlePending)
+    .addCase(refreshToken.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.isLoading = false;
+      }
+    })
+    .addCase(refreshToken.rejected, handleRejected);
 }

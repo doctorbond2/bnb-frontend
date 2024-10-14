@@ -4,4 +4,6 @@ export enum LocalStorageKeys {
   BOOKINGS_LIST = 'my_bookings',
   TOKEN = 'token',
   REFRESHTOKEN = 'refreshToken',
+  TOKEN_EXPIRY = 'token-expiry',
+  REFRESHTOKEN_EXPIRY = 'refreshToken-expiry',
 }

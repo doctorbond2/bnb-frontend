@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import { userExtraReducers } from '../extraReducers/user';
 import { User } from '@/models/interfaces/user';
 import { reducer_logout } from '../reducers/user';
+import localStorageHandler from '@/lib/helpers/localStorage';
+import { LocalStorageKeys } from '@/models/enum/localstorage';
 export interface UserState {
   user: User;
   loggedIn: boolean;
@@ -21,14 +23,25 @@ export const user_initialState: UserState = {
   isLoading: false,
   error: null,
 };
+
 export const userSlice = createSlice({
   name: 'user',
   initialState: user_initialState,
   reducers: {
     logout: reducer_logout,
+    checkUserLocalStorage: (state) => {
+      const user = localStorageHandler.getfromStorage(
+        LocalStorageKeys.USER_STATE
+      );
+      if (user) {
+        state.loggedIn = true;
+        state.isLoading = false;
+        state.user = user as User;
+      }
+    },
   },
   extraReducers: (builder) => userExtraReducers(builder),
 });
-export const { logout } = userSlice.actions;
+export const { logout, checkUserLocalStorage } = userSlice.actions;
 
 export default userSlice.reducer;

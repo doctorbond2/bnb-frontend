@@ -5,6 +5,8 @@ import { sendRequest } from '@/lib/helpers/fetch';
 import { LocalStorageKeys as key } from '@/models/enum/localstorage';
 import localStorageHandler from '@/lib/helpers/localStorage';
 import { User } from '@/models/interfaces/user';
+import { AppDispatch } from '../store';
+
 export interface LoginApiResponse {
   user: User;
   token: string;
@@ -12,7 +14,9 @@ export interface LoginApiResponse {
   message?: string;
   status?: number;
 }
-
+export interface RefreshTokenResponse {
+  data: { token: string; refreshToken: string };
+}
 export const loginUser = createAsyncThunk(
   'user/loginUser',
   async (
@@ -20,14 +24,14 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue }
   ): Promise<LoginApiResponse | ReturnType<typeof rejectWithValue>> => {
     try {
-      const data: LoginApiResponse = await sendRequest(
-        '/api/auth/login',
-        'POST',
-        credentials
-      );
+      const data: LoginApiResponse = await sendRequest({
+        url: '/api/auth/login',
+        method: 'POST',
+        body: credentials,
+      });
       console.warn('Login data response:\n', data);
-      localStorageHandler.setInStorage(key.TOKEN, data.token);
-      localStorageHandler.setInStorage(key.REFRESHTOKEN, data.refreshToken);
+      localStorageHandler.setToken(data.token);
+      localStorageHandler.setRefreshToken(data.refreshToken);
       localStorageHandler.setInStorage(key.USER_STATE, data.user);
       return data;
     } catch (err: unknown) {
@@ -39,11 +43,39 @@ export const updateUser = createAsyncThunk(
   'user/updateUser',
   async (credentials: UpdateUserFormData, { rejectWithValue }) => {
     try {
-      const data = await sendRequest('/api/protected/user', 'PUT');
+      const data = await sendRequest({
+        url: '/api/protected/user',
+        method: 'PUT',
+        body: { ...credentials },
+        protected: true,
+      });
       console.log(data);
       return data;
     } catch (err: unknown) {
       rejectWithValue(thunkError(err));
+    }
+  }
+);
+export const refreshToken = createAsyncThunk<string, { refreshToken: string }>(
+  'user/refreshToken',
+  async (
+    credentials: { refreshToken: string },
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      const response: RefreshTokenResponse = await sendRequest(
+        {
+          url: '/api/auth/refreshToken',
+          method: 'POST',
+          body: credentials,
+        },
+        dispatch as AppDispatch
+      );
+      localStorageHandler.setToken(response.data.token);
+      localStorageHandler.setRefreshToken(response.data.refreshToken);
+      return response.data.token;
+    } catch (error) {
+      return rejectWithValue(thunkError(error));
     }
   }
 );

@@ -1,20 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getHostedProperties } from '../thunks/property';
 import { Property } from '@/models/interfaces/property';
+import { extraHPReducers } from '../extraReducers/property';
+import { LocalStorageKeys as key } from '@/models/enum/localstorage';
+import localStorageHandler from '@/lib/helpers/localStorage';
 export interface HostedPropertiesState {
-  // id: string;
-  // name: string;
-  // description: string;
-  // address: string;
-  // city: string;
-  // price: number;
-  // images?: string[];
-  isLoading?: boolean;
-  error?: string | null;
+  isLoading: boolean;
+  error: string | null;
   list: Property[];
-  //   rating: number;
-  //   zip: string;
-  //   state: string;
 }
 
 const initialState: HostedPropertiesState = {
@@ -26,20 +18,15 @@ const initialState: HostedPropertiesState = {
 export const propertySlice = createSlice({
   name: 'hostedProperties',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(getHostedProperties.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(getHostedProperties.fulfilled, (state, action) => {
-        state.list = action.payload || [];
-      })
-      .addCase(getHostedProperties.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      });
+  reducers: {
+    checkPropertyLocalStorage: (state) => {
+      const properties = localStorageHandler.getfromStorage(key.PROPERTY_LIST);
+      if (properties) {
+        state.list = properties as Property[];
+      }
+    },
   },
+  extraReducers: (builder) => extraHPReducers(builder),
 });
+export const { checkPropertyLocalStorage } = propertySlice.actions;
 export default propertySlice.reducer;

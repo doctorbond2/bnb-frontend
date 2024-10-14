@@ -8,6 +8,8 @@ export function reducer_logout() {
     LocalStorageKeys.USER_STATE,
     LocalStorageKeys.BOOKINGS_LIST,
     LocalStorageKeys.PROPERTY_LIST,
+    LocalStorageKeys.REFRESHTOKEN_EXPIRY,
+    LocalStorageKeys.TOKEN_EXPIRY,
   ]);
   return user_initialState;
 }
