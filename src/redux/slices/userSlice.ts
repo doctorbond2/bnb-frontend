@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { userExtraReducers } from '../extraReducers/user';
 import { User } from '@/models/interfaces/user';
-import { reducer_logout } from '../reducers/user';
 import localStorageHandler from '@/lib/helpers/localStorage';
 import { LocalStorageKeys } from '@/models/enum/localstorage';
+import { PayloadAction } from '@reduxjs/toolkit';
+import { AppDispatch } from '../store';
 export interface UserState {
   user: User;
   loggedIn: boolean;
@@ -28,20 +29,45 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: user_initialState,
   reducers: {
-    logout: reducer_logout,
-    checkUserLocalStorage: (state) => {
-      const user = localStorageHandler.getfromStorage(
-        LocalStorageKeys.USER_STATE
-      );
-      if (user) {
-        state.loggedIn = true;
-        state.isLoading = false;
-        state.user = user as User;
-      }
+    setUser: (state, action: PayloadAction<User>) => {
+      state.loggedIn = true;
+      state.isLoading = false;
+      state.user = action.payload;
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+    setError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload;
     },
   },
   extraReducers: (builder) => userExtraReducers(builder),
 });
-export const { logout, checkUserLocalStorage } = userSlice.actions;
 
+export const { setUser, setLoading, setError } = userSlice.actions;
+
+export const checkUserLocalStorage = () => (dispatch: AppDispatch) => {
+  const user = localStorageHandler.getfromStorage(LocalStorageKeys.USER_STATE);
+
+  if (user) {
+    dispatch(setUser(user as User));
+  } else {
+    dispatch(setLoading(false));
+  }
+};
+export const logout = () => (dispatch: AppDispatch) => {
+  localStorageHandler.clearMultipleFromStorage([
+    LocalStorageKeys.TOKEN,
+    LocalStorageKeys.REFRESHTOKEN,
+    LocalStorageKeys.USER_STATE,
+    LocalStorageKeys.BOOKINGS_LIST,
+    LocalStorageKeys.PROPERTY_LIST,
+    LocalStorageKeys.REFRESHTOKEN_EXPIRY,
+    LocalStorageKeys.TOKEN_EXPIRY,
+  ]);
+
+  dispatch(userSlice.actions.setLoading(false));
+  dispatch(userSlice.actions.setUser(user_initialState.user));
+  dispatch(userSlice.actions.setError(null));
+};
 export default userSlice.reducer;

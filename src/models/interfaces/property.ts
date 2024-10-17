@@ -15,6 +15,18 @@ export interface Property {
   bookings: Booking[];
   Images: PropertyImage[];
 }
+export interface PropertyFormData {
+  name: string;
+  country: string;
+  city: string;
+  address: string;
+  price_per_night: number;
+  availableFrom?: string;
+  availableUntil?: string;
+  available: boolean;
+  hostId: string;
+  images?: PropertyImage[];
+}
 
 // model Property {
 //     id              String    @id @default(auto()) @map("_id") @db.ObjectId

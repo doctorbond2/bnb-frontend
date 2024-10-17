@@ -3,7 +3,9 @@ import { sendRequest } from '@/lib/helpers/fetch';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import localStorageHandler from '@/lib/helpers/localStorage';
 import { LocalStorageKeys as key } from '@/models/enum/localstorage';
+import { PropertyFormData } from '@/models/interfaces/property';
 import { Property } from '@/models/interfaces/property';
+import { AppDispatch } from '../store';
 type GetPropertiesApiResponse = Property[];
 export const getHostedProperties = createAsyncThunk(
   'property/getHostedProperties',
@@ -22,6 +24,30 @@ export const getHostedProperties = createAsyncThunk(
       console.warn(data);
       localStorageHandler.setInStorage(key.PROPERTY_LIST, data);
       return data;
+    } catch (err: unknown) {
+      rejectWithValue(thunkError(err));
+    }
+  }
+);
+export const createProperty = createAsyncThunk(
+  'property/createProperty',
+  async (
+    credentials: { data: PropertyFormData; dispatch: AppDispatch },
+    { rejectWithValue }
+  ) => {
+    try {
+      const data: Property = await sendRequest(
+        {
+          url: '/api/protected/property',
+          method: 'POST',
+          body: { ...credentials.data },
+          protected: true,
+          x_api_key: 'API_KEY',
+        },
+        credentials.dispatch
+      );
+
+      return credentials.data;
     } catch (err: unknown) {
       rejectWithValue(thunkError(err));
     }

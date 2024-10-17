@@ -4,7 +4,6 @@ import { logout } from '@/redux/slices/userSlice';
 export function isTokenExpired(expiry: number): boolean {
   return Date.now() >= expiry;
 }
-
 export const authenicateUserTokensExpiry = (): void => {
   const tokenExpiry = localStorageHandler.getfromStorage<number>(
     LocalStorageKeys.TOKEN_EXPIRY

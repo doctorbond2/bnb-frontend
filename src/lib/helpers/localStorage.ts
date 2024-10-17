@@ -62,5 +62,7 @@ const localStorageHandler = {
   setToken,
   setRefreshToken,
   clearToken,
+  clearRefreshToken,
+  clearBothTokens,
 };
 export default localStorageHandler;

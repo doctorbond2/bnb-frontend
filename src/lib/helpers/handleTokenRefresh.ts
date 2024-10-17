@@ -1,6 +1,7 @@
 import { refreshToken } from '@/redux/thunks/user';
 import { logout } from '@/redux/slices/userSlice';
 import localStorageHandler from './localStorage';
+import { handleApiError as apiError } from './error';
 import { LocalStorageKeys as key } from '@/models/enum/localstorage';
 import { AppDispatch } from '@/redux/store';
 
@@ -10,6 +11,7 @@ export const handleTokenRefresh = async (
   URL: string,
   headers: Record<string, string>
 ) => {
+  console.log('Retrying...');
   const refreshTokenValue = localStorageHandler.getfromStorage<string>(
     key.REFRESHTOKEN
   );
@@ -19,12 +21,15 @@ export const handleTokenRefresh = async (
       const newToken = await dispatch(
         refreshToken({ refreshToken: refreshTokenValue })
       ).unwrap();
-
+      console.log('NEW TOKEN: ', newToken);
       headers['Authorization'] = `Bearer ${newToken}`;
+      headers['X-Api-Key'] = 'API_KEY';
 
-      const response = await fetch(URL, options);
+      const response = await fetch(URL, { ...options, headers });
+
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
+        await apiError(response);
+        return;
       }
 
       return await response.json();
