@@ -1,7 +1,5 @@
 import { AppDispatch } from '@/redux/store';
 import RETRY_REFRESHTOKEN from './handleTokenRefresh';
-import localStorageHandler from './localStorage';
-import { LocalStorageKeys as key } from '@/models/enum/localstorage';
 import { handleApiError as apiError } from './error';
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export interface SendRequestConfig {
@@ -18,20 +16,11 @@ export const sendRequest = async <T>(
 ): Promise<T> => {
   const BaseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
   const URL = `${BaseUrl}${config.url}`;
-  const token = config.token || localStorageHandler.getfromStorage(key.TOKEN);
-  const api_key = config.x_api_key || process.env.NEXT_PUBLIC_X_API_KEY;
+  // const token = config.token || localStorageHandler.getfromStorage(key.TOKEN);
+  // const api_key = config.x_api_key || process.env.NEXT_PUBLIC_X_API_KEY;
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  if (api_key) {
-    headers['X-Api-Key'] = api_key;
-    console.log('api key:', api_key);
-  }
 
   const options: RequestInit = {
     method: config.method,
