@@ -2,7 +2,7 @@ import { AppDispatch } from '@/redux/store';
 import RETRY_REFRESHTOKEN from './handleTokenRefresh';
 import localStorageHandler from './localStorage';
 import { LocalStorageKeys as key } from '@/models/enum/localstorage';
-import { handleApiError as apiError, handleApiError } from './error';
+import { handleApiError as apiError } from './error';
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export interface SendRequestCredentials {
   url: string;

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import HeaderLayout from '@/components/client/header/HeaderLayout';
 import StoreProvider from '@/redux/StoreProvider';
 export const metadata: Metadata = {
   title: 'BNB',
@@ -14,7 +15,10 @@ export default function RootLayout({
   return (
     <StoreProvider>
       <html lang="en">
-        <body>{children}</body>
+        <body>
+          <HeaderLayout />
+          {children}
+        </body>
       </html>
     </StoreProvider>
   );

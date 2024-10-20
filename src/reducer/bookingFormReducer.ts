@@ -1,7 +1,7 @@
 export interface BookingFormState {
   startDate: Date;
   endDate: Date;
-  time: string;
+  time?: string;
   firstName: string;
   lastName: string;
   email: string;

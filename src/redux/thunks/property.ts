@@ -47,7 +47,7 @@ export const createProperty = createAsyncThunk(
         credentials.dispatch
       );
 
-      return credentials.data;
+      return data;
     } catch (err: unknown) {
       rejectWithValue(thunkError(err));
     }
