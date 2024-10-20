@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 import { userExtraReducers } from '../extraReducers/user';
 import { User } from '@/models/interfaces/user';
 import localStorageHandler from '@/lib/helpers/localStorage';
@@ -57,14 +58,14 @@ export const checkUserLocalStorage = () => (dispatch: AppDispatch) => {
 };
 export const logout = () => (dispatch: AppDispatch) => {
   localStorageHandler.clearMultipleFromStorage([
-    LocalStorageKeys.TOKEN,
-    LocalStorageKeys.REFRESHTOKEN,
     LocalStorageKeys.USER_STATE,
     LocalStorageKeys.BOOKINGS_LIST,
     LocalStorageKeys.PROPERTY_LIST,
     LocalStorageKeys.REFRESHTOKEN_EXPIRY,
     LocalStorageKeys.TOKEN_EXPIRY,
   ]);
+  Cookies.remove('token');
+  Cookies.remove('refreshToken');
 
   dispatch(userSlice.actions.setLoading(false));
   dispatch(userSlice.actions.setUser(user_initialState.user));

@@ -20,6 +20,7 @@ export const getHostedProperties = createAsyncThunk(
         method: 'GET',
         token,
         x_api_key: 'API_KEY',
+        protected: true,
       });
       console.warn(data);
       localStorageHandler.setInStorage(key.PROPERTY_LIST, data);

@@ -4,7 +4,7 @@ import localStorageHandler from './localStorage';
 import { LocalStorageKeys as key } from '@/models/enum/localstorage';
 import { handleApiError as apiError } from './error';
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
-export interface SendRequestCredentials {
+export interface SendRequestConfig {
   url: string;
   method: RequestMethod;
   body?: Record<string, unknown>;
@@ -13,14 +13,13 @@ export interface SendRequestCredentials {
   protected?: boolean;
 }
 export const sendRequest = async <T>(
-  credentials: SendRequestCredentials,
+  config: SendRequestConfig,
   dispatch?: AppDispatch
 ): Promise<T> => {
   const BaseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-  const URL = `${BaseUrl}${credentials.url}`;
-  const token =
-    credentials.token || localStorageHandler.getfromStorage(key.TOKEN);
-  const api_key = credentials.x_api_key || process.env.NEXT_PUBLIC_X_API_KEY;
+  const URL = `${BaseUrl}${config.url}`;
+  const token = config.token || localStorageHandler.getfromStorage(key.TOKEN);
+  const api_key = config.x_api_key || process.env.NEXT_PUBLIC_X_API_KEY;
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
@@ -35,16 +34,16 @@ export const sendRequest = async <T>(
   }
 
   const options: RequestInit = {
-    method: credentials.method,
+    method: config.method,
     headers,
-    body: credentials.body ? JSON.stringify(credentials.body) : undefined,
+    body: config.body ? JSON.stringify(config.body) : undefined,
+    credentials: 'include',
   };
+
   try {
     const response = await fetch(URL, options);
-    console.log('RESPONSE: ', response);
 
-    if (response.status === 401 && credentials.protected && dispatch) {
-      console.log('retrying');
+    if (response.status === 401 && config.protected && dispatch) {
       return await RETRY_REFRESHTOKEN(dispatch, options, URL, headers);
     }
 

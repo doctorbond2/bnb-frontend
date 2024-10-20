@@ -25,12 +25,6 @@ export const handleLogin = async (
   const password: string = form.password.value;
   let userId: string;
   let token: string;
-  // if (username) {
-  //   alert(`Logging in with Username: ${username}, Password: ${password}`);
-  // }
-  // if (email) {
-  //   alert(`Logging in with Email: ${email}, Password: ${password}`);
-  // }
   const loginDetails = {
     username,
     email,

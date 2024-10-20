@@ -29,9 +29,11 @@ export const loginUser = createAsyncThunk(
         method: 'POST',
         body: credentials,
       });
-      console.warn('Login data response:\n', data);
-      localStorageHandler.setToken(data.token);
-      localStorageHandler.setRefreshToken(data.refreshToken);
+      // Cookies.set('token', data.token, { secure: true, sameSite: 'Strict' });
+      // Cookies.set('refreshToken', data.refreshToken, {
+      //   secure: true,
+      //   sameSite: 'Strict',
+      // });
       localStorageHandler.setInStorage(key.USER_STATE, data.user);
       return data;
     } catch (err: unknown) {
