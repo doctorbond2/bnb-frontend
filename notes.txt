@@ -15,6 +15,8 @@ TODO: Flatpickr för dates i NewBookingForm och NewPropertyForm
 
 TODO: Implementera Cloundinary för image handling
 
+TODO: Se till att hosts inte kan boka sina egna properties
+
 
 
 To implement Cloudinary for image uploading and management in your Next.js frontend, you'll need to follow a few steps to integrate their service properly. Cloudinary provides powerful tools for uploading, optimizing, and serving images, and it works well with Next.js. Here's a step-by-step guide on how to set it up:

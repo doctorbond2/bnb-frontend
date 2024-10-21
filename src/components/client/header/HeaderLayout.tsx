@@ -1,5 +1,7 @@
 'use client';
-// import useStoreData from '@/lib/hooks/useStoreData';
+import useStoreData from '@/lib/hooks/useStoreData';
+import useStore from '@/lib/hooks/useStore';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,7 +10,9 @@ export default function HeaderLayout() {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
-
+  const { user } = useStoreData();
+  const { handleLogout } = useStore();
+  const router = useRouter();
   return (
     <header
       className="
@@ -22,26 +26,23 @@ export default function HeaderLayout() {
           width={40}
           height={40}
           alt="SpaceShare Icon"
-          style={{ objectFit: 'fill' }} // Proper CSS for fitting within bounds
+          style={{ objectFit: 'fill' }}
         />
         <h1 className="hidden md:inline-block">Spaceshare</h1>
       </div>
 
-      {/* Mobile menu for small screens */}
       <div className="flex flex-row md:hidden" id="header-mobile-options">
         <Image
           src="/images/search_icon.png"
           width={40}
           height={40}
           alt="SpaceShare Icon"
-          style={{ objectFit: 'fill' }} // Proper CSS for fitting within bounds
+          style={{ objectFit: 'fill' }}
         />
-        {/* Hamburger menu */}
+
         <button onClick={toggleDropdown} className="flex items-center">
           <div className="flex">|||</div>
         </button>
-
-        {/* Mobile options for dropdown */}
 
         <div
           className={`absolute top-20 left-0 w-full bg-white border-t border-gray-300 
@@ -67,7 +68,6 @@ export default function HeaderLayout() {
         </div>
       </div>
 
-      {/* Options for larger screens */}
       <div className="hidden md:flex flex-row" id="header-options">
         <div className="flex">
           <Image
@@ -80,6 +80,17 @@ export default function HeaderLayout() {
         </div>
         <Link href="/profile">|Profile|</Link>
         <button>|Login|</button>
+        {user.id && (
+          <button
+            className="border-2 p-4"
+            onClick={() => {
+              handleLogout();
+              router.push('/login');
+            }}
+          >
+            Logout
+          </button>
+        )}
         <div>|Register|</div>
       </div>
     </header>

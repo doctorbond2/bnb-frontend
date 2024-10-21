@@ -2,27 +2,41 @@
 import useStore from '@/lib/hooks/useStore';
 import { useReducer } from 'react';
 import bookingFormReducer from '@/reducer/bookingFormReducer';
+import DatePicker from './DatePicker';
 import { initialBookingFormState } from '@/reducer/bookingFormReducer';
 import { bookProperty } from '@/lib/handlers/booking';
 import { BookingFormActionType as ACTION } from '@/reducer/bookingFormReducer';
 import useStoreData from '@/lib/hooks/useStoreData';
-export default function NewBookingForm({ propertyId }: { propertyId: string }) {
+import { Property } from '@/models/interfaces/property';
+export default function NewBookingForm({
+  propertyId,
+  property,
+}: {
+  propertyId: string;
+  property: Property;
+}) {
   const { dispatch } = useStore();
   const { user } = useStoreData();
-  const formatDate = (date: Date | undefined): string => {
-    if (date instanceof Date && !isNaN(date.getTime())) {
-      return date.toISOString().split('T')[0];
+  const formatDate = (dateString: Date): string => {
+    if (dateString) {
+      const date = new Date(dateString);
+      if (date instanceof Date && !isNaN(date.getTime())) {
+        return date.toISOString().split('T')[0];
+      }
     }
     return '';
   };
+
   const [state, updateForm] = useReducer(
     bookingFormReducer,
     initialBookingFormState
   );
-
+  if (!property || !property.availableFrom || !property.availableUntil) {
+    return <div>Property not found</div>;
+  }
   return (
     <>
-      {user && user.firstName}
+      {user && user.firstName && property.id}
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
           <div className="block text-gray-700 font-medium mb-2">
@@ -100,32 +114,14 @@ export default function NewBookingForm({ propertyId }: { propertyId: string }) {
                   })
                 }
               />
-              <br />
-              STARTDATE
-              <input
-                type="date"
-                value={formatDate(state.startDate)}
-                onChange={(e) => {
-                  updateForm({
-                    type: ACTION.SET_STARTDATE,
-                    payload: new Date(e.target.value),
-                  });
-                  console.log(state.startDate);
-                }}
-              />
-              <br />
-              ENDDATE
-              <input
-                type="date"
-                value={formatDate(state.endDate)}
-                onChange={(e) => {
-                  updateForm({
-                    type: ACTION.SET_ENDDATE,
-                    payload: new Date(e.target.value),
-                  });
-                }}
-              />
-              <br />
+              {property && (
+                <DatePicker
+                  bookings={property.bookings}
+                  availableFrom={formatDate(property.availableFrom)}
+                  availableUntil={formatDate(property.availableUntil)}
+                  dispatch={updateForm}
+                />
+              )}
               <button
                 type="submit"
                 className="w-full bg-blue-500 text-white font-bold py-2 rounded-lg hover:bg-blue-600 transition-colors"
@@ -136,9 +132,11 @@ export default function NewBookingForm({ propertyId }: { propertyId: string }) {
               {state.isSubmitting && <div>Booking in progress...</div>}
               {state.errors && (
                 <div className="error">
-                  {Object.keys(state.errors).map((err: string) => {
-                    return <h2 key={'error'}>{err}</h2>;
-                  })}
+                  {Object.keys(state.errors).map(
+                    (err: string, index: number) => {
+                      return <h2 key={'error' + index}>{err}</h2>;
+                    }
+                  )}
                 </div>
               )}
             </form>

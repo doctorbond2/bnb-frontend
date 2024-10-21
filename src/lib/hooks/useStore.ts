@@ -11,8 +11,8 @@ function useStore() {
   const handleLogout = () => {
     dispatch(logout());
   };
-  const handleRefreshToken = (refreshTokenValue: string) => {
-    return dispatch(refreshToken({ refreshToken: refreshTokenValue })).unwrap();
+  const handleRefreshToken = () => {
+    return dispatch(refreshToken()).unwrap();
   };
 
   const checkUserState = () => {

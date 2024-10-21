@@ -5,17 +5,14 @@ import { sendRequest } from '@/lib/helpers/fetch';
 import { LocalStorageKeys as key } from '@/models/enum/localstorage';
 import localStorageHandler from '@/lib/helpers/localStorage';
 import { User } from '@/models/interfaces/user';
-import { AppDispatch } from '../store';
 
 export interface LoginApiResponse {
   user: User;
-  token: string;
-  refreshToken: string;
   message?: string;
   status?: number;
 }
 export interface RefreshTokenResponse {
-  data: { token: string; refreshToken: string };
+  status: number;
 }
 export const loginUser = createAsyncThunk(
   'user/loginUser',
@@ -29,11 +26,6 @@ export const loginUser = createAsyncThunk(
         method: 'POST',
         body: credentials,
       });
-      // Cookies.set('token', data.token, { secure: true, sameSite: 'Strict' });
-      // Cookies.set('refreshToken', data.refreshToken, {
-      //   secure: true,
-      //   sameSite: 'Strict',
-      // });
       localStorageHandler.setInStorage(key.USER_STATE, data.user);
       return data;
     } catch (err: unknown) {
@@ -58,24 +50,15 @@ export const updateUser = createAsyncThunk(
     }
   }
 );
-export const refreshToken = createAsyncThunk<string, { refreshToken: string }>(
+export const refreshToken = createAsyncThunk(
   'user/refreshToken',
-  async (
-    credentials: { refreshToken: string },
-    { dispatch, rejectWithValue }
-  ) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const response: RefreshTokenResponse = await sendRequest(
-        {
-          url: '/api/auth/refreshToken',
-          method: 'POST',
-          body: credentials,
-        },
-        dispatch as AppDispatch
-      );
-      localStorageHandler.setToken(response.data.token);
-      localStorageHandler.setRefreshToken(response.data.refreshToken);
-      return response.data.token;
+      const response: RefreshTokenResponse = await sendRequest({
+        url: '/api/auth/refreshToken',
+        method: 'POST',
+      });
+      return response;
     } catch (error) {
       return rejectWithValue(thunkError(error));
     }

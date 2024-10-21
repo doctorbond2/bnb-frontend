@@ -10,17 +10,12 @@ import { AppDispatch } from '../store';
 type GetBookingsApiResponse = Booking[];
 export const getBookings = createAsyncThunk(
   'bookings/getBookings',
-  async (
-    credentials: { userId: UserId; token: string },
-    { rejectWithValue }
-  ) => {
-    const { userId, token } = credentials;
+  async (credentials: { userId: UserId }, { rejectWithValue }) => {
+    const { userId } = credentials;
     try {
       const data: GetBookingsApiResponse = await sendRequest({
         url: '/api/users/bookings/' + userId,
         method: 'GET',
-        token,
-        x_api_key: 'API_KEY',
       });
       console.warn(data);
       localStorageHandler.setInStorage(key.BOOKINGS_LIST, data);
@@ -43,7 +38,6 @@ export const createBooking = createAsyncThunk(
           method: 'POST',
           body: { ...credentials.data },
           protected: true,
-          x_api_key: 'API_KEY',
         },
         credentials.dispatch
       );

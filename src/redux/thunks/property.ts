@@ -9,17 +9,12 @@ import { AppDispatch } from '../store';
 type GetPropertiesApiResponse = Property[];
 export const getHostedProperties = createAsyncThunk(
   'property/getHostedProperties',
-  async (
-    credentials: { hostId: string; token: string },
-    { rejectWithValue }
-  ) => {
-    const { hostId, token } = credentials;
+  async (credentials: { hostId: string }, { rejectWithValue }) => {
+    const { hostId } = credentials;
     try {
       const data: GetPropertiesApiResponse = await sendRequest({
         url: '/api/protected/property/host/' + hostId,
         method: 'GET',
-        token,
-        x_api_key: 'API_KEY',
         protected: true,
       });
       console.warn(data);
@@ -43,7 +38,6 @@ export const createProperty = createAsyncThunk(
           method: 'POST',
           body: { ...credentials.data },
           protected: true,
-          x_api_key: 'API_KEY',
         },
         credentials.dispatch
       );

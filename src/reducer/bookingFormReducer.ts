@@ -1,6 +1,6 @@
 export interface BookingFormState {
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | null;
+  endDate: Date | null;
   time?: string;
   firstName: string;
   lastName: string;
@@ -44,6 +44,7 @@ const bookingFormReducer = (
   const { type, payload } = action;
   switch (type) {
     case BookingFormActionType.SET_STARTDATE:
+      console.log(state);
       return { ...state, startDate: payload as Date };
     case BookingFormActionType.SET_ENDDATE:
       return { ...state, endDate: payload as Date };

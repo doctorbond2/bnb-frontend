@@ -6,18 +6,29 @@ export interface SendRequestConfig {
   url: string;
   method: RequestMethod;
   body?: Record<string, unknown>;
-  token?: string;
-  x_api_key?: string;
   protected?: boolean;
+  id?: string;
+  query?: SendRequestQuery;
+}
+export interface SendRequestQuery {
+  populateBookings?: boolean;
 }
 export const sendRequest = async <T>(
   config: SendRequestConfig,
   dispatch?: AppDispatch
 ): Promise<T> => {
   const BaseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  if (config.id) {
+    config.url = config.url.replace(':id', config.id);
+  }
+  if (config.query) {
+    const params = new URLSearchParams();
+    Object.entries(config.query).forEach(([key, value]) => {
+      params.append(key, value);
+    });
+    config.url = `${config.url}?${params.toString()}`;
+  }
   const URL = `${BaseUrl}${config.url}`;
-  // const token = config.token || localStorageHandler.getfromStorage(key.TOKEN);
-  // const api_key = config.x_api_key || process.env.NEXT_PUBLIC_X_API_KEY;
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
@@ -40,7 +51,6 @@ export const sendRequest = async <T>(
       await apiError(response);
     } else {
       const data = await response.json();
-      console.log('Success:', data);
       return data;
     }
   } catch (err) {

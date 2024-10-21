@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import HeaderLayout from '@/components/client/header/HeaderLayout';
 import StoreProvider from '@/redux/StoreProvider';
+import 'flatpickr/dist/flatpickr.min.css';
 export const metadata: Metadata = {
   title: 'BNB',
   description: 'Michael Lennartz BNB APP',

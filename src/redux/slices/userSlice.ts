@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
 import { userExtraReducers } from '../extraReducers/user';
 import { User } from '@/models/interfaces/user';
 import localStorageHandler from '@/lib/helpers/localStorage';
 import { LocalStorageKeys } from '@/models/enum/localstorage';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch } from '../store';
+import { sendRequest } from '@/lib/helpers/fetch';
 export interface UserState {
   user: User;
   loggedIn: boolean;
@@ -56,7 +56,7 @@ export const checkUserLocalStorage = () => (dispatch: AppDispatch) => {
     dispatch(setLoading(false));
   }
 };
-export const logout = () => (dispatch: AppDispatch) => {
+export const logout = () => async (dispatch: AppDispatch) => {
   localStorageHandler.clearMultipleFromStorage([
     LocalStorageKeys.USER_STATE,
     LocalStorageKeys.BOOKINGS_LIST,
@@ -64,11 +64,18 @@ export const logout = () => (dispatch: AppDispatch) => {
     LocalStorageKeys.REFRESHTOKEN_EXPIRY,
     LocalStorageKeys.TOKEN_EXPIRY,
   ]);
-  Cookies.remove('token');
-  Cookies.remove('refreshToken');
 
-  dispatch(userSlice.actions.setLoading(false));
-  dispatch(userSlice.actions.setUser(user_initialState.user));
-  dispatch(userSlice.actions.setError(null));
+  try {
+    await sendRequest({
+      url: '/api/auth/logout',
+      method: 'POST',
+    });
+
+    dispatch(userSlice.actions.setLoading(false));
+    dispatch(userSlice.actions.setUser(user_initialState.user));
+    dispatch(userSlice.actions.setError(null));
+  } catch (error) {
+    console.error('Failed to log out:', error);
+  }
 };
 export default userSlice.reducer;
