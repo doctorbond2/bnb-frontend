@@ -81,7 +81,7 @@ export const handleRegister = async (
 
   try {
     await sendRequest({
-      url: '/auth/register',
+      url: '/api/auth/register',
       method: 'POST',
       body: { ...registerDetails },
     });
