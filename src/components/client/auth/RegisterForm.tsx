@@ -13,6 +13,7 @@ import { useReducer } from 'react';
 export default function RegisterForm() {
   const [state, updateForm] = useReducer(registerFormReducer, init);
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log('submitting');
     const validRegister = await handleRegister(e, state, updateForm);
     if (validRegister) {
       router.push('/login');
@@ -108,7 +109,7 @@ export default function RegisterForm() {
               onChange={(e) => {
                 updateForm({
                   type: ACTION.SET_EMAIL,
-                  payload: e.target.value.replace(/[^0-9]/g, ''),
+                  payload: e.target.value,
                 });
               }}
               placeholder="Enter your email"

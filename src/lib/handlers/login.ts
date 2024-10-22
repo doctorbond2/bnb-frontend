@@ -59,6 +59,7 @@ export const handleRegister = async (
   updateForm: Dispatch<ACTION>
 ): Promise<boolean> => {
   e.preventDefault();
+
   const { password, repeat_password, username, email, firstName, lastName } =
     state;
   const registerDetails: RegisterFormData = {
@@ -72,6 +73,7 @@ export const handleRegister = async (
   const [hasErrors, validationErrors] =
     validate.validateRegisterForm(registerDetails);
   if (hasErrors) {
+    console.log('errors', validationErrors);
     updateForm({ type: ACTIONTYPE.SET_ERRORS, payload: validationErrors });
     return false;
   }

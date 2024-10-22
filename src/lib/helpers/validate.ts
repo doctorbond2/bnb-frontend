@@ -63,6 +63,8 @@ const validateRegisterForm = ({
   if (!Lastname(lastName)) {
     errors.lastName = 'Invalid last name input';
   }
+  console.log('email', email);
+  console.log('last name', lastName);
   if (!Email(email)) {
     errors.email = 'Invalid email input';
   }

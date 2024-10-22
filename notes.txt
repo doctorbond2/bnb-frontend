@@ -19,7 +19,10 @@ TODO: Se till att hosts inte kan boka sina egna properties
 
 
 
-To implement Cloudinary for image uploading and management in your Next.js frontend, you'll need to follow a few steps to integrate their service properly. Cloudinary provides powerful tools for uploading, optimizing, and serving images, and it works well with Next.js. Here's a step-by-step guide on how to set it up:
+To implement Cloudinary for image uploading and management in your Next.js frontend, you'll need to follow a few steps to 
+integrate their service properly. 
+Cloudinary provides powerful tools for uploading, optimizing, and serving images, 
+and it works well with Next.js. Here's a step-by-step guide on how to set it up:
 
 1. Create a Cloudinary Account
 Sign up for a free account at Cloudinary.
@@ -33,7 +36,9 @@ npm install cloudinary
 This will allow you to use Cloudinary's API from your backend (e.g., an API route in Next.js).
 
 3. Configure Cloudinary in Your Next.js Backend
-Since Cloudinary requires a secure environment to upload images, you should configure the upload logic on your Next.js API routes. Storing your API keys securely in the backend is essential to avoid exposing sensitive information on the frontend.
+Since Cloudinary requires a secure environment to upload images, 
+you should configure the upload logic on your Next.js API routes. 
+Storing your API keys securely in the backend is essential to avoid exposing sensitive information on the frontend.
 
 Create a new .env.local file in the root of your project to store your Cloudinary credentials (this file should not be pushed to Git):
 
