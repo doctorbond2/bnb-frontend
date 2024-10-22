@@ -20,12 +20,12 @@ export interface PropertyFormData {
   country: string;
   city: string;
   address: string;
-  price_per_night: number;
-  availableFrom?: string;
-  availableUntil?: string;
+  price_per_night: number | string;
+  availableFrom: Date | null;
+  availableUntil: Date | null;
   available: boolean;
   hostId: string;
-  images?: PropertyImage[];
+  imageFiles?: File[];
 }
 
 export interface GetManyResponse<T> {

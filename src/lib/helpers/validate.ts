@@ -1,3 +1,4 @@
+import { PropertyFormData } from '@/models/interfaces/property';
 import { emailRegex } from './regex';
 
 import { RegisterFormData } from '@/models/interfaces/user';
@@ -15,6 +16,34 @@ const Password = (password: string, repeat_password: string): boolean => {
     return false;
   }
   return !!(password === repeat_password);
+};
+const Address = (address: string): boolean => {
+  const addressRegex = /^[a-zA-Z0-9\s,.'-]{3,}$/;
+  return !!(address && addressRegex.test(address));
+};
+const PasswordLength = (password: string): boolean =>
+  !!(password && password.length > 6 && password.length < 40);
+const validatePropertyForm = (data: PropertyFormData) => {
+  const errors: { [key: string]: string } = {};
+  if (!data.name || data.name.length < 2) {
+    errors.name = 'Invalid property name input';
+  }
+  if (!data.country || data.country.length < 2) {
+    errors.country = 'Invalid country input';
+  }
+  if (!data.city || data.city.length < 1) {
+    errors.city = 'Invalid city input';
+  }
+  if (!Address(data.address)) {
+    errors.address = 'Invalid address input';
+  }
+  if (!data.price_per_night) {
+    errors.price_per_night = 'Invalid price input';
+  }
+  if (data.price_per_night < 0 || data.price_per_night > 9999) {
+    errors.price_per_night = 'Price must be between 0 and 9999';
+  }
+  return [Object.keys(errors).length > 0, errors];
 };
 const Username = (username: string) =>
   !!(username && username.length > 2 && username.length < 40);
@@ -81,4 +110,5 @@ export const validationHelper = {
   Lastname,
   validateCustomerBooking,
   validateRegisterForm,
+  validatePropertyForm,
 };

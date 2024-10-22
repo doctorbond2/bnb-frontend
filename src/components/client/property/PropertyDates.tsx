@@ -21,8 +21,9 @@ function PropertyDates({ dispatch }: PropertyDateProps) {
 
   return (
     <div>
-      <h2>Select a start date</h2>
       <Flatpickr
+        className="border-2 rounded-sm border-gray-200"
+        placeholder="Property available from"
         value={selectedStartDate as Date}
         onChange={(selectedDates) => {
           setSelectedStartDate(selectedDates[0]);
@@ -48,8 +49,9 @@ function PropertyDates({ dispatch }: PropertyDateProps) {
         </p>
       )}
 
-      <h2>Select an end date</h2>
       <Flatpickr
+        className="border-2 rounded-sm border-gray-200"
+        placeholder="Property available until"
         value={selectedEndDate as Date}
         onChange={(selectedDates) => {
           if (selectedStartDate && selectedDates[0] < selectedStartDate) {
