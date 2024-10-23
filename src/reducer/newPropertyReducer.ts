@@ -7,7 +7,7 @@ export interface NewPropertyFormState {
   address: string;
   price_per_night: number;
   errors: { [key: string]: string };
-  imageFiles: File[];
+  imageUrls: string[];
   isSubmitting: boolean;
 }
 
@@ -19,7 +19,7 @@ export const initialNewPropertyFormState: NewPropertyFormState = {
   name: '',
   address: '',
   price_per_night: 0,
-  imageFiles: [],
+  imageUrls: [],
   errors: {},
   isSubmitting: false,
 };
@@ -32,10 +32,10 @@ export enum NewPropertyActionType {
   SET_ADDRESS = 'SET_ADDRESS',
   SET_ERRORS = 'SET_ERRORS',
   SET_ISSUBMITTING = 'SET_ISSUBMITTING',
-  SET_IMAGEFILES = 'SET_IMAGEFILES',
+  SET_IMAGE_URLS = 'SET_IMAGEFILES',
   SET_PRICE_PER_NIGHT = 'SET_PRICE_PER_NIGHT',
   RESET_FORM = 'RESET_FORM',
-  REMOVE_IMAGEFILE = 'REMOVE_IMAGEFILE',
+  REMOVE_IMAGE_URL = 'REMOVE_IMAGE_URL',
 }
 export interface NewPropertyAction {
   type: NewPropertyActionType;
@@ -44,7 +44,7 @@ export interface NewPropertyAction {
     | Date
     | { [key: string]: string }
     | boolean
-    | File[]
+    | string[]
     | number;
 }
 
@@ -58,16 +58,16 @@ const newPropertyFormReducer = (
       return { ...state, availableFrom: payload as Date };
     case NewPropertyActionType.SET_AVAILABLEUNTIL:
       return { ...state, availableUntil: payload as Date };
-    case NewPropertyActionType.SET_IMAGEFILES:
+    case NewPropertyActionType.SET_IMAGE_URLS:
       return {
         ...state,
-        imageFiles: [...state.imageFiles, ...(payload as File[])],
+        imageUrls: [...state.imageUrls, ...(payload as string[])],
       };
-    case NewPropertyActionType.REMOVE_IMAGEFILE:
+    case NewPropertyActionType.REMOVE_IMAGE_URL:
       const index = payload as number;
       return {
         ...state,
-        imageFiles: state.imageFiles.filter((_, i) => i !== index), // Filter out the file at that index
+        imageUrls: state.imageUrls.filter((_, i) => i !== index),
       };
     case NewPropertyActionType.SET_COUNTRY:
       return { ...state, country: payload as string };

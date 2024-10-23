@@ -40,7 +40,8 @@ const validatePropertyForm = (data: PropertyFormData) => {
   if (!data.price_per_night) {
     errors.price_per_night = 'Invalid price input';
   }
-  if (data.price_per_night < 0 || data.price_per_night > 9999) {
+  const price = Number(data.price_per_night);
+  if (isNaN(price) || price < 0 || price > 9999) {
     errors.price_per_night = 'Price must be between 0 and 9999';
   }
   return [Object.keys(errors).length > 0, errors];
@@ -85,6 +86,9 @@ const validateRegisterForm = ({
   const errors: { [key: string]: string } = {};
   if (!Password(password, repeat_password)) {
     errors.password = 'Invalid password input';
+  }
+  if (!PasswordLength(password)) {
+    errors.password = 'Password must be between 6 and 40 characters';
   }
   if (!Firstname(firstName)) {
     errors.firstName = 'Invalid first name input';

@@ -25,7 +25,7 @@ export interface PropertyFormData {
   availableUntil: Date | null;
   available: boolean;
   hostId: string;
-  imageFiles?: File[];
+  imageUrls?: string[];
 }
 
 export interface GetManyResponse<T> {

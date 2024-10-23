@@ -5,8 +5,9 @@ import useStore from '@/lib/hooks/useStore';
 import { AppDispatch } from '@/redux/store';
 import { PropertyFormData } from '@/models/interfaces/property';
 import { createProperty } from '@/redux/thunks/property';
+import { useState } from 'react';
+import ProxyImage from '@/components/server/ProxyImage';
 import newPropertyFormReducer from '@/reducer/newPropertyReducer';
-import Image from 'next/image';
 import PropertyDates from './PropertyDates';
 import {
   initialNewPropertyFormState as init,
@@ -17,7 +18,32 @@ import { validationHelper } from '@/lib/helpers/validate';
 
 export default function NewPropertyForm() {
   const [state, updateForm] = useReducer(newPropertyFormReducer, init);
+  const [imageUrlInput, setImageUrlInput] = useState('');
 
+  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('input changed: ', e.target.value);
+    setImageUrlInput(e.target.value);
+  };
+
+  const addImageUrl = () => {
+    if (imageUrlInput) {
+      console.log('starrtiing');
+      const urlRegex =
+        /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?[^\s]*)?$/;
+
+      if (urlRegex.test(imageUrlInput)) {
+        console.log('adding image url: ', imageUrlInput);
+        updateForm({
+          type: ACTION.SET_IMAGE_URLS,
+          payload: [imageUrlInput],
+        });
+        setImageUrlInput('');
+      } else {
+        console.error('Invalid URL format:', imageUrlInput);
+        alert('Please enter a valid URL.');
+      }
+    }
+  };
   const { user } = useStoreData();
   const { dispatch } = useStore();
   const create = async (
@@ -39,7 +65,7 @@ export default function NewPropertyForm() {
       availableUntil: state.availableUntil,
       available: true,
       hostId: user.id,
-      imageFiles: state.imageFiles,
+      imageUrls: state.imageUrls || [],
     };
     console.log('form data: ', formData);
     const [hasErrors, errors] = validationHelper.validatePropertyForm(formData);
@@ -124,17 +150,16 @@ export default function NewPropertyForm() {
             <PropertyDates dispatch={updateForm} />
             <br />
             <input
-              type="file"
+              type="text"
               name="property_images"
-              multiple
-              accept="image/*" // Only accept image files
-              onChange={(e) => {
-                console.log(e.target.files);
-                const files = Array.from(e.target.files || []); // Convert FileList to an array
-                updateForm({ type: ACTION.SET_IMAGEFILES, payload: files }); // Update the state with selected files
-                console.log(state.imageFiles);
-              }}
+              placeholder="Image URL"
+              onChange={handleImageUrlChange}
+              value={imageUrlInput}
             />
+            <button type="button" onClick={addImageUrl}>
+              Add Image URL
+            </button>
+            <br />
             PRICE PER NIGHT:
             <br />
             <input
@@ -151,41 +176,37 @@ export default function NewPropertyForm() {
                 })
               }
             />
-            <div id="files-showcase">
-              {state.imageFiles.map((file: File, index: number) => (
-                <div
-                  key={file.name}
-                  className="flex flex-col-reverse w-20 relative"
-                >
-                  <button
-                    className="w-[25%] absolute top-0 right-0"
-                    onClick={() =>
-                      updateForm({
-                        type: ACTION.REMOVE_IMAGEFILE,
-                        payload: index,
-                      })
-                    }
-                    style={{
-                      backgroundColor: 'red',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '5px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    X
-                  </button>
-                  <Image
-                    src={URL.createObjectURL(file)}
-                    alt={file.name}
-                    width="100"
-                    height="100"
-                  />
-                </div>
-              ))}
-            </div>
             <button type="submit">Create property</button>
           </form>
+          <div id="image-urls-showcase">
+            {state.imageUrls.map((url: string, index: number) => (
+              <div key={url} className="flex flex-row-reverse w-40 relative">
+                <button
+                  className="w-[25%]"
+                  onClick={() => {
+                    updateForm({
+                      type: ACTION.REMOVE_IMAGE_URL,
+                      payload: index,
+                    });
+                    console.log('test', index);
+                  }}
+                  style={{
+                    backgroundColor: 'red',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  X
+                </button>
+                <div>
+                  {/* <h2>{url.slice(0, 20)}</h2> */}
+                  <ProxyImage imageUrl={url} />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
