@@ -1,5 +1,6 @@
 'use client';
 import { Property } from '@/models/interfaces/property';
+import HPpropertyCard from '../cards/HPpropertyCard';
 
 function HomePropertyList({ propertyList }: { propertyList: Property[] }) {
   return (
@@ -8,7 +9,7 @@ function HomePropertyList({ propertyList }: { propertyList: Property[] }) {
         <ul>
           {propertyList.map((property) => (
             <li key={property.id}>
-              <h3>{property.name}</h3>
+              <HPpropertyCard property={property} />
             </li>
           ))}
         </ul>

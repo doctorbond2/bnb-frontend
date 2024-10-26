@@ -19,7 +19,8 @@ import { validationHelper } from '@/lib/helpers/validate';
 export default function NewPropertyForm() {
   const [state, updateForm] = useReducer(newPropertyFormReducer, init);
   const [imageUrlInput, setImageUrlInput] = useState('');
-
+  const { user } = useStoreData();
+  const { dispatch } = useStore();
   const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('input changed: ', e.target.value);
     setImageUrlInput(e.target.value);
@@ -27,7 +28,6 @@ export default function NewPropertyForm() {
 
   const addImageUrl = () => {
     if (imageUrlInput) {
-      console.log('starrtiing');
       const urlRegex =
         /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?[^\s]*)?$/;
 
@@ -44,8 +44,7 @@ export default function NewPropertyForm() {
       }
     }
   };
-  const { user } = useStoreData();
-  const { dispatch } = useStore();
+
   const create = async (
     e: React.FormEvent<HTMLFormElement>,
     dispatch: AppDispatch

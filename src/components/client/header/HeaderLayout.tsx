@@ -20,7 +20,7 @@ export default function HeaderLayout() {
       md:mx-[3%] 
       h-20 md:h-12 items-center"
     >
-      <div className="max-w-[80px] max-h-[80px]">
+      <Link className="max-w-[80px] max-h-[80px]" href={'/'}>
         <Image
           src="/images/spaceshare_icon.png"
           width={40}
@@ -29,7 +29,7 @@ export default function HeaderLayout() {
           style={{ objectFit: 'fill' }}
         />
         <h1 className="hidden md:inline-block">Spaceshare</h1>
-      </div>
+      </Link>
 
       <div className="flex flex-row md:hidden" id="header-mobile-options">
         <Image
@@ -46,7 +46,7 @@ export default function HeaderLayout() {
 
         <div
           className={`absolute top-20 left-0 w-full bg-white border-t border-gray-300 
-            overflow-hidden transition-all duration-400 ease-in-out
+            overflow-hidden transition-all duration-400 ease-in-out z-10
               ${
                 isDropdownOpen
                   ? 'opacity-100 max-h-[20rem] pointer-events-auto border-2'
@@ -55,15 +55,49 @@ export default function HeaderLayout() {
             `}
         >
           <div
-            className={`flex flex-col p-[1%] ${
+            className={`flex flex-col p-[1%] ${user.id && 'hidden'} ${
               !isDropdownOpen && 'opacity-40'
             }  max-w-fit ml-[5%]`}
           >
-            <Link href="/profile" className="p-4">
-              <div>Profile</div>
+            Not logged in
+            <button
+              onClick={() => {
+                toggleDropdown();
+                router.push('/login');
+              }}
+              className="p-4 text-left"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => {
+                toggleDropdown();
+                router.push('/login/register');
+              }}
+              className="p-4 text-left"
+            >
+              Register
+            </button>
+          </div>
+          <div
+            className={`flex flex-col p-[1%] ${!user.id && 'hidden'} ${
+              !isDropdownOpen && 'opacity-40'
+            }  max-w-fit ml-[5%]`}
+          >
+            Logged in
+            <Link href={`/user/${user.id}/profile`} className="p-4">
+              <button onClick={toggleDropdown}>Profile</button>
             </Link>
-            <button className="max-w-fit p-4">|Login|</button>
-            <div className="p-4">|Register|</div>
+            <button
+              className="p-4"
+              onClick={() => {
+                toggleDropdown();
+                handleLogout();
+                router.push('/login');
+              }}
+            >
+              Logout
+            </button>
           </div>
         </div>
       </div>
@@ -75,11 +109,11 @@ export default function HeaderLayout() {
             width={40}
             height={40}
             alt="SpaceShare Icon"
-            style={{ objectFit: 'fill' }} // Proper CSS for fitting within bounds
+            style={{ objectFit: 'fill' }}
           />
         </div>
         <Link href="/profile">|Profile|</Link>
-        <button>|Login|</button>
+        <Link href="/login">login</Link>
         {user.id && (
           <button
             className="border-2 p-4"

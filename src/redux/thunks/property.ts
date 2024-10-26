@@ -5,15 +5,20 @@ import localStorageHandler from '@/lib/helpers/localStorage';
 import { LocalStorageKeys as key } from '@/models/enum/localstorage';
 import { PropertyFormData } from '@/models/interfaces/property';
 import { Property } from '@/models/interfaces/property';
+
 import { AppDispatch } from '../store';
 type GetPropertiesApiResponse = Property[];
+export interface UpdatePropertyResponse {
+  property: Property;
+  message?: string;
+  status?: number;
+}
 export const getHostedProperties = createAsyncThunk(
   'property/getHostedProperties',
-  async (credentials: { hostId: string }, { rejectWithValue }) => {
-    const { hostId } = credentials;
+  async (_, { rejectWithValue }) => {
     try {
       const data: GetPropertiesApiResponse = await sendRequest({
-        url: '/api/protected/property/host/' + hostId,
+        url: '/api/users/properties',
         method: 'GET',
         protected: true,
       });
@@ -41,10 +46,36 @@ export const createProperty = createAsyncThunk(
         },
         credentials.dispatch
       );
+      credentials.dispatch(getHostedProperties());
 
       return data;
     } catch (err: unknown) {
       rejectWithValue(thunkError(err));
+    }
+  }
+);
+export const updateProperty = createAsyncThunk(
+  'property/updateProperty',
+  async (
+    credentials: { data: UpdatePropertyFormData; dispatch: AppDispatch },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response: UpdatePropertyResponse = await sendRequest(
+        {
+          url: '/api/properties',
+          method: 'PUT',
+          body: { ...credentials.data },
+          protected: true,
+        },
+        credentials.dispatch
+      );
+
+      credentials.dispatch(getHostedProperties());
+
+      return response;
+    } catch (err: unknown) {
+      return rejectWithValue(thunkError(err));
     }
   }
 );

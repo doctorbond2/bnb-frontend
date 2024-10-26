@@ -10,11 +10,10 @@ import { AppDispatch } from '../store';
 type GetBookingsApiResponse = Booking[];
 export const getBookings = createAsyncThunk(
   'bookings/getBookings',
-  async (credentials: { userId: UserId }, { rejectWithValue }) => {
-    const { userId } = credentials;
+  async (_, { rejectWithValue }) => {
     try {
       const data: GetBookingsApiResponse = await sendRequest({
-        url: '/api/users/bookings/' + userId,
+        url: '/api/users/bookings',
         method: 'GET',
       });
       console.warn(data);
@@ -41,7 +40,7 @@ export const createBooking = createAsyncThunk(
         },
         credentials.dispatch
       );
-
+      credentials.dispatch(getBookings());
       return data;
     } catch (err: unknown) {
       rejectWithValue(thunkError(err));

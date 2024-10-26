@@ -8,6 +8,9 @@ function useStoreData() {
   const userLoading = useAppSelector((state) => state.user.isLoading);
   const userError = useAppSelector((state) => state.user.error);
 
+  const getProperty = (id: string): Property | null => {
+    return properties.find((p) => p.id === id) || null;
+  };
   const properties: Property[] = useAppSelector(
     (state) => state.hostedProperties.list
   );
@@ -28,6 +31,7 @@ function useStoreData() {
     properties,
     propertiesLoading,
     propertiesError,
+    getProperty,
     bookings,
     bookingsLoading,
     bookingsError,

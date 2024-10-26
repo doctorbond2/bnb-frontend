@@ -5,6 +5,7 @@ import { UserId } from '../types/User';
 export interface User {
   id: UserId | null;
   firstName: string;
+  username: string;
   lastName: string;
   fullName?: string;
   admin?: boolean;
@@ -28,9 +29,11 @@ export interface LoginFormData {
   username?: string;
 }
 export interface UpdateUserFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  existing_password: string;
+  password?: string;
   avatar?: string;
 }

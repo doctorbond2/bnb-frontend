@@ -1,19 +1,21 @@
 import { User } from './user';
 import { Booking } from './booking';
-import { PropertyImage } from './general';
 import { PropertyId } from '../types/Property';
+import { Image } from './general';
 export interface Property {
   id: PropertyId;
   name: string;
   country: string;
   address: string;
+  city: string;
   price_per_night: number;
   availableFrom?: Date;
   availableUntil?: Date;
   available: boolean;
   host: User;
+  hostId: string;
   bookings: Booking[];
-  Images: PropertyImage[];
+  images?: Image[];
 }
 export interface PropertyFormData {
   name: string;

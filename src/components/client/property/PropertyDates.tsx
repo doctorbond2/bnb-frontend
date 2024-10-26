@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
 import Flatpickr from 'react-flatpickr';
-import { Dispatch } from 'react';
+import { Dispatch, useEffect } from 'react';
 import {
   NewPropertyAction as Action,
   NewPropertyActionType as TYPE,
 } from '@/reducer/newPropertyReducer';
 interface PropertyDateProps {
   dispatch: Dispatch<Action>;
+  initialStartDate?: Date;
+  initialEndDate?: Date;
 }
-function PropertyDates({ dispatch }: PropertyDateProps) {
-  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
-  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
+function PropertyDates({
+  dispatch,
+  initialStartDate,
+  initialEndDate,
+}: PropertyDateProps) {
+  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(
+    initialStartDate || null
+  );
+  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(
+    initialEndDate || null
+  );
 
   const formatDate = (date: Date | undefined): string => {
     if (date instanceof Date && !isNaN(date.getTime())) {

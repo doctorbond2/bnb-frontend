@@ -11,6 +11,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.8",
     "flatpickr": "^4.6.13",
+    "jose": "^5.9.6",
     "js-cookie": "^3.0.5",
     "next": "14.2.15",
     "react": "^18",
