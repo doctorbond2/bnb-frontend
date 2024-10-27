@@ -66,7 +66,6 @@ export default function NewPropertyForm() {
       hostId: user.id,
       imageUrls: state.imageUrls || [],
     };
-    console.log('form data: ', formData);
     const [hasErrors, errors] = validationHelper.validatePropertyForm(formData);
     if (hasErrors) {
       console.log('errrors: ', errors);

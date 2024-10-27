@@ -80,7 +80,9 @@ export default function UserProperties() {
                         className={`p-2 border rounded-md mt-2 ${
                           booking.status === BookingStatus.PENDING
                             ? 'bg-yellow-500 text-white'
-                            : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                            : BookingStatus.ACCEPTED
+                            ? 'bg-green-400 text-gray-700 cursor-not-allowed'
+                            : 'bg-red-400 text-gray-200 cursor-not-allowed'
                         }`}
                         onClick={() => {
                           setSelectedBooking(booking.id);

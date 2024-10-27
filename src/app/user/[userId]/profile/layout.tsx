@@ -46,10 +46,10 @@ const ProfileLayout = ({
             </li>
             <li>
               <Link
-                href={`/user/${userId}/profile/bookings`}
+                href={`/user/${userId}/profile/hostedProperties`}
                 className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
               >
-                Properties
+                Your Properties
               </Link>
             </li>
           </ul>
