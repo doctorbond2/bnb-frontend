@@ -2,9 +2,7 @@ import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { HostedPropertiesState } from '../slices/propertySlice';
 import { getHostedProperties } from '../thunks/property';
 import { handlePending, handleRejected } from '@/lib/handlers/thunk';
-import localStorageHandler from '@/lib/helpers/localStorage';
-import { LocalStorageKeys } from '@/models/enum/localstorage';
-import { createProperty } from '../thunks/property';
+import { createProperty, updateProperty } from '../thunks/property';
 export function extraHPReducers(
   builder: ActionReducerMapBuilder<HostedPropertiesState>
 ) {
@@ -18,11 +16,15 @@ export function extraHPReducers(
     .addCase(createProperty.fulfilled, (state, action) => {
       if (action.payload) {
         state.list = [...state.list, action.payload];
-        localStorageHandler.setInStorage(
-          LocalStorageKeys.PROPERTY_LIST,
-          state.list
-        );
       }
     })
-    .addCase(createProperty.rejected, handleRejected);
+    .addCase(createProperty.rejected, handleRejected)
+    .addCase(updateProperty.pending, handlePending)
+    .addCase(updateProperty.fulfilled, (state, action) => {
+      if (action.payload) {
+        const index = state.list.findIndex((p) => p.id === action.payload.id);
+        state.list[index] = action.payload;
+      }
+    })
+    .addCase(updateProperty.rejected, handleRejected);
 }

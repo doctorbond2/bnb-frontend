@@ -1,28 +1,20 @@
 import React, { useState } from 'react';
 import Flatpickr from 'react-flatpickr';
-import { Dispatch, useEffect } from 'react';
+import { Dispatch } from 'react';
 import {
   NewPropertyAction as Action,
   NewPropertyActionType as TYPE,
 } from '@/reducer/newPropertyReducer';
+
 interface PropertyDateProps {
   dispatch: Dispatch<Action>;
-  initialStartDate?: Date;
-  initialEndDate?: Date;
 }
-function PropertyDates({
-  dispatch,
-  initialStartDate,
-  initialEndDate,
-}: PropertyDateProps) {
-  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(
-    initialStartDate || null
-  );
-  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(
-    initialEndDate || null
-  );
 
-  const formatDate = (date: Date | undefined): string => {
+function PropertyDates({ dispatch }: PropertyDateProps) {
+  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
+  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
+
+  const formatDate = (date: Date | null): string => {
     if (date instanceof Date && !isNaN(date.getTime())) {
       return date.toISOString();
     }
@@ -41,6 +33,7 @@ function PropertyDates({
             type: TYPE.SET_AVAILABLEFROM,
             payload: formatDate(selectedDates[0]),
           });
+          // Clear end date when start date is selected
           setSelectedEndDate(null);
         }}
         options={{
@@ -51,12 +44,7 @@ function PropertyDates({
         name="availableFrom"
       />
       {selectedStartDate && (
-        <p>
-          Selected Start Date:{' '}
-          {selectedStartDate instanceof Date
-            ? selectedStartDate.toLocaleDateString()
-            : selectedStartDate}
-        </p>
+        <p>Selected Start Date: {selectedStartDate.toLocaleDateString()}</p>
       )}
 
       <Flatpickr
@@ -68,28 +56,21 @@ function PropertyDates({
             alert('End date cannot be before start date.');
             return;
           }
-          console.log('selectedDates', formatDate(selectedDates[0]));
           dispatch({
             type: TYPE.SET_AVAILABLEUNTIL,
             payload: formatDate(selectedDates[0]),
           });
-          console.log('selected; ', selectedDates[0]);
           setSelectedEndDate(selectedDates[0]);
         }}
         options={{
           dateFormat: 'Y-m-d',
-          minDate: selectedStartDate ? selectedStartDate : 'today',
+          minDate: selectedStartDate || 'today',
           maxDate: '2026-12-31',
         }}
         name="availableUntil"
       />
       {selectedEndDate && (
-        <p>
-          Selected End Date:{' '}
-          {selectedEndDate instanceof Date
-            ? selectedEndDate.toLocaleDateString()
-            : selectedEndDate}
-        </p>
+        <p>Selected End Date: {selectedEndDate.toLocaleDateString()}</p>
       )}
     </div>
   );

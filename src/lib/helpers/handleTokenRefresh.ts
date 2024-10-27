@@ -14,7 +14,7 @@ export const handleTokenRefresh = async (
   try {
     const refreshResponse = await dispatch(refreshToken()).unwrap();
     if (refreshResponse) {
-      console.log('Refresh token success:', refreshResponse.status);
+      console.log('Refresh token success');
       const response = await fetch(URL, { ...options, headers });
 
       if (!response.ok) {

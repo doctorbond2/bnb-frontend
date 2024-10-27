@@ -39,7 +39,7 @@ export const sendRequest = async <T>(
     body: config.body ? JSON.stringify(config.body) : undefined,
     credentials: 'include',
   };
-
+  console.log('options:', options);
   try {
     const response = await fetch(URL, options);
 

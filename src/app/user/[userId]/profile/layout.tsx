@@ -16,20 +16,41 @@ const ProfileLayout = ({
   const isMyProfile = user.id === userId;
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto p-6">
       {isMyProfile && (
-        <nav>
-          <ul>
+        <nav className="bg-white shadow-md rounded-lg mb-6">
+          <ul className="flex flex-wrap space-x-4 p-4">
             <li>
-              <Link href={`/user/${userId}/profile`}>Profile Overview</Link>
+              <Link
+                href={`/user/${userId}/profile`}
+                className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+              >
+                Profile Overview
+              </Link>
             </li>
             <li>
-              <Link href={`/user/${userId}/profile/update`}>
+              <Link
+                href={`/user/${userId}/profile/update`}
+                className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+              >
                 Update Profile
               </Link>
             </li>
             <li>
-              <Link href={`/user/${userId}/profile/settings`}>Settings</Link>
+              <Link
+                href={`/user/${userId}/profile/bookings`}
+                className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+              >
+                Bookings
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={`/user/${userId}/profile/bookings`}
+                className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+              >
+                Properties
+              </Link>
             </li>
           </ul>
         </nav>

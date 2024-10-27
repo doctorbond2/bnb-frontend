@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+
 export default function HeaderLayout() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
@@ -13,59 +14,48 @@ export default function HeaderLayout() {
   const { user } = useStoreData();
   const { handleLogout } = useStore();
   const router = useRouter();
+
   return (
-    <header
-      className="
-      w-auto flex flex-row justify-between px-[2%] 
-      md:mx-[3%] 
-      h-20 md:h-12 items-center"
-    >
-      <Link className="max-w-[80px] max-h-[80px]" href={'/'}>
+    <header className="w-full flex items-center justify-between px-4 py-2 bg-white shadow-md md:px-8 h-20 md:h-16">
+      <Link href={'/'} className="flex items-center space-x-2">
         <Image
           src="/images/spaceshare_icon.png"
           width={40}
           height={40}
           alt="SpaceShare Icon"
-          style={{ objectFit: 'fill' }}
+          className="object-cover"
         />
-        <h1 className="hidden md:inline-block">Spaceshare</h1>
+        <h1 className="hidden md:block text-xl font-bold text-gray-700">
+          Spaceshare
+        </h1>
       </Link>
 
-      <div className="flex flex-row md:hidden" id="header-mobile-options">
+      {/* Mobile Options */}
+      <div className="flex md:hidden items-center">
         <Image
           src="/images/search_icon.png"
-          width={40}
-          height={40}
-          alt="SpaceShare Icon"
-          style={{ objectFit: 'fill' }}
+          width={24}
+          height={24}
+          alt="Search Icon"
+          className="object-cover"
         />
-
-        <button onClick={toggleDropdown} className="flex items-center">
-          <div className="flex">|||</div>
+        <button onClick={toggleDropdown} className="text-gray-700">
+          <div className="text-2xl">|||</div>
         </button>
 
         <div
-          className={`absolute top-20 left-0 w-full bg-white border-t border-gray-300 
-            overflow-hidden transition-all duration-400 ease-in-out z-10
-              ${
-                isDropdownOpen
-                  ? 'opacity-100 max-h-[20rem] pointer-events-auto border-2'
-                  : 'opacity-70 max-h-0 pointer-events-none'
-              }
-            `}
+          className={`absolute top-20 left-0 w-full bg-white border-t border-gray-300 shadow-lg transition-transform transform ${
+            isDropdownOpen ? 'scale-y-100' : 'scale-y-0'
+          } origin-top z-10`}
         >
-          <div
-            className={`flex flex-col p-[1%] ${user.id && 'hidden'} ${
-              !isDropdownOpen && 'opacity-40'
-            }  max-w-fit ml-[5%]`}
-          >
-            Not logged in
+          <div className={`flex flex-col px-6 py-4 ${user.id ? 'hidden' : ''}`}>
+            <span className="text-gray-600">Not logged in</span>
             <button
               onClick={() => {
-                toggleDropdown();
                 router.push('/login');
+                toggleDropdown();
               }}
-              className="p-4 text-left"
+              className="text-left py-2 hover:text-blue-600"
             >
               Login
             </button>
@@ -74,22 +64,22 @@ export default function HeaderLayout() {
                 toggleDropdown();
                 router.push('/login/register');
               }}
-              className="p-4 text-left"
+              className="text-left py-2 hover:text-blue-600"
             >
               Register
             </button>
           </div>
           <div
-            className={`flex flex-col p-[1%] ${!user.id && 'hidden'} ${
-              !isDropdownOpen && 'opacity-40'
-            }  max-w-fit ml-[5%]`}
+            className={`flex flex-col px-6 py-4 ${!user.id ? 'hidden' : ''}`}
           >
-            Logged in
-            <Link href={`/user/${user.id}/profile`} className="p-4">
-              <button onClick={toggleDropdown}>Profile</button>
+            <span className="text-gray-600">Logged in</span>
+            <Link href={`/user/${user.id}/profile`} className="py-2">
+              <button onClick={toggleDropdown} className="hover:text-blue-600">
+                Profile
+              </button>
             </Link>
             <button
-              className="p-4"
+              className="py-2 hover:text-blue-600"
               onClick={() => {
                 toggleDropdown();
                 handleLogout();
@@ -102,33 +92,48 @@ export default function HeaderLayout() {
         </div>
       </div>
 
-      <div className="hidden md:flex flex-row" id="header-options">
-        <div className="flex">
-          <Image
-            src="/images/search_icon.png"
-            width={40}
-            height={40}
-            alt="SpaceShare Icon"
-            style={{ objectFit: 'fill' }}
-          />
-        </div>
-        <Link href="/profile">|Profile|</Link>
-        <Link href="/login">login</Link>
-        {user.id && (
+      {/* Desktop Options */}
+      <div className="hidden md:flex items-center space-x-6">
+        <Image
+          src="/images/search_icon.png"
+          width={24}
+          height={24}
+          alt="Search Icon"
+          className="object-cover"
+        />
+        <Link
+          href={`/user/${user.id}/profile`}
+          className="text-gray-700 hover:text-blue-600"
+        >
+          Profile
+        </Link>
+        {!user.id ? (
           <button
-            className="border-2 p-4"
+            onClick={() => {
+              router.push('/login');
+            }}
+            className="text-gray-700 border rounded-md px-3 py-1 hover:bg-gray-100"
+          >
+            Login
+          </button>
+        ) : (
+          <button
             onClick={() => {
               handleLogout();
               router.push('/login');
             }}
+            className="text-gray-700 border rounded-md px-3 py-1 hover:bg-gray-100"
           >
             Logout
           </button>
         )}
-        <div>|Register|</div>
+        <Link
+          href="login/register"
+          className="text-gray-700 hover:text-blue-600"
+        >
+          Register
+        </Link>
       </div>
     </header>
   );
 }
-// const headerStyle: string =
-//   'w-auto flex flex-row justify-between md:justify-around md:mx-[3%] border-2';

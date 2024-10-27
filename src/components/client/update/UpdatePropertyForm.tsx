@@ -1,13 +1,10 @@
 'use client';
-import { useReducer, useEffect, useState } from 'react';
+import { useReducer, useEffect, useMemo, useState } from 'react';
 import updatePropertyFormReducer from '@/reducer/updatePropertyReducer';
+import ProxyImage from '@/components/server/ProxyImage';
 import PropertyDates from '../property/PropertyDates';
-import { useRouter } from 'next/navigation';
-import {
-  UpdatePropertyFormState,
-  UpdatePropertyFormActionType as ACTION,
-} from '@/reducer/updatePropertyReducer';
-
+import { UpdatePropertyFormActionType as ACTION } from '@/reducer/updatePropertyReducer';
+import { UpdatePropertyFormData } from '@/models/interfaces/property';
 import { updateProperty } from '@/redux/thunks/property';
 import useStoreData from '@/lib/hooks/useStoreData';
 import useStore from '@/lib/hooks/useStore';
@@ -17,39 +14,81 @@ export default function PropertyUpdateForm({
 }: {
   propertyId: string;
 }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { getProperty } = useStoreData();
   const { dispatch } = useStore();
-  const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const property = getProperty(propertyId);
-  if (!property) {
-    router.push('/404');
-    return null;
-  }
-  const property_imageUrls =
-    property.images?.map((image, index) => {
-      return image.url;
-    }) || [];
-  const init: UpdatePropertyFormState = {
-    name: '',
-    country: '',
-    city: '',
-    address: '',
-    price_per_night: '',
-    availableFrom: null,
-    availableUntil: null,
-    available: false,
-    hostId: '',
-    imageUrls: [],
-    isSubmitting: false,
-    errors: {},
+  const initialState = useMemo(
+    () => ({
+      name: property?.name || '',
+      country: property?.country || '',
+      city: property?.city || '',
+      address: property?.address || '',
+      price_per_night: property?.price_per_night?.toString() || '',
+      availableFrom: property?.availableFrom || null,
+      availableUntil: property?.availableUntil || null,
+      available: property?.available || false,
+      imageUrls: property?.images?.map((image) => image.url) || [],
+      isSubmitting: false,
+      errors: {},
+    }),
+    [property]
+  );
+
+  const [state, updateForm] = useReducer(
+    updatePropertyFormReducer,
+    initialState
+  );
+  useEffect(() => {
+    if (property) {
+      updateForm({ type: ACTION.SET_NAME, payload: property.name });
+      updateForm({ type: ACTION.SET_COUNTRY, payload: property.country });
+      updateForm({ type: ACTION.SET_CITY, payload: property.city });
+      updateForm({ type: ACTION.SET_ADDRESS, payload: property.address });
+      updateForm({
+        type: ACTION.SET_PRICE_PER_NIGHT,
+        payload: property.price_per_night,
+      });
+      updateForm({ type: ACTION.SET_AVAILABLE, payload: property.available });
+      updateForm({
+        type: ACTION.SET_IMAGE_URLS,
+        payload: property.images?.map((image) => image.url),
+      });
+      updateForm({
+        type: ACTION.SET_AVAILABLE_FROM,
+        payload: property.availableFrom,
+      });
+      updateForm({
+        type: ACTION.SET_AVAILABLE_UNTIL,
+        payload: property.availableUntil,
+      });
+    }
+  }, [property]);
+  // const formatDate = (date: Date | null | undefined): string => {
+  //   if (date instanceof Date && !isNaN(date.getTime())) {
+  //     return date.toISOString();
+  //   }
+  //   return '';
+  // };
+  const formatDateForDisplay = (
+    dateString: string | null | undefined | Date
+  ): string => {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleDateString();
+    }
+    return '';
   };
-
-  const [state, updateForm] = useReducer(updatePropertyFormReducer, init);
-
   const submit = async () => {
+    if (!property) {
+      return;
+    }
     updateForm({ type: ACTION.SET_ISSUBMITTING, payload: true });
-    const updatedData = {
+    const updatedData: UpdatePropertyFormData = {
       name: state.name && state.name !== property.name ? state.name : undefined,
       country:
         state.country && state.country !== property.country
@@ -68,42 +107,19 @@ export default function PropertyUpdateForm({
       availableFrom: state.availableFrom || property.availableFrom,
       availableUntil: state.availableUntil || property.availableUntil,
       available: state.available,
-      hostId: state.hostId || property.hostId,
     };
+
     const data = await dispatch(
-      updateProperty({ data: updatedData, dispatch })
+      updateProperty({
+        data: updatedData,
+        propertyId: propertyId,
+        dispatch,
+      })
     );
     if (data) {
       updateForm({ type: ACTION.SET_ISSUBMITTING, payload: false });
     }
   };
-
-  useEffect(() => {
-    if (property) {
-      updateForm({ type: ACTION.SET_NAME, payload: property.name });
-      updateForm({ type: ACTION.SET_COUNTRY, payload: property.country });
-      updateForm({ type: ACTION.SET_CITY, payload: property.city });
-      updateForm({ type: ACTION.SET_ADDRESS, payload: property.address });
-      updateForm({
-        type: ACTION.SET_PRICE_PER_NIGHT,
-        payload: String(property.price_per_night),
-      });
-      updateForm({
-        type: ACTION.SET_AVAILABLE_FROM,
-        payload: property.availableFrom,
-      });
-      updateForm({
-        type: ACTION.SET_AVAILABLE_UNTIL,
-        payload: property.availableUntil,
-      });
-      updateForm({ type: ACTION.SET_AVAILABLE, payload: property.available });
-      updateForm({ type: ACTION.SET_HOST_ID, payload: property.hostId });
-      updateForm({
-        type: ACTION.SET_IMAGE_URLS,
-        payload: property_imageUrls,
-      });
-    }
-  }, [property]);
 
   return (
     <>
@@ -169,24 +185,59 @@ export default function PropertyUpdateForm({
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               />
               <label
+                htmlFor="address"
+                className="block text-gray-700 font-medium mb-2"
+              >
+                Address:
+              </label>
+              <input
+                type="text"
+                id="address"
+                value={state.address}
+                onChange={(e) =>
+                  updateForm({
+                    type: ACTION.SET_ADDRESS,
+                    payload: e.target.value,
+                  })
+                }
+                placeholder="Address"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              />
+              <label
                 htmlFor="price_per_night"
                 className="block text-gray-700 font-medium mb-2"
               >
                 Price per Night:
               </label>
+
               <input
-                type="number"
-                id="price_per_night"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                pattern="[0-9]*"
+                inputMode="numeric"
+                placeholder="Price per night"
+                name="price_per_night"
+                type="text"
                 value={state.price_per_night}
                 onChange={(e) =>
                   updateForm({
                     type: ACTION.SET_PRICE_PER_NIGHT,
-                    payload: e.target.value,
+                    payload: e.target.value.replace(/[^0-9]/g, ''),
                   })
                 }
-                placeholder="Price per Night"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               />
+              <div id="current-dates">
+                <h3>Property currently available between:</h3>
+                <p>From: {formatDateForDisplay(state.availableFrom)}</p>
+                <p>Until: {formatDateForDisplay(state.availableUntil)}</p>
+              </div>
+              <div id="number-of-bookings">
+                {property?.bookings && (
+                  <p>Number of bookings: {property.bookings.length}</p>
+                )}
+              </div>
+
+              {state.available && <PropertyDates dispatch={dispatch} />}
+
               <label
                 htmlFor="available"
                 className="block text-gray-700 font-medium mb-2"
@@ -205,6 +256,31 @@ export default function PropertyUpdateForm({
                 }
                 className="mr-2 leading-tight"
               />
+            </div>
+            <div id="image-urls-showcase">
+              {state.imageUrls &&
+                state.imageUrls.map((url: string, index: number) => (
+                  <div
+                    key={url}
+                    className="flex flex-row-reverse w-40 relative"
+                  >
+                    <button
+                      className="w-[10%] bg-red-500 absolute top-0 right-0"
+                      onClick={() => {
+                        updateForm({
+                          type: ACTION.REMOVE_IMAGE_URL,
+                          payload: index,
+                        });
+                        console.log('test', index);
+                      }}
+                    >
+                      X
+                    </button>
+                    <div>
+                      <ProxyImage imageUrl={url} />
+                    </div>
+                  </div>
+                ))}
             </div>
             <div className="flex justify-center">
               <button

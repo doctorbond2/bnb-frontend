@@ -21,7 +21,7 @@ export default function TokenChecker() {
       }
     };
     checkTokenExpiry();
-  }, [user, dispatch]);
+  }, [user, dispatch, handleLogout, router]);
 
   return null;
 }

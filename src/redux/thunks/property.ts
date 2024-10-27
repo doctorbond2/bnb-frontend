@@ -3,13 +3,16 @@ import { sendRequest } from '@/lib/helpers/fetch';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import localStorageHandler from '@/lib/helpers/localStorage';
 import { LocalStorageKeys as key } from '@/models/enum/localstorage';
-import { PropertyFormData } from '@/models/interfaces/property';
+import {
+  PropertyFormData,
+  UpdatePropertyFormData,
+} from '@/models/interfaces/property';
 import { Property } from '@/models/interfaces/property';
 
 import { AppDispatch } from '../store';
 type GetPropertiesApiResponse = Property[];
 export interface UpdatePropertyResponse {
-  property: Property;
+  updatedProperty: Property;
   message?: string;
   status?: number;
 }
@@ -57,13 +60,17 @@ export const createProperty = createAsyncThunk(
 export const updateProperty = createAsyncThunk(
   'property/updateProperty',
   async (
-    credentials: { data: UpdatePropertyFormData; dispatch: AppDispatch },
+    credentials: {
+      data: UpdatePropertyFormData;
+      propertyId: string;
+      dispatch: AppDispatch;
+    },
     { rejectWithValue }
   ) => {
     try {
       const response: UpdatePropertyResponse = await sendRequest(
         {
-          url: '/api/properties',
+          url: '/api/protected/property/' + credentials.propertyId,
           method: 'PUT',
           body: { ...credentials.data },
           protected: true,
@@ -72,8 +79,8 @@ export const updateProperty = createAsyncThunk(
       );
 
       credentials.dispatch(getHostedProperties());
-
-      return response;
+      console.log('response:', response);
+      return response.updatedProperty;
     } catch (err: unknown) {
       return rejectWithValue(thunkError(err));
     }

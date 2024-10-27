@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import { useState } from 'react';
-import { Image as ImageType } from '@/models/interfaces/general';
 const ProxyImage = ({ imageUrl }: { imageUrl: string }) => {
   const [src, setSrc] = useState(
     `/api/proxyImage?url=${encodeURIComponent(imageUrl)}`
@@ -17,7 +16,7 @@ const ProxyImage = ({ imageUrl }: { imageUrl: string }) => {
       unoptimized
       onError={() => {
         console.log('Error loading image, switching to default.');
-        setSrc(fallbackSrc); // Switch to default image on error
+        setSrc(fallbackSrc);
       }}
     />
   );

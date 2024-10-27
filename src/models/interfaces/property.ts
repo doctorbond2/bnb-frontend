@@ -29,6 +29,18 @@ export interface PropertyFormData {
   hostId: string;
   imageUrls?: string[];
 }
+export interface UpdatePropertyFormData {
+  name?: string;
+  country?: string;
+  city?: string;
+  address?: string;
+  price_per_night?: number | string;
+  availableFrom?: Date | null;
+  availableUntil?: Date | null;
+  available?: boolean;
+  hostId?: string;
+  imageUrls?: string[];
+}
 
 export interface GetManyResponse<T> {
   currentPage: number;

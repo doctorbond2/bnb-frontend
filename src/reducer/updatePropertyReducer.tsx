@@ -1,4 +1,3 @@
-import { Image } from '@/models/interfaces/general';
 export interface UpdatePropertyFormState {
   name: string;
   country: string;
@@ -8,8 +7,7 @@ export interface UpdatePropertyFormState {
   availableFrom: Date | null;
   availableUntil: Date | null;
   available: boolean;
-  hostId: string;
-  imageUrls?: string[];
+  imageUrls: string[];
   isSubmitting: boolean;
   errors: { [key: string]: string };
 }
@@ -19,11 +17,10 @@ export const initialUpdatePropertyFormState: UpdatePropertyFormState = {
   country: '',
   city: '',
   address: '',
-  price_per_night: '',
+  price_per_night: 0,
   availableFrom: null,
   availableUntil: null,
   available: false,
-  hostId: '',
   imageUrls: [],
   isSubmitting: false,
   errors: {},
@@ -38,8 +35,9 @@ export enum UpdatePropertyFormActionType {
   SET_AVAILABLE_FROM = 'SET_AVAILABLE_FROM',
   SET_AVAILABLE_UNTIL = 'SET_AVAILABLE_UNTIL',
   SET_AVAILABLE = 'SET_AVAILABLE',
-  SET_HOST_ID = 'SET_HOST_ID',
+
   SET_IMAGE_URLS = 'SET_IMAGE_URLS',
+  REMOVE_IMAGE_URL = 'REMOVE_IMAGE_URL',
   SET_ISSUBMITTING = 'SET_ISSUBMITTING',
   SET_ERRORS = 'SET_ERRORS',
 }
@@ -78,8 +76,12 @@ const updatePropertyFormReducer = (
       return { ...state, availableUntil: payload as Date };
     case UpdatePropertyFormActionType.SET_AVAILABLE:
       return { ...state, available: payload as boolean };
-    case UpdatePropertyFormActionType.SET_HOST_ID:
-      return { ...state, hostId: payload as string };
+    case UpdatePropertyFormActionType.REMOVE_IMAGE_URL:
+      const index = payload as number;
+      return {
+        ...state,
+        imageUrls: state.imageUrls.filter((_, i) => i !== index),
+      };
     case UpdatePropertyFormActionType.SET_IMAGE_URLS:
       return { ...state, imageUrls: payload as string[] };
     case UpdatePropertyFormActionType.SET_ISSUBMITTING:

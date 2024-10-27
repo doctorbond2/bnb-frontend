@@ -20,7 +20,7 @@ export default function RootLayout({
         <body>
           <TokenChecker />
           <HeaderLayout />
-          <div className="md:px-3">{children}</div>
+          <div>{children}</div>
         </body>
       </html>
     </StoreProvider>

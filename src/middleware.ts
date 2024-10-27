@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token');
   const admin = request.cookies.get('admin');
-  const protectedRoutes = ['/protected', '/book', '/another-protected-route'];
+  const protectedRoutes = ['/protected', '/book', '/user/:path*'];
   console.log('token:', token);
 
   if (token) {
@@ -30,5 +30,12 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/login', '/login/register', '/protected/:path*', '/book/:path*'],
+  matcher: [
+    '/login',
+    '/login/register',
+    '/protected/:path*',
+    '/book/:path*',
+    '/user/:path*',
+    '/admin/:path*',
+  ],
 };

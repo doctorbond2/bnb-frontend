@@ -19,11 +19,7 @@ export default function ProfilePageLayout({ userId }: { userId: string }) {
   return (
     <div>
       {isLoggedInUser ? (
-        <LoggedInUserProfile
-          user={user}
-          bookings={bookings}
-          properties={properties}
-        />
+        <LoggedInUserProfile user={user} />
       ) : (
         <UserProfile userId={userId} />
       )}
