@@ -6,6 +6,7 @@ import {
   BookingFormAction as Action,
   BookingFormActionType as TYPE,
 } from '@/reducer/bookingFormReducer';
+
 interface BookingDate {
   startDate: string;
   endDate: string;
@@ -31,6 +32,7 @@ function DatePicker({
     from: booking.startDate,
     to: booking.endDate,
   }));
+
   const formatDate = (date: Date | undefined): string => {
     if (date instanceof Date && !isNaN(date.getTime())) {
       return date.toISOString();
@@ -39,8 +41,10 @@ function DatePicker({
   };
 
   return (
-    <div>
-      <h2>Select a start date</h2>
+    <div className="p-4 bg-gray-50 rounded-lg shadow-md space-y-6">
+      <h2 className="text-lg font-semibold text-gray-700">
+        Select a Start Date
+      </h2>
       <Flatpickr
         value={selectedStartDate as Date}
         onChange={(selectedDates) => {
@@ -58,17 +62,20 @@ function DatePicker({
           disable: disabledRanges,
         }}
         name="startDate"
+        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       {selectedStartDate && (
-        <p>
+        <p className="text-gray-600 mt-2">
           Selected Start Date:{' '}
-          {selectedStartDate instanceof Date
-            ? selectedStartDate.toLocaleDateString()
-            : selectedStartDate}
+          <span className="font-medium text-gray-800">
+            {selectedStartDate.toLocaleDateString()}
+          </span>
         </p>
       )}
 
-      <h2>Select an end date</h2>
+      <h2 className="text-lg font-semibold text-gray-700">
+        Select an End Date
+      </h2>
       <Flatpickr
         value={selectedEndDate as Date}
         onChange={(selectedDates) => {
@@ -76,12 +83,10 @@ function DatePicker({
             alert('End date cannot be before start date.');
             return;
           }
-          console.log('selectedDates', formatDate(selectedDates[0]));
           dispatch({
             type: TYPE.SET_ENDDATE,
             payload: formatDate(selectedDates[0]),
           });
-          console.log('selected; ', selectedDates[0]);
           setSelectedEndDate(selectedDates[0]);
         }}
         options={{
@@ -91,13 +96,14 @@ function DatePicker({
           disable: disabledRanges,
         }}
         name="endDate"
+        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       {selectedEndDate && (
-        <p>
+        <p className="text-gray-600 mt-2">
           Selected End Date:{' '}
-          {selectedEndDate instanceof Date
-            ? selectedEndDate.toLocaleDateString()
-            : selectedEndDate}
+          <span className="font-medium text-gray-800">
+            {selectedEndDate.toLocaleDateString()}
+          </span>
         </p>
       )}
     </div>

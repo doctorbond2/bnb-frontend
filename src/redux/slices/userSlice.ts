@@ -34,6 +34,7 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.loggedIn = true;
       state.isLoading = false;
+
       state.user = action.payload;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
@@ -50,7 +51,6 @@ export const { setUser, setLoading, setError } = userSlice.actions;
 
 export const checkUserLocalStorage = () => (dispatch: AppDispatch) => {
   const user = localStorageHandler.getfromStorage(LocalStorageKeys.USER_STATE);
-
   if (user) {
     dispatch(setUser(user as User));
   } else {

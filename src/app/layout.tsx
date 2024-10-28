@@ -20,7 +20,9 @@ export default function RootLayout({
         <body>
           <TokenChecker />
           <HeaderLayout />
-          <div>{children}</div>
+          <div className="md:px-4 py-4 bg-slate-100 min-h-[100vh]">
+            {children}
+          </div>
         </body>
       </html>
     </StoreProvider>

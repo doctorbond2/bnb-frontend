@@ -4,6 +4,7 @@ import { Property } from '@/models/interfaces/property';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import useStoreData from '@/lib/hooks/useStoreData';
+import Link from 'next/link';
 
 export default function HPpropertyCard({
   property: { name, images, price_per_night, address, id, host },
@@ -21,7 +22,9 @@ export default function HPpropertyCard({
     }
     router.push(`/book/${id}`);
   };
-
+  if (!host) {
+    return <div>property not found</div>;
+  }
   return (
     <div className="flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden max-w-sm md:max-w-full">
       <div className="w-full md:w-[30%] h-48 bg-gray-100 flex items-center justify-center">
@@ -47,6 +50,7 @@ export default function HPpropertyCard({
           {host.firstName} {host.lastName}
         </p>
       </div>
+      <Link href={'/properties/' + id}>Details</Link>
       <div className="p-4">
         <button
           onClick={bookNow}

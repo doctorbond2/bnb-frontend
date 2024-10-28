@@ -2,12 +2,12 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token');
-  const admin = request.cookies.get('admin');
+  const token = request.cookies.get('token')?.value;
+  const admin = request.cookies.get('admin')?.value;
   const protectedRoutes = ['/protected', '/book', '/user/:path*'];
-  console.log('token:', token);
 
   if (token) {
+    console.log('token:', token);
     if (
       request.nextUrl.pathname === '/login' ||
       request.nextUrl.pathname === '/login/register'

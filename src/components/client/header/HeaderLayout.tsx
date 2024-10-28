@@ -108,14 +108,12 @@ export default function HeaderLayout() {
           Profile
         </Link>
         {!user.id ? (
-          <button
-            onClick={() => {
-              router.push('/login');
-            }}
+          <Link
+            href={'/login'}
             className="text-gray-700 border rounded-md px-3 py-1 hover:bg-gray-100"
           >
             Login
-          </button>
+          </Link>
         ) : (
           <button
             onClick={() => {
@@ -127,12 +125,14 @@ export default function HeaderLayout() {
             Logout
           </button>
         )}
-        <Link
-          href="login/register"
-          className="text-gray-700 hover:text-blue-600"
-        >
-          Register
-        </Link>
+        {!user.id && (
+          <Link
+            href="login/register"
+            className="text-gray-700 hover:text-blue-600"
+          >
+            Register
+          </Link>
+        )}
       </div>
     </header>
   );

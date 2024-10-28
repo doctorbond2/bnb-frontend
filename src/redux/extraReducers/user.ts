@@ -16,6 +16,7 @@ export async function userExtraReducers(
         state.user.firstName = action.payload.user.firstName;
         state.user.lastName = action.payload.user.lastName;
         state.user.email = action.payload.user.email;
+        state.user.admin = action.payload.user.admin;
       } else {
         return;
       }

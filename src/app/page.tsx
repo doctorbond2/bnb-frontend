@@ -6,7 +6,6 @@ const getPropertyList = async () => {
     url: '/api/property',
     method: 'GET',
   });
-  console.log('Property list:', response);
   return response;
 };
 export default async function Home() {

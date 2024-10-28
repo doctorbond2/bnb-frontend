@@ -1,7 +1,10 @@
 'use client';
-import { User } from '@/models/interfaces/user';
 
-export default function LoggedInUserProfile({ user }: { user: User }) {
+import useStoreData from '@/lib/hooks/useStoreData';
+
+export default function LoggedInUserProfile() {
+  const { user } = useStoreData();
+  console.log('user:', user);
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">Profile</h2>
@@ -25,12 +28,6 @@ export default function LoggedInUserProfile({ user }: { user: User }) {
             <span className="font-medium text-gray-700 w-32">Email:</span>
             <span className="text-gray-900">{user.email}</span>
           </li>
-          {user.fullName && (
-            <li className="flex items-center">
-              <span className="font-medium text-gray-700 w-32">Full Name:</span>
-              <span className="text-gray-900">{user.fullName}</span>
-            </li>
-          )}
           {user.admin && (
             <li className="flex items-center">
               <span className="font-medium text-gray-700 w-32">Role:</span>
