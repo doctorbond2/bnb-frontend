@@ -1,5 +1,5 @@
 import { AppDispatch } from '@/redux/store';
-import RETRY_REFRESHTOKEN from './handleTokenRefresh';
+import { RETRY_REFRESHTOKEN } from './handleTokenRefresh';
 import { handleApiError as apiError } from './error';
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export interface SendRequestConfig {

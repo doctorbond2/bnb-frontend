@@ -119,8 +119,8 @@ export default function NewBookingForm({
           {property && (
             <DatePicker
               bookings={property.bookings}
-              availableFrom={formatDate(property.availableFrom)}
-              availableUntil={formatDate(property.availableUntil)}
+              availableFrom={formatDate(property.availableFrom as Date)}
+              availableUntil={formatDate(property.availableUntil as Date)}
               dispatch={updateForm}
             />
           )}

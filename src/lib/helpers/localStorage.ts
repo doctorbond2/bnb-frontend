@@ -9,9 +9,6 @@ const setInStorage = <T>(key: LocalStorageKeys, value: T): void => {
   }
 };
 const getfromStorage = <T>(key: LocalStorageKeys): T | null => {
-  if (typeof window === 'undefined') {
-    return null;
-  }
   const storedItem = localStorage.getItem(key);
   if (!storedItem) {
     return null;

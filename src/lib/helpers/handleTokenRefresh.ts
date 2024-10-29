@@ -1,9 +1,9 @@
-import { refreshToken } from '@/redux/thunks/user';
 import { logout } from '@/redux/slices/userSlice';
 import { handleApiError as apiError } from './error';
+import { refreshTokenRequest } from './auth';
 import { AppDispatch } from '@/redux/store';
 
-export const handleTokenRefresh = async (
+export const RETRY_REFRESHTOKEN = async (
   dispatch: AppDispatch,
   options: RequestInit,
   URL: string,
@@ -12,9 +12,9 @@ export const handleTokenRefresh = async (
   console.log('Retrying...');
 
   try {
-    const refreshResponse = await dispatch(refreshToken()).unwrap();
+    const refreshResponse = await refreshTokenRequest();
     if (refreshResponse) {
-      console.log('Refresh token success');
+      console.log('Refresh token success CLIENT');
       const response = await fetch(URL, { ...options, headers });
 
       if (!response.ok) {
@@ -32,4 +32,3 @@ export const handleTokenRefresh = async (
     throw new Error('Session expired. Please log in again.');
   }
 };
-export default handleTokenRefresh;

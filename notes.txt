@@ -16,3 +16,6 @@ TODO: Flatpickr för dates i NewBookingForm och NewPropertyForm
 TODO: Implementera Cloundinary för image handling
 
 TODO: Se till att hosts inte kan boka sina egna properties
+
+TODO later: Fixa varförr man måste refresha för att logga in igen
+Kanske något med att state inte återställs.

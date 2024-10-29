@@ -22,6 +22,7 @@ export interface Booking {
   confirmationCode: string;
   status: BookingStatus;
   created_by: UserId;
+  cancelled?: boolean;
 }
 export interface BookingFormData {
   propertyId: PropertyId;

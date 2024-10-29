@@ -1,7 +1,7 @@
 'use client';
 
 import useStoreData from '@/lib/hooks/useStoreData';
-
+import Link from 'next/link';
 export default function LoggedInUserProfile() {
   const { user } = useStoreData();
   console.log('user:', user);
@@ -35,6 +35,7 @@ export default function LoggedInUserProfile() {
             </li>
           )}
         </ul>
+        {user.admin && <Link href="/admin">Go to adminpage</Link>}
       </div>
     </div>
   );

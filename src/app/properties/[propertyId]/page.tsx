@@ -1,11 +1,12 @@
 import { sendRequest } from '@/lib/helpers/fetch';
+import { Property } from '@/models/interfaces/property';
 
 export default async function PropertyDetailPage({
   params,
 }: {
   params: { propertyId: string };
 }) {
-  const response = await sendRequest({
+  const response: Property = await sendRequest({
     url: `/api/property/${params.propertyId}`,
     method: 'GET',
   });
@@ -42,7 +43,7 @@ export default async function PropertyDetailPage({
             Available From:
           </span>
           <span className="text-gray-700">
-            {formatDate(property.availableFrom)}
+            {formatDate(property.availableFrom as string)}
           </span>
         </div>
 
@@ -51,7 +52,7 @@ export default async function PropertyDetailPage({
             Available Until:
           </span>
           <span className="text-gray-700">
-            {formatDate(property.availableUntil)}
+            {formatDate(property.availableUntil as string)}
           </span>
         </div>
 
@@ -67,11 +68,6 @@ export default async function PropertyDetailPage({
             {property.available ? 'Available' : 'Unavailable'}
           </span>
         </div>
-      </div>
-
-      <div className="mt-8 text-sm text-gray-500">
-        <p>Created At: {formatDate(property.createdAt)}</p>
-        <p>Last Updated: {formatDate(property.updatedAt)}</p>
       </div>
     </div>
   );

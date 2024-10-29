@@ -9,7 +9,9 @@ export default function LoginForm() {
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
   const router = useRouter();
   const { dispatch } = useStore();
-  const submitlogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submitlogin = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     setIsLoggingIn(true);
     const success = await handleLogin(e, dispatch);
     if (success) {
@@ -19,7 +21,11 @@ export default function LoginForm() {
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+      <div
+        className={`${
+          isLoggingIn && 'hidden'
+        } bg-white p-6 rounded-lg shadow-lg max-w-sm w-full`}
+      >
         <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
 
         <div className="mb-4">
@@ -34,6 +40,7 @@ export default function LoginForm() {
                   : 'bg-gray-200 text-gray-700'
               }`}
               onClick={() => setLoginType('username')}
+              type="button"
             >
               Username
             </button>
@@ -103,6 +110,7 @@ export default function LoginForm() {
 
           <button
             type="submit"
+            disabled={isLoggingIn}
             className="w-full bg-blue-500 text-white font-bold py-2 rounded-lg hover:bg-blue-600 transition-colors"
           >
             Submit
@@ -111,11 +119,18 @@ export default function LoginForm() {
         <div className="mt-4">
           <h3 className={`${isLoggingIn && 'hidden'}`}>
             New user? Create an account{' '}
-            <Link href="/login/register" className={`font-bold`}>
-              here
+            <Link href="/login/register">
+              <span className="font-bold">here</span>
             </Link>
           </h3>
         </div>
+      </div>
+      <div
+        className={`${
+          isLoggingIn && 'block'
+        } hidden bg-white p-6 rounded-lg shadow-lg max-w-sm w-full`}
+      >
+        Logging in...
       </div>
     </div>
   );

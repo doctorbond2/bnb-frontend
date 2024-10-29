@@ -1,7 +1,8 @@
 import localStorageHandler from './localStorage';
 import { LocalStorageKeys } from '@/models/enum/localstorage';
-import { logout } from '@/redux/slices/userSlice';
-import { cookies } from 'next/headers';
+import { RefreshTokenResponse } from '@/redux/thunks/user';
+import { sendRequest } from './fetch';
+
 import { AppDispatch } from '@/redux/store';
 import { refreshToken } from '@/redux/thunks/user';
 
@@ -48,36 +49,54 @@ export const authenicateUserTokensExpiry = async (
     }
   }
 };
-// export const verifyToken = async (): Promise<TokenPayload | null> => {
-//   const cookieStore = cookies();
-//   const token = cookieStore.get('token')?.value;
+export const verifyToken = async (
+  token: string
+): Promise<TokenPayload | null> => {
+  if (!token) {
+    return null;
+  }
 
-//   if (!token) {
-//     return null;
-//   }
+  try {
+    const secret = new TextEncoder().encode(SECRET_KEY);
 
-//   try {
-//     const secret = new TextEncoder().encode(SECRET_KEY);
+    const { payload }: { payload: TokenPayload } = await jose.jwtVerify(
+      token,
+      secret,
+      {
+        algorithms: ['HS256'],
+      }
+    );
 
-//     const { payload }: { payload: TokenPayload } = await jose.jwtVerify(
-//       token,
-//       secret,
-//       {
-//         algorithms: ['HS256'],
-//       }
-//     );
+    if (typeof payload !== 'object' || !payload.id) {
+      return null;
+    }
 
-//     if (typeof payload !== 'object' || !payload.id) {
-//       return null;
-//     }
-
-//     return payload;
-//   } catch (err) {
-//     if (err instanceof jose.errors.JWTExpired) {
-//       console.log('Token has expired:');
-//     } else {
-//       console.log('JWT verification error:');
-//     }
-//     return null;
-//   }
-// };
+    return payload;
+  } catch (err) {
+    if (err instanceof jose.errors.JWTExpired) {
+      console.log('Token has expired:');
+    } else {
+      console.log('JWT verification error:');
+    }
+    return null;
+  }
+};
+export const refreshTokenRequest = async () => {
+  try {
+    const response: RefreshTokenResponse = await sendRequest({
+      url: '/api/auth/refreshToken',
+      method: 'POST',
+    });
+    localStorageHandler.setInStorage(
+      LocalStorageKeys.REFRESHTOKEN_EXPIRY,
+      response.refreshTokenExpiry
+    );
+    localStorageHandler.setInStorage(
+      LocalStorageKeys.TOKEN_EXPIRY,
+      response.tokenExpiry
+    );
+    return response;
+  } catch {
+    throw new Error('Failed to refresh token');
+  }
+};

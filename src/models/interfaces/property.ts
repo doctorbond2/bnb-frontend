@@ -9,13 +9,14 @@ export interface Property {
   address: string;
   city: string;
   price_per_night: number;
-  availableFrom?: Date;
-  availableUntil?: Date;
+  availableFrom?: Date | string;
+  availableUntil?: Date | string;
   available: boolean;
   host: User;
   hostId: string;
   bookings: Booking[];
   images?: Image[];
+  deletedAt?: Date | string;
 }
 export interface PropertyFormData {
   name: string;
