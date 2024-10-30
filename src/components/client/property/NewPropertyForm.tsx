@@ -22,7 +22,6 @@ export default function NewPropertyForm() {
   const { user } = useStoreData();
   const { dispatch } = useStore();
   const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('input changed: ', e.target.value);
     setImageUrlInput(e.target.value);
   };
 
@@ -81,125 +80,152 @@ export default function NewPropertyForm() {
   return (
     <>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+        <div className="bg-white p-8 rounded-lg shadow-lg max-w-2xl w-full space-y-4">
           <form
             onSubmit={(e) => {
               create(e, dispatch);
             }}
+            className="space-y-4"
           >
-            PROPERTY NAME:
-            <input
-              type="text"
-              name="property_name"
-              placeholder="Enter property name"
-              required
-              onChange={(e) => {
-                updateForm({
-                  type: ACTION.SET_NAME,
-                  payload: e.currentTarget.value,
-                });
-              }}
-            />
-            <br />
-            CITY:
-            <input
-              type="text"
-              name="city"
-              placeholder="Enter city"
-              required
-              onChange={(e) => {
-                updateForm({
-                  type: ACTION.SET_CITY,
-                  payload: e.currentTarget.value,
-                });
-              }}
-            />
-            <br />
-            ADDRESS:
-            <input
-              type="text"
-              name="address"
-              placeholder="Enter address"
-              required
-              onChange={(e) => {
-                updateForm({
-                  type: ACTION.SET_ADDRESS,
-                  payload: e.currentTarget.value,
-                });
-              }}
-            />
-            <br />
-            COUNRY:
-            <select
-              required
-              name="country"
-              onChange={(e) => {
-                updateForm({
-                  type: ACTION.SET_COUNTRY,
-                  payload: e.currentTarget.value,
-                });
-              }}
-            >
-              {countries.map((country: { name: string; code: string }) => (
-                <option key={country.code}>{country.name}</option>
-              ))}
-            </select>
-            <br />
-            <PropertyDates dispatch={updateForm} />
-            <br />
-            <input
-              type="text"
-              name="property_images"
-              placeholder="Image URL"
-              onChange={handleImageUrlChange}
-              value={imageUrlInput}
-            />
-            <button type="button" onClick={addImageUrl}>
-              Add Image URL
-            </button>
-            <br />
-            PRICE PER NIGHT:
-            <br />
-            <input
-              pattern="[0-9]*"
-              inputMode="numeric"
-              placeholder="Price per night"
-              name="price_per_night"
-              type="text"
-              value={state.price_per_night}
-              onChange={(e) =>
-                updateForm({
-                  type: ACTION.SET_PRICE_PER_NIGHT,
-                  payload: e.target.value.replace(/[^0-9]/g, ''),
-                })
-              }
-            />
-            <button type="submit">Create property</button>
-          </form>
-          <div id="image-urls-showcase">
-            {state.imageUrls.map((url: string, index: number) => (
-              <div key={url} className="flex flex-row-reverse w-40 relative">
+            <label className="block text-gray-700 font-semibold">
+              Property Name:
+              <input
+                type="text"
+                name="property_name"
+                placeholder="Enter property name"
+                required
+                className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => {
+                  updateForm({
+                    type: ACTION.SET_NAME,
+                    payload: e.currentTarget.value,
+                  });
+                }}
+              />
+            </label>
+
+            <label className="block text-gray-700 font-semibold">
+              City:
+              <input
+                type="text"
+                name="city"
+                placeholder="Enter city"
+                required
+                className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => {
+                  updateForm({
+                    type: ACTION.SET_CITY,
+                    payload: e.currentTarget.value,
+                  });
+                }}
+              />
+            </label>
+
+            <label className="block text-gray-700 font-semibold">
+              Address:
+              <input
+                type="text"
+                name="address"
+                placeholder="Enter address"
+                required
+                className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => {
+                  updateForm({
+                    type: ACTION.SET_ADDRESS,
+                    payload: e.currentTarget.value,
+                  });
+                }}
+              />
+            </label>
+
+            <label className="block text-gray-700 font-semibold">
+              Country:
+              <select
+                required
+                name="country"
+                className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => {
+                  updateForm({
+                    type: ACTION.SET_COUNTRY,
+                    payload: e.currentTarget.value,
+                  });
+                }}
+              >
+                {countries.map((country: { name: string; code: string }) => (
+                  <option key={country.code}>{country.name}</option>
+                ))}
+              </select>
+            </label>
+
+            {/* PropertyDates component */}
+            <div className="mt-4">
+              <PropertyDates dispatch={updateForm} />
+            </div>
+
+            <label className="block text-gray-700 font-semibold">
+              Image URL:
+              <div className="flex space-x-2 mt-1">
+                <input
+                  type="text"
+                  name="property_images"
+                  placeholder="Image URL"
+                  value={imageUrlInput}
+                  className="p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  onChange={handleImageUrlChange}
+                />
                 <button
-                  className="w-[25%]"
+                  type="button"
+                  onClick={addImageUrl}
+                  className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
+                >
+                  Add
+                </button>
+              </div>
+            </label>
+
+            <label className="block text-gray-700 font-semibold">
+              Price Per Night:
+              <input
+                pattern="[0-9]*"
+                inputMode="numeric"
+                placeholder="Price per night"
+                name="price_per_night"
+                type="text"
+                value={state.price_per_night}
+                className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) =>
+                  updateForm({
+                    type: ACTION.SET_PRICE_PER_NIGHT,
+                    payload: e.target.value.replace(/[^0-9]/g, ''),
+                  })
+                }
+              />
+            </label>
+
+            <button
+              type="submit"
+              className="w-full bg-indigo-500 text-white p-2 rounded mt-4 hover:bg-indigo-600"
+            >
+              Create property
+            </button>
+          </form>
+
+          {/* Bilder */}
+          <div id="image-urls-showcase" className="space-y-4 mt-6">
+            {state.imageUrls.map((url: string, index: number) => (
+              <div key={url} className="flex items-center space-x-2 w-full">
+                <button
                   onClick={() => {
                     updateForm({
                       type: ACTION.REMOVE_IMAGE_URL,
                       payload: index,
                     });
-                    console.log('test', index);
                   }}
-                  style={{
-                    backgroundColor: 'red',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                  }}
+                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
                 >
                   X
                 </button>
-                <div>
-                  {/* <h2>{url.slice(0, 20)}</h2> */}
+                <div className="flex-grow">
                   <ProxyImage imageUrl={url} />
                 </div>
               </div>

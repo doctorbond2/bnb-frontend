@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import useStoreData from '@/lib/hooks/useStoreData';
+import useStore from '@/lib/hooks/useStore';
 
 const ProfileLayout = ({
   children,

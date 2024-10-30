@@ -22,9 +22,9 @@ function PropertyDates({ dispatch }: PropertyDateProps) {
   };
 
   return (
-    <div>
+    <div className="space-y-4">
       <Flatpickr
-        className="border-2 rounded-sm border-gray-200"
+        className="w-full p-2 border-2 rounded-md border-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         placeholder="Property available from"
         value={selectedStartDate as Date}
         onChange={(selectedDates) => {
@@ -33,7 +33,7 @@ function PropertyDates({ dispatch }: PropertyDateProps) {
             type: TYPE.SET_AVAILABLEFROM,
             payload: formatDate(selectedDates[0]),
           });
-          // Clear end date when start date is selected
+
           setSelectedEndDate(null);
         }}
         options={{
@@ -44,11 +44,13 @@ function PropertyDates({ dispatch }: PropertyDateProps) {
         name="availableFrom"
       />
       {selectedStartDate && (
-        <p>Selected Start Date: {selectedStartDate.toLocaleDateString()}</p>
+        <p className="text-sm text-gray-600">
+          Available from: {selectedStartDate.toLocaleDateString()}
+        </p>
       )}
 
       <Flatpickr
-        className="border-2 rounded-sm border-gray-200"
+        className="w-full p-2 border-2 rounded-md border-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         placeholder="Property available until"
         value={selectedEndDate as Date}
         onChange={(selectedDates) => {
@@ -70,7 +72,9 @@ function PropertyDates({ dispatch }: PropertyDateProps) {
         name="availableUntil"
       />
       {selectedEndDate && (
-        <p>Selected End Date: {selectedEndDate.toLocaleDateString()}</p>
+        <p className="text-sm text-gray-600">
+          Until: {selectedEndDate.toLocaleDateString()}
+        </p>
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import HeaderLayout from '@/components/client/header/HeaderLayout';
 import StoreProvider from '@/redux/StoreProvider';
+import BookingFetcher from '@/components/client/update/AutoFetchBookings';
 import 'flatpickr/dist/flatpickr.min.css';
 import TokenChecker from '@/components/client/auth/TokenChecker';
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({
     <StoreProvider>
       <html lang="en">
         <body>
+          <BookingFetcher />
           <TokenChecker />
           <HeaderLayout />
           <div className="md:px-4 py-4 bg-slate-100 min-h-[100vh]">

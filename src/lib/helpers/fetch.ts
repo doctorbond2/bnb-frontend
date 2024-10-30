@@ -43,6 +43,7 @@ export const sendRequest = async <T>(
     const response = await fetch(URL, options);
 
     if (response.status === 401 && config.protected && dispatch) {
+      console.log('401 error, retrying with refresh token');
       return await RETRY_REFRESHTOKEN(dispatch, options, URL, headers);
     }
 

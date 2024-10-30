@@ -80,9 +80,9 @@ export default function HeaderLayout() {
             </Link>
             <button
               className="py-2 hover:text-blue-600"
-              onClick={() => {
+              onClick={async () => {
                 toggleDropdown();
-                handleLogout();
+                await handleLogout();
                 router.push('/login');
               }}
             >
@@ -101,12 +101,22 @@ export default function HeaderLayout() {
           alt="Search Icon"
           className="object-cover"
         />
-        <Link
-          href={`/user/${user.id}/profile`}
-          className="text-gray-700 hover:text-blue-600"
-        >
-          Profile
-        </Link>
+        {user.id && (
+          <div className="space-x-3">
+            <Link
+              href={'/host/new'}
+              className="text-gray-700 hover:text-blue-600"
+            >
+              Host New
+            </Link>
+            <Link
+              href={`/user/${user.id}/profile`}
+              className="text-gray-700 hover:text-blue-600"
+            >
+              Profile
+            </Link>
+          </div>
+        )}
         {!user.id ? (
           <Link
             href={'/login'}
@@ -116,8 +126,8 @@ export default function HeaderLayout() {
           </Link>
         ) : (
           <button
-            onClick={() => {
-              handleLogout();
+            onClick={async () => {
+              await handleLogout();
               router.push('/login');
             }}
             className="text-gray-700 border rounded-md px-3 py-1 hover:bg-gray-100"

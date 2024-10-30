@@ -15,6 +15,7 @@ export const getBookings = createAsyncThunk(
       const data: GetBookingsApiResponse = await sendRequest({
         url: '/api/users/bookings',
         method: 'GET',
+        protected: true,
       });
       console.warn(data);
       localStorageHandler.setInStorage(key.BOOKINGS_LIST, data);

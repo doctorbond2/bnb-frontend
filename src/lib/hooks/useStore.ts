@@ -9,8 +9,8 @@ import { updateUser } from '@/redux/thunks/user';
 function useStore() {
   const dispatch = useAppDispatch();
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    await dispatch(logout());
   };
 
   const handleRefreshToken = () => {

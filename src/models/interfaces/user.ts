@@ -22,6 +22,8 @@ export interface RegisterFormData {
   password: string;
   repeat_password: string;
   username: string;
+  admin?: boolean;
+  admin_password?: string;
 }
 export interface LoginFormData {
   email?: string;

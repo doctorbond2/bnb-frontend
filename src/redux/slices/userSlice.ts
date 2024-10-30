@@ -58,23 +58,22 @@ export const checkUserLocalStorage = () => (dispatch: AppDispatch) => {
   }
 };
 export const logout = () => async (dispatch: AppDispatch) => {
-  localStorageHandler.clearMultipleFromStorage([
-    LocalStorageKeys.USER_STATE,
-    LocalStorageKeys.BOOKINGS_LIST,
-    LocalStorageKeys.PROPERTY_LIST,
-    LocalStorageKeys.REFRESHTOKEN_EXPIRY,
-    LocalStorageKeys.TOKEN_EXPIRY,
-  ]);
-
   try {
     await sendRequest({
       url: '/api/auth/logout',
       method: 'POST',
     });
 
-    dispatch(userSlice.actions.setLoading(false));
-    dispatch(userSlice.actions.setUser(user_initialState.user));
-    dispatch(userSlice.actions.setError(null));
+    dispatch(setLoading(false));
+    dispatch(setUser(user_initialState.user));
+    dispatch(setError(null));
+    localStorageHandler.clearMultipleFromStorage([
+      LocalStorageKeys.USER_STATE,
+      LocalStorageKeys.BOOKINGS_LIST,
+      LocalStorageKeys.PROPERTY_LIST,
+      LocalStorageKeys.REFRESHTOKEN_EXPIRY,
+      LocalStorageKeys.TOKEN_EXPIRY,
+    ]);
   } catch (error) {
     console.error('Failed to log out:', error);
   }
