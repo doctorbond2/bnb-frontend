@@ -1,10 +1,10 @@
 import { useAppDispatch } from '@/redux/hooks';
 import { logout, checkUserLocalStorage } from '@/redux/slices/userSlice';
-import { UpdateUserFormData } from '@/models/interfaces/user';
+import { deleteProperty, updateProperty } from '@/redux/thunks/property';
+import { UpdatePropertyFormData } from '@/models/interfaces/property';
 import { refreshToken } from '@/redux/thunks/user';
 import { checkBookingLocalStorage } from '@/redux/slices/bookingSlice';
 import { checkPropertyLocalStorage } from '@/redux/slices/propertySlice';
-import { updateUser } from '@/redux/thunks/user';
 
 function useStore() {
   const dispatch = useAppDispatch();
@@ -28,10 +28,26 @@ function useStore() {
   const checkBookingState = () => {
     dispatch(checkBookingLocalStorage());
   };
+  const handleDeleteProperty = async (id: string) => {
+    return await dispatch(
+      deleteProperty({ dispatch, propertyId: id })
+    ).unwrap();
+  };
+  const handleUpdateProperty = async (
+    data: UpdatePropertyFormData,
+    id: string
+  ) => {
+    console.warn('Handle Update Property');
+    return await dispatch(
+      updateProperty({ data, propertyId: id, dispatch })
+    ).unwrap();
+  };
 
   return {
     handleLogout,
     handleRefreshToken,
+    handleDeleteProperty,
+    handleUpdateProperty,
     checkUserState,
     checkPropertyState,
     checkBookingState,

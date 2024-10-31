@@ -1,6 +1,8 @@
 import { sendServerRequest } from '@/lib/helpers/severFetch';
 import { Booking } from '@/models/interfaces/booking';
-import AllBookingsList from '@/components/client/admin/AllBookingsList';
+import ActiveBookingsList from '@/components/client/admin/ActiveBookings';
+import InactiveBookingsList from '@/components/client/admin/InactiveBookingsList';
+import { BookingStatus } from '@/models/enum/booking';
 
 const getData = async () => {
   const response: Booking[] | undefined = await sendServerRequest({
@@ -15,7 +17,25 @@ export default async function Page() {
     if (!response || response.length < 1) {
       return <div>No bookings found</div>;
     }
-    return <AllBookingsList bookingList={response} />;
+    const activeBookings = response.filter(
+      (booking: Booking) =>
+        booking.status === BookingStatus.ACCEPTED ||
+        booking.status === BookingStatus.PENDING
+    );
+    const inActiveBookings = response.filter(
+      (booking: Booking) =>
+        booking.status === BookingStatus.REJECTED ||
+        booking.status === BookingStatus.CANCELLED
+    );
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+          All Bookings
+        </h1>
+        <ActiveBookingsList activeBookings={activeBookings} />
+        <InactiveBookingsList inActiveBookings={inActiveBookings} />
+      </div>
+    );
   } catch (error) {
     console.error('Error:', error);
     return <div>Error</div>;

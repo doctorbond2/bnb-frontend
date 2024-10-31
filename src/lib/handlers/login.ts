@@ -45,7 +45,7 @@ export const handleLogin = async (
     console.error('Failed to retrieve properties', err);
   }
   try {
-    await dispatch(getBookings());
+    await dispatch(getBookings({ dispatch }));
   } catch (err) {
     console.error('Failed to retrieve bookings', err);
   }

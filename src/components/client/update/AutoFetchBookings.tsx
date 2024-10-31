@@ -17,12 +17,12 @@ export default function BookingFetcher() {
       now - parseInt(lastFetchTimestamp) > REFRESH_INTERVAL
     ) {
       alert('fetching bookings');
-      dispatch(getBookings());
+      dispatch(getBookings({ dispatch: dispatch }));
       localStorage.setItem(LAST_FETCH_KEY, now.toString());
     }
 
     const intervalId = setInterval(() => {
-      dispatch(getBookings());
+      dispatch(getBookings({ dispatch: dispatch }));
       localStorage.setItem(LAST_FETCH_KEY, Date.now().toString());
     }, REFRESH_INTERVAL);
 

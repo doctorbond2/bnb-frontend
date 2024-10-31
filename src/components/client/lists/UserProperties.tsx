@@ -11,6 +11,7 @@ export default function UserProperties() {
   const { dispatch } = useStore();
   const { user, properties } = useStoreData();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<string>('');
 
   const parseCustomerJson = (customer: string | Customer) => {
@@ -91,6 +92,16 @@ export default function UserProperties() {
                       >
                         {booking.status}
                       </button>
+                      {booking.status === BookingStatus.ACCEPTED && (
+                        <button
+                          className="px-4 py-2 border rounded-md mt-2 ml-2 bg-red-500 text-white"
+                          onClick={() => {
+                            setIsCancelModalOpen(true);
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      )}
                     </li>
                   );
                 })}
@@ -133,6 +144,23 @@ export default function UserProperties() {
                 className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
               >
                 Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isCancelModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg relative w-full max-w-md">
+            <h2 className="text-lg font-semibold mb-4">Cancel booking?</h2>
+            <div className="flex justify-end">
+              <button
+                onClick={() => {
+                  setIsCancelModalOpen(false);
+                }}
+                className="absolute top-0 right-0 px-2 py-1 bg-red-500 text-white rounded-full"
+              >
+                X
               </button>
             </div>
           </div>

@@ -23,9 +23,11 @@ export default function UserBookings() {
                 <p className="text-gray-600">
                   Property Name: {booking.property?.name}
                 </p>
-                <p className="text-gray-600">
-                  Confirmation Code: {booking.confirmationCode}
-                </p>
+                {booking.confirmationCode && (
+                  <p className="text-gray-600">
+                    Confirmation Code: {booking.confirmationCode}
+                  </p>
+                )}
                 <p className="text-gray-600">
                   Host: {booking.property?.host.firstName}{' '}
                   {booking.property?.host.lastName}

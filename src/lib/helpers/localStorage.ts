@@ -38,6 +38,17 @@ function setRefreshToken(token: string): void {
     Date.now() + refreshTokenExpiryTime
   );
 }
+function replaceItemInStorageById<T extends { id: string }>(
+  key: LocalStorageKeys,
+  newItem: T
+): void {
+  const item = localStorage.getItem(key);
+  const oldArray: T[] = item ? JSON.parse(item) : [];
+  const newArray = oldArray.map((item: T) =>
+    item.id === newItem.id ? newItem : item
+  );
+  localStorage.setItem(key, JSON.stringify(newArray));
+}
 function clearToken(): void {
   localStorage.removeItem(LocalStorageKeys.TOKEN);
   localStorage.removeItem(LocalStorageKeys.TOKEN_EXPIRY);
@@ -56,6 +67,7 @@ const localStorageHandler = {
   logStoredValue,
   deleteFromStorage,
   clearMultipleFromStorage,
+  replaceItemInStorageById,
   setToken,
   setRefreshToken,
   clearToken,

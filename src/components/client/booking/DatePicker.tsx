@@ -29,10 +29,10 @@ function DatePicker({
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
 
   const disabledRanges = bookings.map((booking) => ({
-    from: booking.startDate,
-    to: booking.endDate,
+    from: new Date(booking.startDate),
+    to: new Date(booking.endDate),
   }));
-
+  console.log(disabledRanges);
   const formatDate = (date: Date | undefined): string => {
     if (date instanceof Date && !isNaN(date.getTime())) {
       return date.toISOString();

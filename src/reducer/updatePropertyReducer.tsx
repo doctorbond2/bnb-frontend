@@ -4,8 +4,8 @@ export interface UpdatePropertyFormState {
   city: string;
   address: string;
   price_per_night: number | string;
-  availableFrom: Date | null;
-  availableUntil: Date | null;
+  availableFrom: Date;
+  availableUntil: Date;
   available: boolean;
   imageUrls: string[];
   isSubmitting: boolean;
@@ -18,8 +18,8 @@ export const initialUpdatePropertyFormState: UpdatePropertyFormState = {
   city: '',
   address: '',
   price_per_night: 0,
-  availableFrom: null,
-  availableUntil: null,
+  availableFrom: new Date(),
+  availableUntil: new Date(),
   available: false,
   imageUrls: [],
   isSubmitting: false,

@@ -8,23 +8,20 @@ import {
   UpdatePropertyFormData,
 } from '@/models/interfaces/property';
 import { Property } from '@/models/interfaces/property';
-
 import { AppDispatch } from '../store';
 type GetPropertiesApiResponse = Property[];
-export interface UpdatePropertyResponse {
-  updatedProperty: Property;
-  message?: string;
-  status?: number;
-}
 export const getHostedProperties = createAsyncThunk(
   'property/getHostedProperties',
-  async (_, { rejectWithValue }) => {
+  async (credentials: { dispatch: AppDispatch }, { rejectWithValue }) => {
     try {
-      const data: GetPropertiesApiResponse = await sendRequest({
-        url: '/api/users/properties',
-        method: 'GET',
-        protected: true,
-      });
+      const data: GetPropertiesApiResponse = await sendRequest(
+        {
+          url: '/api/users/properties',
+          method: 'GET',
+          protected: true,
+        },
+        credentials.dispatch
+      );
       console.warn(data);
       localStorageHandler.setInStorage(key.PROPERTY_LIST, data);
       return data;
@@ -49,8 +46,6 @@ export const createProperty = createAsyncThunk(
         },
         credentials.dispatch
       );
-      credentials.dispatch(getHostedProperties());
-
       return data;
     } catch (err: unknown) {
       rejectWithValue(thunkError(err));
@@ -68,21 +63,42 @@ export const updateProperty = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response: UpdatePropertyResponse = await sendRequest(
+      const data: Property = await sendRequest(
         {
-          url: '/api/protected/property/' + credentials.propertyId,
+          url: '/api/protected/property/:id',
           method: 'PUT',
           body: { ...credentials.data },
           protected: true,
+          id: credentials.propertyId,
         },
         credentials.dispatch
       );
-
-      credentials.dispatch(getHostedProperties());
-      console.log('response:', response);
-      return response.updatedProperty;
+      localStorageHandler.replaceItemInStorageById(key.PROPERTY_LIST, data);
+      return data;
     } catch (err: unknown) {
       return rejectWithValue(thunkError(err));
+    }
+  }
+);
+export const deleteProperty = createAsyncThunk(
+  'property/deleteProperty',
+  async (
+    credentials: { dispatch: AppDispatch; propertyId: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      await sendRequest(
+        {
+          url: '/api/protected/property/:id',
+          method: 'DELETE',
+          protected: true,
+          id: credentials.propertyId,
+        },
+        credentials.dispatch
+      );
+      return credentials.propertyId;
+    } catch (err: unknown) {
+      rejectWithValue(thunkError(err));
     }
   }
 );
