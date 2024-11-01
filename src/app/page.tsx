@@ -16,16 +16,6 @@ export default async function Home() {
   }
   return (
     <div>
-      {/* <h2>{user && user.firstName ? user.firstName : 'Not logged in'}</h2>
-
-      <button
-        className="border-2 p-4"
-        onClick={() => {
-          dispatch(logout());
-        }}
-      >
-        Logout
-      </button> */}
       <HomePropertyList propertyList={propertyList} />
     </div>
   );

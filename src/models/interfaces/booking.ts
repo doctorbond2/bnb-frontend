@@ -17,12 +17,12 @@ export interface Booking {
   propertyId: PropertyId;
   property?: Property;
   customer: Customer;
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | string;
+  endDate: Date | string;
   confirmationCode: string;
   status: BookingStatus;
   created_by: UserId;
-  cancelled?: boolean;
+  price_total?: number;
 }
 export interface BookingFormData {
   propertyId: PropertyId;

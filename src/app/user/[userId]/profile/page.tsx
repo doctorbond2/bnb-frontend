@@ -4,7 +4,6 @@ export default function ProfilePage({
 }: {
   params: { userId: string };
 }) {
-  console.log('params:', params);
   if (!params.userId) return <div>User not found</div>;
 
   return <ProfilePageLayout />;

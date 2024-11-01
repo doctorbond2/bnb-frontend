@@ -31,7 +31,6 @@ export default function AdminLayout({
         </nav>
       </aside>
 
-      {/* Top Navigation for small screens */}
       <div className="md:hidden bg-white shadow-md">
         <nav className="flex space-x-4 p-4">
           <Link

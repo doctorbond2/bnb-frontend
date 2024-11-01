@@ -44,12 +44,12 @@ export default function HeaderLayout() {
         </button>
 
         <div
-          className={`absolute top-20 left-0 w-full bg-white border-t border-gray-300 shadow-lg transition-transform transform ${
+          className={`absolute top-20 left-0 w-full bg-white border-t rounded-b-lg border-gray-300 shadow-lg transition-transform transform ${
             isDropdownOpen ? 'scale-y-100' : 'scale-y-0'
           } origin-top z-10`}
         >
           <div className={`flex flex-col px-6 py-4 ${user.id ? 'hidden' : ''}`}>
-            <span className="text-gray-600">Not logged in</span>
+            <span className="text-gray-600 cursor-default">Not logged in</span>
             <button
               onClick={() => {
                 router.push('/login');
@@ -72,14 +72,27 @@ export default function HeaderLayout() {
           <div
             className={`flex flex-col px-6 py-4 ${!user.id ? 'hidden' : ''}`}
           >
-            <span className="text-gray-600">Logged in</span>
-            <Link href={`/user/${user.id}/profile`} className="py-2">
+            <span className="text-gray-400 cursor-default w-fit py-2">
+              Logged in
+            </span>
+            <Link href={`/user/${user.id}/profile`} className="py-2 w-fit">
               <button onClick={toggleDropdown} className="hover:text-blue-600">
                 Profile
               </button>
             </Link>
+            <Link
+              href={'/host/new'}
+              className="text-gray-700 hover:text-blue-600 w-fit"
+            >
+              <button
+                onClick={toggleDropdown}
+                className="hover:text-blue-600 py-2"
+              >
+                Host New
+              </button>
+            </Link>
             <button
-              className="py-2 hover:text-blue-600"
+              className="py-2 hover:text-blue-600 w-fit"
               onClick={async () => {
                 toggleDropdown();
                 await handleLogout();

@@ -1,5 +1,3 @@
-// import useStore from '@/lib/hooks/useStore';
-// import useStoreData from '@/lib/hooks/useStoreData';
 import { Property } from '@/models/interfaces/property';
 import { sendRequest } from '@/lib/helpers/fetch';
 import NewBookingForm from '@/components/client/booking/NewBookingForm';
@@ -21,7 +19,7 @@ export default async function Page({
       console.error('Property not found:', propertyId);
       return <div>Property not found</div>;
     }
-    console.log('Making booking for property:', propertyId);
+    console.log('Making booking for property:', propertyToBook);
     return <NewBookingForm propertyId={propertyId} property={propertyToBook} />;
   } catch (error) {
     console.error('Error:', error);

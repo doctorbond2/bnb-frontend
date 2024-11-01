@@ -1,8 +1,6 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import useStoreData from '@/lib/hooks/useStoreData';
-import useStore from '@/lib/hooks/useStore';
 
 const ProfileLayout = ({
   children,
@@ -12,19 +10,16 @@ const ProfileLayout = ({
   params: { userId: string };
 }) => {
   const { userId } = params;
-  const { user } = useStoreData();
-
-  const isMyProfile = user.id === userId;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {isMyProfile && (
-        <nav className="bg-white shadow-md rounded-lg mb-6">
-          <ul className="flex flex-wrap space-x-4 p-4">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
+      <aside className="hidden md:block w-64 bg-white p-4 shadow-md rounded-md">
+        <nav className="bg-white min-h-screen">
+          <ul className="flex flex-col  p-8 space-y-4">
             <li>
               <Link
                 href={`/user/${userId}/profile`}
-                className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                className="block text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md transition transform hover:scale-105"
               >
                 Profile Overview
               </Link>
@@ -32,7 +27,7 @@ const ProfileLayout = ({
             <li>
               <Link
                 href={`/user/${userId}/profile/update`}
-                className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                className="block text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md transition transform hover:scale-105"
               >
                 Update Profile
               </Link>
@@ -40,7 +35,7 @@ const ProfileLayout = ({
             <li>
               <Link
                 href={`/user/${userId}/profile/bookings`}
-                className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                className="block text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md transition transform hover:scale-105"
               >
                 Bookings
               </Link>
@@ -48,15 +43,61 @@ const ProfileLayout = ({
             <li>
               <Link
                 href={`/user/${userId}/profile/hostedProperties`}
-                className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                className="block text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md transition transform hover:scale-105"
               >
                 Your Properties
               </Link>
             </li>
           </ul>
         </nav>
-      )}
-      <main>{children}</main>
+      </aside>
+
+      <div className="md:hidden bg-white shadow-md rounded-md mx-4">
+        <nav className="flex space-x-4 p-4">
+          <ul className="flex flex-wrap ustify-around">
+            <li>
+              <Link
+                href={`/user/${userId}/profile`}
+                className="block text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md transition transform hover:scale-105"
+              >
+                Profile Overview
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={`/user/${userId}/profile/update`}
+                className="block text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md transition transform hover:scale-105"
+              >
+                Update Profile
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={`/user/${userId}/profile/bookings`}
+                className="block text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md transition transform hover:scale-105"
+              >
+                Bookings
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={`/user/${userId}/profile/hostedProperties`}
+                className="block text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md transition transform hover:scale-105"
+              >
+                Your Properties
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <main className="flex-1 px-4">
+        <div className="bg-white p-4 rounded-md shadow-md min-h-full mt-4 md:mt-0">
+          <div className=" bg-gray-100 rounded min-h-screen relative">
+            {children}
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

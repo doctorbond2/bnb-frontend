@@ -40,7 +40,7 @@ export const handleLogin = async (
     return false;
   }
   try {
-    await dispatch(getHostedProperties());
+    await dispatch(getHostedProperties({ dispatch }));
   } catch (err) {
     console.error('Failed to retrieve properties', err);
   }

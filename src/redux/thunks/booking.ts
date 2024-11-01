@@ -65,8 +65,9 @@ export const userCancelBooking = createAsyncThunk(
         },
         credentials.dispatch
       );
+      console.log('replacing with', data);
       localStorageHandler.replaceItemInStorageById(key.BOOKINGS_LIST, data);
-      return credentials.bookingId;
+      return data;
     } catch (err: unknown) {
       rejectWithValue(thunkError(err));
     }

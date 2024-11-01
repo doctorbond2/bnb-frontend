@@ -1,14 +1,18 @@
 'use client';
-import React, { useEffect } from 'react';
-import { useAppDispatch } from '@/redux/hooks';
+import { useEffect } from 'react';
 import { getBookings } from '@/redux/thunks/booking';
 const REFRESH_INTERVAL = 120000;
 const LAST_FETCH_KEY = 'lastFetchTimestamp';
 import useStore from '@/lib/hooks/useStore';
+import useStoreData from '@/lib/hooks/useStoreData';
 export default function BookingFetcher() {
   const { dispatch } = useStore();
+  const { user } = useStoreData();
 
   useEffect(() => {
+    if (!user || !user.id) {
+      return;
+    }
     const lastFetchTimestamp = localStorage.getItem(LAST_FETCH_KEY);
     const now = Date.now();
 
@@ -16,7 +20,6 @@ export default function BookingFetcher() {
       !lastFetchTimestamp ||
       now - parseInt(lastFetchTimestamp) > REFRESH_INTERVAL
     ) {
-      alert('fetching bookings');
       dispatch(getBookings({ dispatch: dispatch }));
       localStorage.setItem(LAST_FETCH_KEY, now.toString());
     }
@@ -27,7 +30,7 @@ export default function BookingFetcher() {
     }, REFRESH_INTERVAL);
 
     return () => clearInterval(intervalId);
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   return null;
 }

@@ -21,6 +21,18 @@ export default function ActiveBookingsList({
       console.log(err);
     }
   };
+  const handleCancelBooking = async (bookingId: string) => {
+    try {
+      const response = await sendRequest({
+        url: '/api/admin/bookings/:id',
+        method: 'PUT',
+        id: bookingId,
+      });
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <section id="active-bookings">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -51,14 +63,37 @@ export default function ActiveBookingsList({
                       {booking.status}
                     </span>
                   </div>
-                  <button
-                    className="bg-black text-red p-2"
-                    onClick={() => {
-                      handleDeleteBooking(booking.id);
-                    }}
-                  >
-                    Hard Delete
-                  </button>
+                  <div className="flex space-x-3 justify-end">
+                    <button
+                      className="bg-black text-red-500 py-2 rounded-md px-6"
+                      onClick={async (e) => {
+                        const decision = confirm('Are you sure?');
+                        if (!decision) {
+                          e.preventDefault();
+                          return;
+                        }
+                        await handleDeleteBooking(booking.id);
+                        alert('Booking Deleted, refreshing page...');
+                        location.reload();
+                      }}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      className="bg-yellow-300 py-2 rounded-md px-6"
+                      onClick={async () => {
+                        const decision = confirm('Are you sure?');
+                        if (!decision) {
+                          return;
+                        }
+                        await handleCancelBooking(booking.id);
+                        alert('Booking Cancelled, refreshing page...');
+                        location.reload();
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                   <div className="text-gray-700">
                     <p className="text-sm">{customer.email}</p>
                     <p>Booked by account: {booking.userId}</p>

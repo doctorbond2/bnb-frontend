@@ -42,10 +42,21 @@ function replaceItemInStorageById<T extends { id: string }>(
   key: LocalStorageKeys,
   newItem: T
 ): void {
+  console.log('Received key:', key);
+  console.log('Received newItem:', newItem);
+  console.log('newItem.id:', newItem?.id);
+  console.log('Replacing item in storage', newItem);
   const item = localStorage.getItem(key);
+  console.log('old item:', JSON.parse(item as string));
   const oldArray: T[] = item ? JSON.parse(item) : [];
+  console.log('old array:', oldArray);
   const newArray = oldArray.map((item: T) =>
     item.id === newItem.id ? newItem : item
+  );
+  console.log('new array:', newArray);
+  console.log(
+    'Item replaced: ',
+    newArray.find((item) => item.id === newItem.id)
   );
   localStorage.setItem(key, JSON.stringify(newArray));
 }

@@ -1,6 +1,6 @@
 import { sendRequest } from '@/lib/helpers/fetch';
 import { Property } from '@/models/interfaces/property';
-
+import CustomImage from '@/components/server/PropertyHomeImage';
 export default async function PropertyDetailPage({
   params,
 }: {
@@ -67,6 +67,15 @@ export default async function PropertyDetailPage({
           >
             {property.available ? 'Available' : 'Unavailable'}
           </span>
+        </div>
+        <div>
+          {property.images?.map((image) => {
+            return (
+              <div className="h-32 w-32">
+                <CustomImage key={image.alt} image={image} />
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

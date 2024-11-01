@@ -27,8 +27,10 @@ export function bookingExtraReducers(
     .addCase(userCancelBooking.pending, handlePending)
     .addCase(userCancelBooking.fulfilled, (state, action) => {
       if (action.payload) {
-        state.list = state.list.filter(
-          (booking) => booking.id !== action.payload
+        state.list = state.list.map((booking) =>
+          action.payload && booking.id === action.payload.id
+            ? { ...booking, ...action.payload }
+            : booking
         );
       }
     });

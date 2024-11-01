@@ -6,7 +6,7 @@ import { BookingFormState } from '@/reducer/bookingFormReducer';
 import { validationHelper } from '../helpers/validate';
 import { BookingFormAction as Action } from '@/reducer/bookingFormReducer';
 import { BookingFormActionType as ACTION } from '@/reducer/bookingFormReducer';
-import { getBookings } from '@/redux/thunks/booking';
+
 import { getHostedProperties } from '@/redux/thunks/property';
 import { Dispatch } from 'react';
 import { sendRequest } from '../helpers/fetch';
@@ -50,7 +50,10 @@ export async function bookProperty(
   };
   updateForm({ type: ACTION.SET_ISSUBMITTING, payload: true });
   try {
-    await dispatch(createBooking({ data: bookingDetails, dispatch }));
+    const result = await dispatch(
+      createBooking({ data: bookingDetails, dispatch })
+    );
+    console.log('Booking created:', result);
   } catch (err) {
     console.log(err);
     throw new Error('Failed to create booking');
@@ -102,24 +105,24 @@ export const hostCancelBooking = async (
     throw new Error('Failed to update booking');
   }
 };
-export const userCancelBooking = async (
-  bookingId: string,
-  dispatch: AppDispatch
-) => {
-  try {
-    await sendRequest(
-      {
-        url: `/api/protected/booking/:id`,
-        method: 'DELETE',
-        protected: true,
-        id: bookingId,
-      },
-      dispatch
-    );
-    await dispatch(getBookings({ dispatch }));
-    console.log('Booking cancel updated');
-  } catch (err) {
-    console.error(err);
-    throw new Error('Failed to update booking');
-  }
-};
+// export const userCancelBooking = async (
+//   bookingId: string,
+//   dispatch: AppDispatch
+// ) => {
+//   try {
+//     await sendRequest(
+//       {
+//         url: `/api/protected/booking/:id`,
+//         method: 'DELETE',
+//         protected: true,
+//         id: bookingId,
+//       },
+//       dispatch
+//     );
+//     await dispatch(getBookings({ dispatch }));
+//     console.log('Booking cancel updated');
+//   } catch (err) {
+//     console.error(err);
+//     throw new Error('Failed to update booking');
+//   }
+// };

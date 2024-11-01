@@ -1,7 +1,12 @@
-export default function Page({ params }: { params: { bookingId: string } }) {
+import BookingDetails from '@/components/client/pagesize/BookingDetails';
+export default function Page({
+  params,
+}: {
+  params: { bookingId: string; userId: string };
+}) {
   return (
     <div>
-      <h1>Page for booking {params.bookingId}</h1>
+      <BookingDetails bookingId={params.bookingId} userId={params.userId} />
     </div>
   );
 }

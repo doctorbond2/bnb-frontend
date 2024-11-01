@@ -6,7 +6,7 @@ export default function LoggedInUserProfile() {
   const { user } = useStoreData();
   console.log('user:', user);
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-full mx-auto p-6">
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">Profile</h2>
 
       <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 overflow-hidden">

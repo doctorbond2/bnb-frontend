@@ -32,7 +32,7 @@ function DatePicker({
     from: new Date(booking.startDate),
     to: new Date(booking.endDate),
   }));
-  console.log(disabledRanges);
+  console.log('disabled.', disabledRanges);
   const formatDate = (date: Date | undefined): string => {
     if (date instanceof Date && !isNaN(date.getTime())) {
       return date.toISOString();

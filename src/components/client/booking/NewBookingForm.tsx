@@ -45,8 +45,8 @@ export default function NewBookingForm({
         </h2>
 
         <form
-          onSubmit={(e) =>
-            bookProperty(e, dispatch, updateForm, propertyId, state)
+          onSubmit={async (e) =>
+            await bookProperty(e, dispatch, updateForm, propertyId, state)
           }
           className="space-y-6"
         >

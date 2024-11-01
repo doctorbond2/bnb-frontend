@@ -12,9 +12,9 @@ export default function AvailablePts({
   ) => {
     let decision = true;
     if (propertyBookings > 0) {
-      const decision = confirm('Are you sure? Property has bookings');
+      decision = confirm('Are you sure? Property has bookings');
     } else {
-      const decision = confirm('Are you sure?');
+      decision = confirm('Are you sure?');
     }
     if (!decision) {
       return;
@@ -36,8 +36,9 @@ export default function AvailablePts({
       return;
     }
     await sendRequest({
-      url: '/api/admin/properties',
+      url: '/api/admin/properties/:id',
       method: 'DELETE',
+      id: propertyId,
     })
       .then((response) => {
         console.log(response);
@@ -76,6 +77,7 @@ export default function AvailablePts({
                 <button
                   className="p-2 h-fit bg-black rounded-md text-red-600"
                   onClick={() => {
+                    alert(property.id);
                     handleHardDelete(property.id);
                   }}
                 >

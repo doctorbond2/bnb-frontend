@@ -73,8 +73,8 @@ export default function UserUpdateForm() {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-auto">
+      <div className="min-h-screen flex justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl mx-auto mt-12">
           <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">
             Update Profile
           </h2>

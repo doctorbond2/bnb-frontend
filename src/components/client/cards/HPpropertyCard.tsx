@@ -58,6 +58,7 @@ export default function HPpropertyCard({
         >
           Book Now
         </button>
+        <Link href={`/properties/${id}`}>Details</Link>
       </div>
     </div>
   );

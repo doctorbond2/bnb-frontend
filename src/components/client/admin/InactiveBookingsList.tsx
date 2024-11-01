@@ -3,11 +3,24 @@ import { Booking } from '@/models/interfaces/booking';
 import { parseCustomerJson } from '@/lib/helpers/json';
 import { Customer } from '@/models/interfaces/booking';
 import { BookingStatus } from '@/models/enum/booking';
+import { sendRequest } from '@/lib/helpers/fetch';
 export default function InactiveBookingsList({
   inActiveBookings,
 }: {
   inActiveBookings: Booking[];
 }) {
+  const handleDeleteBooking = async (bookingId: string) => {
+    try {
+      const response = await sendRequest({
+        url: '/api/admin/bookings/:id',
+        method: 'DELETE',
+        id: bookingId,
+      });
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <section className="mt-4" id="inactive-bookings">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -45,6 +58,23 @@ export default function InactiveBookingsList({
                     <p className="text-sm text-gray-500 mt-1">
                       Booking ID: {booking.id}
                     </p>
+                    <div className="flex justify-end">
+                      <button
+                        className="bg-black text-red-500 py-2 rounded-md px-6 "
+                        onClick={async (e) => {
+                          const decision = confirm('Are you sure?');
+                          if (!decision) {
+                            e.preventDefault();
+                            return;
+                          }
+                          await handleDeleteBooking(booking.id);
+                          alert('Booking Deleted, refreshing page...');
+                          location.reload();
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               </li>
