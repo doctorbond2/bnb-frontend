@@ -13,7 +13,7 @@ export const getBookings = createAsyncThunk(
     try {
       const data: GetBookingsApiResponse = await sendRequest(
         {
-          url: '/api/users/bookings',
+          url: '/api/protected/user/bookings',
           method: 'GET',
           protected: true,
         },

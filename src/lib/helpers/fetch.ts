@@ -12,6 +12,8 @@ export interface SendRequestConfig {
 }
 export interface SendRequestQuery {
   populateBookings?: boolean;
+  soft?: boolean;
+  purge?: boolean;
 }
 export const sendRequest = async <T>(
   config: SendRequestConfig,

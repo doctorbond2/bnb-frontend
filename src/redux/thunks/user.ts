@@ -58,7 +58,7 @@ export const updateUser = createAsyncThunk(
     try {
       const response: UpdateUserResponse = await sendRequest(
         {
-          url: '/api/users',
+          url: '/api/protected/user',
           method: 'PUT',
           body: { ...credentials.data },
           protected: true,

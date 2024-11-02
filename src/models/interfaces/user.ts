@@ -3,7 +3,7 @@ import { Booking } from './booking';
 
 import { UserId } from '../types/User';
 export interface User {
-  id: UserId | null;
+  id: UserId;
   firstName: string;
   username: string;
   lastName: string;

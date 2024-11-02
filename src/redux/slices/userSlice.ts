@@ -14,7 +14,7 @@ export interface UserState {
 }
 export const user_initialState: UserState = {
   user: {
-    id: null,
+    id: '',
     username: '',
     firstName: '',
     lastName: '',

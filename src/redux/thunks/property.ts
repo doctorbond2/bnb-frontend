@@ -16,7 +16,7 @@ export const getHostedProperties = createAsyncThunk(
     try {
       const data: GetPropertiesApiResponse = await sendRequest(
         {
-          url: '/api/users/properties',
+          url: '/api/protected/user/properties',
           method: 'GET',
           protected: true,
         },

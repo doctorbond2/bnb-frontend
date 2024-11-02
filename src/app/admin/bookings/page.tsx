@@ -29,9 +29,6 @@ export default async function Page() {
     );
     return (
       <div className="p-6 bg-gray-50 min-h-screen">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">
-          All Bookings
-        </h1>
         <ActiveBookingsList activeBookings={activeBookings} />
         <InactiveBookingsList inActiveBookings={inActiveBookings} />
       </div>

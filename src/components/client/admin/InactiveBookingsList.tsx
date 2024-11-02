@@ -21,12 +21,41 @@ export default function InactiveBookingsList({
       console.log(err);
     }
   };
+  const handleDeleteAll = async () => {
+    const bookingIds = inActiveBookings.map((booking) => booking.id);
+    console.log('deteling all bookings', bookingIds);
+    try {
+      const response: { status: number } = await sendRequest({
+        url: '/api/admin/bookings',
+        method: 'DELETE',
+        body: { bookingIds },
+      });
+      console.log(response.status);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <section className="mt-4" id="inactive-bookings">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-        Inactive Bookings
-      </h2>
-
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Inactive Bookings
+        </h2>
+        <button
+          className="px-4 py-2 bg-red-500 text-white rounded-md"
+          onClick={() => {
+            const decision = confirm('Are you sure?');
+            if (!decision) {
+              return;
+            }
+            handleDeleteAll();
+            alert('All bookings deleted, refreshing page...');
+            location.reload();
+          }}
+        >
+          Delete All
+        </button>
+      </div>
       <ul>
         <div className="space-y-4">
           {inActiveBookings.map((booking) => {
@@ -60,7 +89,7 @@ export default function InactiveBookingsList({
                     </p>
                     <div className="flex justify-end">
                       <button
-                        className="bg-black text-red-500 py-2 rounded-md px-6 "
+                        className="bg-black text-red-500 py-2 rounded-md px-6"
                         onClick={async (e) => {
                           const decision = confirm('Are you sure?');
                           if (!decision) {

@@ -30,9 +30,36 @@ export default async function Page() {
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">
           All Properties
         </h1>
-        <AvailablePts properties={availableProperties} />
-        <UnavailablePts properties={unAvailableProperties} />
-        <DeletedProperties properties={deletedProperties} />
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Available Properties
+        </h2>
+        <div
+          className={`rounded-md p-2 max-h-screen overflow-auto bg-gray-500 ${
+            availableProperties.length < 1 && 'hidden'
+          }`}
+        >
+          <AvailablePts properties={availableProperties} />
+        </div>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Unavailable Properties
+        </h2>
+        <div
+          className={`rounded-md p-2 max-h-screen overflow-auto bg-gray-500 ${
+            unAvailableProperties.length < 1 && 'hidden'
+          }`}
+        >
+          <UnavailablePts properties={unAvailableProperties} />
+        </div>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Deleted Properties
+        </h2>
+        <div
+          className={`rounded-md p-2 max-h-screen overflow-auto bg-gray-500 ${
+            deletedProperties.length < 1 && 'hidden'
+          }`}
+        >
+          <DeletedProperties properties={deletedProperties} />
+        </div>
       </div>
     );
   } catch (error) {
