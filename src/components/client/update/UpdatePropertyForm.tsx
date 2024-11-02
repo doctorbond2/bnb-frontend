@@ -18,12 +18,33 @@ export default function PropertyUpdateForm({
   const { getProperty, user } = useStoreData();
   const { dispatch, handleDeleteProperty, handleUpdateProperty } = useStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageUrlInput, setImageUrlInput] = useState('');
 
   const router = useRouter();
 
   const property = getProperty(propertyId);
 
   const [state, updateForm] = useReducer(updatePropertyFormReducer, init);
+  const addImageUrl = () => {
+    if (imageUrlInput) {
+      const urlRegex =
+        /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?[^\s]*)?$/;
+
+      if (urlRegex.test(imageUrlInput)) {
+        updateForm({
+          type: ACTION.SET_IMAGE_URLS,
+          payload: [imageUrlInput],
+        });
+        setImageUrlInput('');
+      } else {
+        console.error('Invalid URL format:', imageUrlInput);
+        alert('Please enter a valid URL.');
+      }
+    }
+  };
+  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImageUrlInput(e.target.value);
+  };
   useEffect(() => {
     if (property) {
       updateForm({ type: ACTION.SET_NAME, payload: property.name });
@@ -99,14 +120,24 @@ export default function PropertyUpdateForm({
       return;
     }
     try {
+      alert('deleting property: ' + propertyId);
       await handleDeleteProperty(propertyId);
     } catch (error) {
       console.error(error);
     }
   };
-  // <div className="min-h-screen flex items-center justify-center bg-gray-100">
+
   return (
     <>
+      <button
+        className="bg-white  px-4 py-3 border-2 rounded-md hover:bg-gray-200"
+        onClick={() => {
+          router.back();
+        }}
+      >
+        {' '}
+        Go back
+      </button>
       {property ? (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 rounded-lg">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
@@ -248,11 +279,34 @@ export default function PropertyUpdateForm({
                   className="mr-2 leading-tight"
                 />
               </div>
-              <div id="image-urls-showcase">
+              <label className="block text-gray-700 font-semibold">
+                Image URL:
+                <div className="flex space-x-2 mt-1">
+                  <input
+                    type="text"
+                    name="property_images"
+                    placeholder="Image URL"
+                    value={imageUrlInput}
+                    className="p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    onChange={handleImageUrlChange}
+                  />
+                  <button
+                    type="button"
+                    onClick={addImageUrl}
+                    className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
+                  >
+                    Add
+                  </button>
+                </div>
+              </label>
+              <div
+                id="image-urls-showcase"
+                className="flex flex-wrap border-2 rounded-lg p-2"
+              >
                 {state.imageUrls &&
                   state.imageUrls.map((url: string, index: number) => (
                     <div
-                      key={url}
+                      key={url + '-' + index}
                       className="flex flex-row-reverse w-40 relative"
                     >
                       <button

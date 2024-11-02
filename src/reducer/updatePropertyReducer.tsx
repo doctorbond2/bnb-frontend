@@ -83,7 +83,11 @@ const updatePropertyFormReducer = (
         imageUrls: state.imageUrls.filter((_, i) => i !== index),
       };
     case UpdatePropertyFormActionType.SET_IMAGE_URLS:
-      return { ...state, imageUrls: payload as string[] };
+      return {
+        ...state,
+        imageUrls: [...state.imageUrls, ...(payload as string[])],
+      };
+
     case UpdatePropertyFormActionType.SET_ISSUBMITTING:
       return { ...state, isSubmitting: payload as boolean };
 

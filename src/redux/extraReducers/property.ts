@@ -19,13 +19,13 @@ export function extraHPReducers(
     .addCase(createProperty.pending, handlePending)
     .addCase(createProperty.fulfilled, (state, action) => {
       if (action.payload) {
+        console.warn('Create Property Fulfilled');
         state.list = [...state.list, action.payload];
       }
     })
     .addCase(createProperty.rejected, handleRejected)
     .addCase(updateProperty.pending, handlePending)
     .addCase(updateProperty.fulfilled, (state, action) => {
-      console.warn('Update Property Fulfilled');
       if (action.payload) {
         console.warn(action.payload);
         const index = state.list.findIndex((p) => p.id === action.payload.id);

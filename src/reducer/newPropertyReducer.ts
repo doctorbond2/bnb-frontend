@@ -9,6 +9,7 @@ export interface NewPropertyFormState {
   errors: { [key: string]: string };
   imageUrls: string[];
   isSubmitting: boolean;
+  submitError: string;
 }
 
 export const initialNewPropertyFormState: NewPropertyFormState = {
@@ -22,6 +23,7 @@ export const initialNewPropertyFormState: NewPropertyFormState = {
   imageUrls: [],
   errors: {},
   isSubmitting: false,
+  submitError: '',
 };
 export enum NewPropertyActionType {
   SET_AVAILABLEFROM = 'SET_AVAILABLEFROM',
@@ -36,6 +38,7 @@ export enum NewPropertyActionType {
   SET_PRICE_PER_NIGHT = 'SET_PRICE_PER_NIGHT',
   RESET_FORM = 'RESET_FORM',
   REMOVE_IMAGE_URL = 'REMOVE_IMAGE_URL',
+  SET_SUBMIT_ERROR = 'SET_SUBMIT_ERROR',
 }
 export interface NewPropertyAction {
   type: NewPropertyActionType;
@@ -85,6 +88,8 @@ const newPropertyFormReducer = (
       return { ...state, isSubmitting: payload as boolean };
     case NewPropertyActionType.RESET_FORM:
       return initialNewPropertyFormState;
+    case NewPropertyActionType.SET_SUBMIT_ERROR:
+      return { ...state, submitError: payload as string };
     default:
       return state;
   }

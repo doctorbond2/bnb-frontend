@@ -1,10 +1,10 @@
 'use client';
 import { sendRequest } from '@/lib/helpers/fetch';
 import { useEffect, useState } from 'react';
-import useStoreData from '@/lib/hooks/useStoreData';
 import { formatDate, parseCustomerJson } from '@/lib/helpers/json';
 import { BookingStatus } from '@/models/enum/booking';
 import useStore from '@/lib/hooks/useStore';
+import { useRouter } from 'next/navigation';
 import { Booking } from '@/models/interfaces/booking';
 
 export default function BookingDetails({
@@ -16,40 +16,48 @@ export default function BookingDetails({
 }) {
   const { dispatch } = useStore();
   const [booking, setBooking] = useState<Booking | null>(null);
+  const router = useRouter();
   const [dates, setDates] = useState<{ startDate: Date; endDate: Date }>({
     startDate: new Date(),
     endDate: new Date(),
   });
-
+  const fetchBooking = async () => {
+    try {
+      const bookingData: Booking = await sendRequest(
+        {
+          url: `/api/protected/booking/:id`,
+          method: 'GET',
+          protected: true,
+          id: bookingId,
+        },
+        dispatch
+      );
+      setBooking({
+        ...bookingData,
+        customer: parseCustomerJson(bookingData.customer),
+      });
+      setDates({
+        startDate: new Date(bookingData.startDate),
+        endDate: new Date(bookingData.endDate),
+      });
+    } catch (err) {
+      console.log('error:', err);
+    }
+  };
   useEffect(() => {
-    const fetchBooking = async () => {
-      try {
-        const bookingData: Booking = await sendRequest(
-          {
-            url: `/api/protected/booking/:id`,
-            method: 'GET',
-            protected: true,
-            id: bookingId,
-          },
-          dispatch
-        );
-        setBooking({
-          ...bookingData,
-          customer: parseCustomerJson(bookingData.customer),
-        });
-        setDates({
-          startDate: new Date(bookingData.startDate),
-          endDate: new Date(bookingData.endDate),
-        });
-      } catch (err) {
-        console.log('error:', err);
-      }
-    };
     fetchBooking();
   }, [bookingId, dispatch]);
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-md shadow-lg mt-4">
+      <button
+        onClick={() => {
+          router.back();
+        }}
+        className="mb-12"
+      >
+        Back to bookings
+      </button>
       {booking ? (
         <>
           <h1 className="text-2xl font-semibold mb-4 text-gray-800">

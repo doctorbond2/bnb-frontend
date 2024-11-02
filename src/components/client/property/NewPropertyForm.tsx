@@ -8,6 +8,7 @@ import { createProperty } from '@/redux/thunks/property';
 import { useState } from 'react';
 import ProxyImage from '@/components/server/ProxyImage';
 import newPropertyFormReducer from '@/reducer/newPropertyReducer';
+import { useRouter } from 'next/navigation';
 import PropertyDates from './PropertyDates';
 import {
   initialNewPropertyFormState as init,
@@ -18,7 +19,9 @@ import { validationHelper } from '@/lib/helpers/validate';
 
 export default function NewPropertyForm() {
   const [state, updateForm] = useReducer(newPropertyFormReducer, init);
+  const router = useRouter();
   const [imageUrlInput, setImageUrlInput] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const { user } = useStoreData();
   const { dispatch } = useStore();
   const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +32,6 @@ export default function NewPropertyForm() {
     if (imageUrlInput) {
       const urlRegex =
         /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?[^\s]*)?$/;
-
       if (urlRegex.test(imageUrlInput)) {
         console.log('adding image url: ', imageUrlInput);
         updateForm({
@@ -52,7 +54,6 @@ export default function NewPropertyForm() {
     if (!user.id) {
       return;
     }
-
     const formData: PropertyFormData = {
       name: state.name,
       country: state.country,
@@ -67,12 +68,16 @@ export default function NewPropertyForm() {
     };
     const [hasErrors, errors] = validationHelper.validatePropertyForm(formData);
     if (hasErrors) {
-      console.log('errrors: ', errors);
       updateForm({ type: ACTION.SET_ERRORS, payload: errors });
+      setShowModal(true);
       return;
     }
+    setShowModal(true);
+    updateForm({ type: ACTION.SET_ISSUBMITTING, payload: true });
     try {
-      dispatch(createProperty({ data: formData, dispatch }));
+      await dispatch(createProperty({ data: formData, dispatch }));
+      updateForm({ type: ACTION.RESET_FORM });
+      updateForm({ type: ACTION.SET_ISSUBMITTING, payload: false });
     } catch (err) {
       console.log(err);
     }
@@ -157,7 +162,6 @@ export default function NewPropertyForm() {
               </select>
             </label>
 
-            {/* PropertyDates component */}
             <div className="mt-4">
               <PropertyDates dispatch={updateForm} />
             </div>
@@ -210,7 +214,6 @@ export default function NewPropertyForm() {
             </button>
           </form>
 
-          {/* Bilder */}
           <div id="image-urls-showcase" className="space-y-4 mt-6">
             {state.imageUrls.map((url: string, index: number) => (
               <div key={url} className="flex items-center space-x-2 w-full">
@@ -233,6 +236,78 @@ export default function NewPropertyForm() {
           </div>
         </div>
       </div>
+      {showModal &&
+      !state.isSubmitting &&
+      !state.submitError &&
+      Object.keys(state.errors).length <= 0 ? (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-80 shadow-lg">
+            <h3 className="text-lg font-semibold mb-4">
+              Success! Property Created.
+            </h3>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+                onClick={() => {
+                  setShowModal(false);
+                  router.push(`/user/${user.id}/profile/hostedProperties`);
+                }}
+              >
+                View your properties
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : showModal && state.isSubmitting ? (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-80 shadow-lg">
+            <h3 className="text-lg font-semibold mb-4">Creating Property...</h3>
+          </div>
+        </div>
+      ) : showModal && Object.keys(state.errors).length > 0 ? (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-80 shadow-lg">
+            <h3 className="text-lg font-semibold mb-4">
+              Error Creating Property
+            </h3>
+            <ul className="list-inside list-none">
+              {Object.keys(state.errors).map((error) => (
+                <li key={error}>{state.errors[error]}</li>
+              ))}
+            </ul>
+            <div className="flex justify-end space-x-3">
+              <button
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+                onClick={() => {
+                  setShowModal(false);
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : showModal && state.submitError ? (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-80 shadow-lg">
+            <h3 className="text-lg font-semibold mb-4">
+              Error Creating Property
+            </h3>
+            <p className="text-red-500">{state.submitError}</p>
+            <div className="flex justify-end space-x-3">
+              <button
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+                onClick={() => {
+                  setShowModal(false);
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }

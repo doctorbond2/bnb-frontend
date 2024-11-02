@@ -10,6 +10,7 @@ const getPropertyList = async () => {
 };
 export default async function Home() {
   const response = await getPropertyList();
+
   const propertyList = response.data;
   if (!response) {
     return <div>Error</div>;

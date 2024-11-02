@@ -46,6 +46,8 @@ export const createProperty = createAsyncThunk(
         },
         credentials.dispatch
       );
+      console.log('data:', data);
+      localStorageHandler.addItemToListInStorage(key.PROPERTY_LIST, data);
       return data;
     } catch (err: unknown) {
       rejectWithValue(thunkError(err));

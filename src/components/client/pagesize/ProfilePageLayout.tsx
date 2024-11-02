@@ -8,9 +8,5 @@ export default function ProfilePageLayout() {
   console.log('user:', user);
   if (!user.id) return <div>User not found</div>;
 
-  return (
-    <div>
-      <LoggedInUserProfile />
-    </div>
-  );
+  return <div>{user ? <LoggedInUserProfile /> : <div>Loading...</div>}</div>;
 }

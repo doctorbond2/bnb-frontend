@@ -60,6 +60,15 @@ function replaceItemInStorageById<T extends { id: string }>(
   );
   localStorage.setItem(key, JSON.stringify(newArray));
 }
+function addItemToListInStorage<T>(key: LocalStorageKeys, item: T): void {
+  const storedItem = localStorage.getItem(key);
+  if (!storedItem) {
+    return;
+  }
+  const parsedItem: T[] = JSON.parse(storedItem);
+  parsedItem.push(item);
+  localStorage.setItem(key, JSON.stringify(parsedItem));
+}
 function clearToken(): void {
   localStorage.removeItem(LocalStorageKeys.TOKEN);
   localStorage.removeItem(LocalStorageKeys.TOKEN_EXPIRY);
@@ -79,6 +88,7 @@ const localStorageHandler = {
   deleteFromStorage,
   clearMultipleFromStorage,
   replaceItemInStorageById,
+  addItemToListInStorage,
   setToken,
   setRefreshToken,
   clearToken,

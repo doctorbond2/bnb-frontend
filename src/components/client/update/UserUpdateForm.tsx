@@ -2,6 +2,7 @@
 import { useReducer, useEffect, useState } from 'react';
 import updateUserFormReducer from '@/reducer/updateUserReducer';
 import { updateUser } from '@/redux/thunks/user';
+import { useRouter } from 'next/navigation';
 import {
   UpdateUserFormState,
   UpdateUserFormActionType as ACTION,
@@ -11,6 +12,7 @@ import useStore from '@/lib/hooks/useStore';
 
 export default function UserUpdateForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
   const { user } = useStoreData();
   const { dispatch } = useStore();
 
