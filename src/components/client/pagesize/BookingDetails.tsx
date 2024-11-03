@@ -9,7 +9,6 @@ import { Booking } from '@/models/interfaces/booking';
 
 export default function BookingDetails({
   bookingId,
-  userId,
 }: {
   bookingId: string;
   userId: string;

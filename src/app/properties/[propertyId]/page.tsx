@@ -71,7 +71,7 @@ export default async function PropertyDetailPage({
         <div>
           {property.images?.map((image) => {
             return (
-              <div className="h-32 w-32">
+              <div className="h-32 w-32" key={image.alt}>
                 <CustomImage key={image.alt} image={image} />
               </div>
             );
