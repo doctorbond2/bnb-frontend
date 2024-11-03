@@ -2,6 +2,9 @@ import { sendServerRequest } from '@/lib/helpers/severFetch';
 import { User } from '@/models/interfaces/user';
 import AllUsersList from '@/components/client/admin/AllUsersList';
 import DeletedUsers from '@/components/client/admin/DeletedUsers';
+
+export const dynamic = 'force-dynamic';
+
 const getData = async () => {
   const response: User[] | undefined = await sendServerRequest({
     url: '/api/admin/users',

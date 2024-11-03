@@ -3,6 +3,9 @@ import { Property } from '@/models/interfaces/property';
 import AvailablePts from '@/components/client/admin/AvailablePts';
 import UnavailablePts from '@/components/client/admin/UnavailablePts';
 import DeletedProperties from '@/components/client/admin/DeletedProperties';
+
+export const dynamic = 'force-dynamic';
+
 const getData = async () => {
   const response: Property[] | undefined = await sendServerRequest({
     url: '/api/admin/properties',

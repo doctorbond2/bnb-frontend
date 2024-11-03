@@ -4,6 +4,8 @@ import ActiveBookingsList from '@/components/client/admin/ActiveBookings';
 import InactiveBookingsList from '@/components/client/admin/InactiveBookingsList';
 import { BookingStatus } from '@/models/enum/booking';
 
+export const dynamic = 'force-dynamic';
+
 const getData = async () => {
   const response: Booking[] | undefined = await sendServerRequest({
     url: '/api/admin/bookings',
