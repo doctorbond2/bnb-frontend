@@ -45,6 +45,7 @@ export default function BookingDetails({
   };
   useEffect(() => {
     fetchBooking();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingId, dispatch]);
 
   return (
