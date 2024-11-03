@@ -14,6 +14,7 @@ export interface User {
   avatar?: string;
   properties?: Property[];
   bookings?: Booking[];
+  deletedAt?: string;
 }
 export interface RegisterFormData {
   firstName: string;

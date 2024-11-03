@@ -31,6 +31,7 @@ export const sendRequest = async <T>(
     config.url = `${config.url}?${params.toString()}`;
   }
   const URL = `${BaseUrl}${config.url}`;
+
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };

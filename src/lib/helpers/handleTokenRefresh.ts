@@ -2,15 +2,12 @@ import { logout } from '@/redux/slices/userSlice';
 import { handleApiError as apiError } from './error';
 import { refreshTokenRequest } from './auth';
 import { AppDispatch } from '@/redux/store';
-import { useAppDispatch } from '@/redux/hooks';
 export const RETRY_REFRESHTOKEN = async (
   dispatch: AppDispatch,
   options: RequestInit,
   URL: string,
   headers: Record<string, string>
 ) => {
-  console.log('Retrying...');
-
   try {
     const refreshResponse = await refreshTokenRequest();
     if (refreshResponse) {

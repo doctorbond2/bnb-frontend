@@ -1,6 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import { getBookings } from '@/redux/thunks/booking';
+import { getHostedProperties } from '@/redux/thunks/property';
 const REFRESH_INTERVAL = 120000;
 const LAST_FETCH_KEY = 'lastFetchTimestamp';
 import useStore from '@/lib/hooks/useStore';
@@ -21,6 +22,7 @@ export default function BookingFetcher() {
       now - parseInt(lastFetchTimestamp) > REFRESH_INTERVAL
     ) {
       dispatch(getBookings({ dispatch: dispatch }));
+      dispatch(getHostedProperties({ dispatch: dispatch }));
       localStorage.setItem(LAST_FETCH_KEY, now.toString());
     }
 

@@ -1,67 +1,72 @@
 'use client';
 import { sendRequest } from '@/lib/helpers/fetch';
 import { Property } from '@/models/interfaces/property';
+
 export default function DeletedProperties({
   properties,
 }: {
   properties: Property[];
 }) {
   const handleHardDelete = async (propertyId: string) => {
-    const decision = confirm('Are you sure?');
-    if (!decision) {
-      return;
-    }
-    await sendRequest({
-      url: '/api/admin/properties',
-      method: 'DELETE',
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
+    if (!confirm('Are you sure?')) return;
+
+    try {
+      const response = await sendRequest({
+        url: `/api/admin/properties/${propertyId}`,
+        method: 'DELETE',
+        id: propertyId,
       });
+      console.log(response);
+      alert('Property deleted, reloading page...');
+    } catch (err) {
+      console.log(err);
+    }
   };
+
   return (
-    <ul>
-      <div className="space-y-4">
+    <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+      <thead className="bg-gray-100 border-b">
+        <tr>
+          <th className="py-2 px-4 text-left text-gray-700 font-medium">
+            Name
+          </th>
+          <th className="py-2 px-4 text-left text-gray-700 font-medium">
+            Price per Night
+          </th>
+          <th className="py-2 px-4 text-left text-gray-700 font-medium">
+            Property ID
+          </th>
+          <th className="py-2 px-4 text-left text-gray-700 font-medium">
+            Number of Images
+          </th>
+          <th className="py-2 px-4 text-left text-gray-700 font-medium">P</th>
+          <th className="py-2 px-4 text-left text-gray-700 font-medium">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
         {properties.map((property) => (
-          <li key={property.id}>
-            <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 flex flex-wrap overflow-hidden justify-between">
-              <div id="info-section">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {property.name}
-                  </h3>
-                </div>
-                <div className="text-gray-700">
-                  <p className="text-sm">{property.price_per_night}</p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    ID: {property.id}
-                  </p>
-                  <p>
-                    Number of Images:{' '}
-                    {property.images?.length ? property.images.length : '0'}
-                  </p>
-                </div>
-              </div>
-              <div
-                id="button section"
-                className="flex flex-wrap items-center space-x-2"
+          <tr key={property.id} className="border-b">
+            <td className="py-3 px-4 text-gray-900">{property.name}</td>
+            <td className="py-3 px-4 text-gray-700">
+              {property.price_per_night}
+            </td>
+            <td className="py-3 px-4 text-gray-500">{property.id}</td>
+            <td className="py-3 px-4 text-gray-700">
+              {property.images?.length ? property.images.length : '0'}
+            </td>
+            <td className="py-3 px-4">
+              <button
+                className="px-3 py-1 bg-black text-red-600 rounded-md"
+                onClick={() => handleHardDelete(property.id)}
               >
-                <button
-                  className="p-2 h-fit bg-black rounded-md text-red-600"
-                  onClick={() => {
-                    handleHardDelete(property.id);
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </li>
+                Delete
+              </button>
+            </td>
+          </tr>
         ))}
-      </div>
-    </ul>
+      </tbody>
+    </table>
   );
 }

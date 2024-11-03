@@ -27,14 +27,14 @@ export default async function Page() {
     }
     return (
       <div className="p-6 bg-gray-50 min-h-screen">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4 ">
           All Properties
         </h1>
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           Available Properties
         </h2>
         <div
-          className={`rounded-md p-2 max-h-screen overflow-auto bg-gray-500 ${
+          className={`rounded-lg max-h-screen overflow-auto${
             availableProperties.length < 1 && 'hidden'
           }`}
         >
