@@ -3,6 +3,7 @@ import { Property } from '@/models/interfaces/property';
 import HPpropertyCard from '../cards/HPpropertyCard';
 
 function HomePropertyList({ propertyList }: { propertyList: Property[] }) {
+  console.log('propertyList:', propertyList);
   return (
     <>
       <div>
