@@ -6,6 +6,7 @@ const getPropertyList = async () => {
     url: '/api/property',
     method: 'GET',
   });
+  console.log('response:', response);
   return response;
 };
 export const dynamic = 'force-dynamic';
