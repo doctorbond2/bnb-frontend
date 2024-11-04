@@ -16,21 +16,31 @@ export default function HeaderLayout() {
   const router = useRouter();
 
   return (
-    <header className="w-full flex items-center justify-between px-4 py-2 bg-white shadow-md md:px-8 h-20 md:h-16">
-      <Link href={'/'} className="flex items-center space-x-2">
-        <Image
-          src="/images/spaceshare_icon.png"
-          width={40}
-          height={40}
-          alt="SpaceShare Icon"
-          className="object-cover"
-        />
-        <h1 className="hidden md:block text-xl font-bold text-gray-700">
-          Spaceshare
-        </h1>
-      </Link>
+    <header className="w-full flex items-center justify-between px-4 py-2 bg-white shadow-md md:px-8 h-20 md:h-16 border border-b-2 border-gray-300">
+      <div className="flex items-center ml-8">
+        <Link href={'/'} className="flex items-center space-x-2">
+          <Image
+            src="/images/spaceshare_icon.png"
+            width={40}
+            height={40}
+            alt="SpaceShare Icon"
+            className="object-cover"
+          />
+          <h1 className="hidden md:block text-xl font-bold text-gray-700">
+            Spaceshare
+          </h1>
+        </Link>
+        <div className="w-fit ml-5">
+          <Image
+            src="/images/search_icon.png"
+            width={24}
+            height={24}
+            alt="Search Icon"
+            className="object-cover"
+          />
+        </div>
+      </div>
 
-      {/* Mobile Options */}
       <div className="flex md:hidden items-center">
         <Image
           src="/images/search_icon.png"
@@ -105,17 +115,9 @@ export default function HeaderLayout() {
         </div>
       </div>
 
-      {/* Desktop Options */}
-      <div className="hidden md:flex items-center space-x-6">
-        <Image
-          src="/images/search_icon.png"
-          width={24}
-          height={24}
-          alt="Search Icon"
-          className="object-cover"
-        />
+      <div className="hidden md:flex space-x-6 w-[25%] justify-end items-center">
         {user.id && (
-          <div className="space-x-3">
+          <>
             <Link
               href={'/host/new'}
               className="text-gray-700 hover:text-blue-600"
@@ -128,7 +130,7 @@ export default function HeaderLayout() {
             >
               Profile
             </Link>
-          </div>
+          </>
         )}
         {!user.id ? (
           <Link
@@ -151,7 +153,7 @@ export default function HeaderLayout() {
         {!user.id && (
           <Link
             href="login/register"
-            className="text-gray-700 hover:text-blue-600"
+            className="text-gray-700 border rounded-md px-3 py-1 hover:bg-gray-100"
           >
             Register
           </Link>

@@ -16,6 +16,7 @@ export interface Property {
   hostId: string;
   bookings: Booking[];
   images?: Image[];
+  description?: string;
   deletedAt?: Date | string;
 }
 export interface PropertyFormData {
@@ -27,6 +28,7 @@ export interface PropertyFormData {
   availableFrom: Date | null;
   availableUntil: Date | null;
   available: boolean;
+  description?: string;
   hostId: string;
   imageUrls?: string[];
 }
@@ -39,6 +41,7 @@ export interface UpdatePropertyFormData {
   availableFrom?: Date | null;
   availableUntil?: Date | null;
   available?: boolean;
+  description?: string;
   hostId?: string;
   imageUrls?: string[];
 }

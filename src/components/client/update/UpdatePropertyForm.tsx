@@ -2,6 +2,7 @@
 import { useReducer, useEffect, useState } from 'react';
 import { initialUpdatePropertyFormState as init } from '@/reducer/updatePropertyReducer';
 import updatePropertyFormReducer from '@/reducer/updatePropertyReducer';
+import { formatSentence } from '@/lib/helpers/convert';
 import ProxyImage from '@/components/server/ProxyImage';
 import PropertyDates from '../property/PropertyDates';
 import { UpdatePropertyFormActionType as ACTION } from '@/reducer/updatePropertyReducer';
@@ -57,6 +58,10 @@ export default function PropertyUpdateForm({
       });
       updateForm({ type: ACTION.SET_AVAILABLE, payload: property.available });
       updateForm({
+        type: ACTION.SET_DESCRIPTION,
+        payload: property.description,
+      });
+      updateForm({
         type: ACTION.SET_IMAGE_URLS,
         payload: property.images?.map((image) => image.url),
       });
@@ -104,8 +109,13 @@ export default function PropertyUpdateForm({
         state.price_per_night !== property.price_per_night
           ? state.price_per_night
           : undefined,
+      description:
+        state.description && state.description !== property.description
+          ? formatSentence(state.description)
+          : undefined,
       availableFrom: state.availableFrom || property.availableFrom,
       availableUntil: state.availableUntil || property.availableUntil,
+      imageUrls: state.imageUrls,
       available: state.available,
     };
 
@@ -120,8 +130,8 @@ export default function PropertyUpdateForm({
       return;
     }
     try {
-      alert('deleting property: ' + propertyId);
       await handleDeleteProperty(propertyId);
+      router.push(`/user/${user?.id}/profile/hostedProperties`);
     } catch (error) {
       console.error(error);
     }
@@ -149,82 +159,77 @@ export default function PropertyUpdateForm({
               }}
             >
               <div className="space-y-2">
-                <label
-                  htmlFor="name"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Property Name:
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={state.name}
-                  onChange={(e) =>
-                    updateForm({
-                      type: ACTION.SET_NAME,
-                      payload: e.target.value,
-                    })
-                  }
-                  placeholder="Update Property Name"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                />
-                <label
-                  htmlFor="country"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Country:
-                </label>
-                <input
-                  type="text"
-                  id="country"
-                  value={state.country}
-                  onChange={(e) =>
-                    updateForm({
-                      type: ACTION.SET_COUNTRY,
-                      payload: e.target.value,
-                    })
-                  }
-                  placeholder="Country"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                />
-                <label
-                  htmlFor="city"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  City:
-                </label>
-                <input
-                  type="text"
-                  id="city"
-                  value={state.city}
-                  onChange={(e) =>
-                    updateForm({
-                      type: ACTION.SET_CITY,
-                      payload: e.target.value,
-                    })
-                  }
-                  placeholder="City"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                />
-                <label
-                  htmlFor="address"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Address:
-                </label>
-                <input
-                  type="text"
-                  id="address"
-                  value={state.address}
-                  onChange={(e) =>
-                    updateForm({
-                      type: ACTION.SET_ADDRESS,
-                      payload: e.target.value,
-                    })
-                  }
-                  placeholder="Address"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                />
+                <div className="space-y-2">
+                  {[
+                    {
+                      id: 'name',
+                      value: state.name,
+                      label: 'Property Name',
+                      type: 'text',
+                      action: ACTION.SET_NAME,
+                      placeholder: 'Update Property Name',
+                      className:
+                        'w-full px-4 py-2 border border-gray-300 rounded-lg',
+                    },
+                    {
+                      id: 'country',
+                      value: state.country,
+                      label: 'Country',
+                      type: 'text',
+                      action: ACTION.SET_COUNTRY,
+                      placeholder: 'Country',
+                      className:
+                        'w-full px-4 py-2 border border-gray-300 rounded-lg',
+                    },
+                    {
+                      id: 'city',
+                      value: state.city,
+                      label: 'City',
+                      type: 'text',
+                      action: ACTION.SET_CITY,
+                      placeholder: 'City',
+                      className:
+                        'w-full px-4 py-2 border border-gray-300 rounded-lg',
+                    },
+                    {
+                      id: 'address',
+                      value: state.address,
+                      label: 'Address',
+                      type: 'text',
+                      action: ACTION.SET_ADDRESS,
+                      placeholder: 'Address',
+                      className:
+                        'w-full px-4 py-2 border border-gray-300 rounded-lg',
+                    },
+                  ].map(
+                    ({
+                      value,
+                      label,
+                      type = 'text',
+                      action,
+                      placeholder,
+                      id,
+                      className,
+                    }) => (
+                      <div key={id}>
+                        <label htmlFor={id}>{label}</label>
+                        <input
+                          className={className}
+                          placeholder={placeholder}
+                          type={type}
+                          value={value}
+                          onChange={(e) =>
+                            updateForm({
+                              type: action,
+                              payload: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
+
                 <label
                   htmlFor="price_per_night"
                   className="block text-gray-700 font-medium mb-2"
@@ -232,6 +237,25 @@ export default function PropertyUpdateForm({
                   Price per Night:
                 </label>
 
+                <label
+                  htmlFor="description"
+                  className="font-semibold block text-gray-700"
+                >
+                  Describe your property
+                </label>
+                <textarea
+                  id="description"
+                  value={state.description}
+                  rows={6}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="Number of rooms, amenities, etc."
+                  onChange={(e) => {
+                    updateForm({
+                      type: ACTION.SET_DESCRIPTION,
+                      payload: e.currentTarget.value,
+                    });
+                  }}
+                />
                 <input
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   pattern="[0-9]*"
@@ -243,14 +267,26 @@ export default function PropertyUpdateForm({
                   onChange={(e) =>
                     updateForm({
                       type: ACTION.SET_PRICE_PER_NIGHT,
-                      payload: e.target.value.replace(/[^0-9]/g, ''),
+                      payload: parseInt(
+                        e.target.value.replace(/[^0-9]/g, ''),
+                        10
+                      ),
                     })
                   }
                 />
-                <div id="current-dates">
-                  <h3>Property currently available between:</h3>
-                  <p>From: {formatDateForDisplay(state.availableFrom)}</p>
-                  <p>Until: {formatDateForDisplay(state.availableUntil)}</p>
+                <div
+                  id="current-dates"
+                  className="flex flex-col border-2 border-gray-200"
+                >
+                  <h3 className="font-bold text-lg text-center">
+                    Property currently available between:
+                  </h3>
+                  <p className="py-2 text-center">
+                    From: {formatDateForDisplay(state.availableFrom)}
+                  </p>
+                  <p className="py-2 text-center">
+                    Until: {formatDateForDisplay(state.availableUntil)}
+                  </p>
                 </div>
                 <div id="number-of-bookings">
                   {property?.bookings && (

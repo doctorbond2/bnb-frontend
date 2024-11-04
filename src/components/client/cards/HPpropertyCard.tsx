@@ -26,12 +26,17 @@ export default function HPpropertyCard({
     return <div>property not found</div>;
   }
   return (
-    <div className="flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden max-w-sm md:max-w-full">
-      <div className="w-full md:w-[30%] h-48 bg-gray-100 flex items-center justify-center">
+    <div className="flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden max-w-full md:max-w-2xl md:h-64">
+      <div
+        className="w-full md:w-[50%] h-48 bg-gray-100 flex items-center justify-center cursor-pointer"
+        onClick={() => {
+          router.push(`/properties/${id}`);
+        }}
+      >
         {image ? (
           <CustomImage image={image} />
         ) : (
-          <div className="w-full h-full relative">
+          <div className="w-full h-full relative border-2 border-gray-500 rounded-sm">
             <Image
               src="/images/No_Photo_Available.jpg"
               alt={'No Photo Available'}
@@ -42,12 +47,15 @@ export default function HPpropertyCard({
           </div>
         )}
       </div>
-      <div className="p-4">
-        <h2 className="text-xl font-semibold text-gray-800">{name}</h2>
+      <div className="p-4 w-[40%]">
+        <h2 className="text-xl font-bold text-gray-800">{name}</h2>
         <p className="text-gray-600 mt-2">{address}</p>
         <p className="text-gray-800 font-bold mt-2">${price_per_night}/night</p>
         <p>
-          {host.firstName} {host.lastName}
+          <span className="font-semibold">Owner:</span>{' '}
+          <span className="font-bold">
+            {host.firstName} {host.lastName}
+          </span>
         </p>
       </div>
       <Link href={'/properties/' + id}>Details</Link>

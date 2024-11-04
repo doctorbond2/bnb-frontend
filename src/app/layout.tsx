@@ -22,9 +22,7 @@ export default function RootLayout({
           <BookingFetcher />
           <TokenChecker />
           <HeaderLayout />
-          <div className="md:px-4 py-4 bg-slate-100 min-h-[100vh]">
-            {children}
-          </div>
+          <div className=" py-4 bg-slate-100 min-h-[100vh]">{children}</div>
         </body>
       </html>
     </StoreProvider>

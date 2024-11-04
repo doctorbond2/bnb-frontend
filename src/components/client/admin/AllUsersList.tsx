@@ -30,6 +30,9 @@ export default function AllUsersList({ userList }: { userList: User[] }) {
               Name
             </th>
             <th className="py-2 px-4 text-left text-gray-700 font-medium">
+              Role
+            </th>
+            <th className="py-2 px-4 text-left text-gray-700 font-medium">
               Email
             </th>
             <th className="py-2 px-4 text-left text-gray-700 font-medium">
@@ -50,6 +53,9 @@ export default function AllUsersList({ userList }: { userList: User[] }) {
                 {user.firstName} {user.lastName}
               </td>
               <td className="py-3 px-4 text-gray-700 overflow-auto">
+                {user.admin ? 'Admin' : 'User'}
+              </td>
+              <td className="py-3 px-4 text-gray-700 overflow-auto">
                 {user.email}
               </td>
               <td className="py-3 px-4 text-gray-700 overflow-auto ">
@@ -63,7 +69,9 @@ export default function AllUsersList({ userList }: { userList: User[] }) {
                 <button
                   disabled={user.admin}
                   onClick={() => softDelete(user.id)}
-                  className="px-3 py-1 bg-yellow-500 text-white rounded-md"
+                  className={`px-3 py-1 text-white rounded-md ${
+                    user.admin ? 'cursor-not-allowed bg-red-300' : 'bg-red-600'
+                  }`}
                 >
                   Soft Delete
                 </button>

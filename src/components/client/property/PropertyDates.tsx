@@ -22,9 +22,9 @@ function PropertyDates({ dispatch }: PropertyDateProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 flex flex-col">
       <Flatpickr
-        className="w-full p-2 border-2 rounded-md border-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        className="w-60 p-2 border-2 rounded-md border-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         placeholder="Property available from"
         value={selectedStartDate as Date}
         onChange={(selectedDates) => {
@@ -51,7 +51,7 @@ function PropertyDates({ dispatch }: PropertyDateProps) {
 
       <Flatpickr
         disabled={!selectedStartDate}
-        className="w-full p-2 border-2 rounded-md border-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        className="w-60  p-2 border-2 rounded-md border-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         placeholder="Property available until"
         value={selectedEndDate as Date}
         onChange={(selectedDates) => {

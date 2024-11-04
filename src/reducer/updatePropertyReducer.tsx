@@ -3,10 +3,11 @@ export interface UpdatePropertyFormState {
   country: string;
   city: string;
   address: string;
-  price_per_night: number | string;
+  price_per_night: number;
   availableFrom: Date;
   availableUntil: Date;
   available: boolean;
+  description: string;
   imageUrls: string[];
   isSubmitting: boolean;
   errors: { [key: string]: string };
@@ -23,6 +24,7 @@ export const initialUpdatePropertyFormState: UpdatePropertyFormState = {
   available: false,
   imageUrls: [],
   isSubmitting: false,
+  description: '',
   errors: {},
 };
 
@@ -33,6 +35,7 @@ export enum UpdatePropertyFormActionType {
   SET_ADDRESS = 'SET_ADDRESS',
   SET_PRICE_PER_NIGHT = 'SET_PRICE_PER_NIGHT',
   SET_AVAILABLE_FROM = 'SET_AVAILABLE_FROM',
+  SET_DESCRIPTION = 'SET_DESCRIPTION',
   SET_AVAILABLE_UNTIL = 'SET_AVAILABLE_UNTIL',
   SET_AVAILABLE = 'SET_AVAILABLE',
   SET_IMAGE_URLS = 'SET_IMAGE_URLS',
@@ -68,9 +71,11 @@ const updatePropertyFormReducer = (
     case UpdatePropertyFormActionType.SET_ADDRESS:
       return { ...state, address: payload as string };
     case UpdatePropertyFormActionType.SET_PRICE_PER_NIGHT:
-      return { ...state, price_per_night: payload as number | string };
+      return { ...state, price_per_night: payload as number };
     case UpdatePropertyFormActionType.SET_AVAILABLE_FROM:
       return { ...state, availableFrom: payload as Date };
+    case UpdatePropertyFormActionType.SET_DESCRIPTION:
+      return { ...state, description: payload as string };
     case UpdatePropertyFormActionType.SET_AVAILABLE_UNTIL:
       return { ...state, availableUntil: payload as Date };
     case UpdatePropertyFormActionType.SET_AVAILABLE:

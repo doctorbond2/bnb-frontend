@@ -18,6 +18,7 @@ export default function DeletedProperties({
       });
       console.log(response);
       alert('Property deleted, reloading page...');
+      location.reload();
     } catch (err) {
       console.log(err);
     }

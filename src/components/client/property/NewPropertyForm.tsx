@@ -8,6 +8,10 @@ import { createProperty } from '@/redux/thunks/property';
 import { useState } from 'react';
 import ProxyImage from '@/components/server/ProxyImage';
 import newPropertyFormReducer from '@/reducer/newPropertyReducer';
+import {
+  convertFirstCharToUpperCase as firstToUpper,
+  formatSentence,
+} from '@/lib/helpers/convert';
 import { useRouter } from 'next/navigation';
 import PropertyDates from './PropertyDates';
 import {
@@ -62,6 +66,9 @@ export default function NewPropertyForm() {
       price_per_night: parseInt(state.price_per_night as unknown as string),
       availableFrom: state.availableFrom,
       availableUntil: state.availableUntil,
+      description:
+        formatSentence(state.description) ||
+        `A beautiful home in ${state.city}, ${state.country}`,
       available: true,
       hostId: user.id,
       imageUrls: state.imageUrls || [],
@@ -93,9 +100,10 @@ export default function NewPropertyForm() {
             className="space-y-4"
           >
             <label className="block text-gray-700 font-semibold">
-              Property Name:
+              Property Name
               <input
                 type="text"
+                value={firstToUpper(state.name)}
                 name="property_name"
                 placeholder="Enter property name"
                 required
@@ -103,16 +111,17 @@ export default function NewPropertyForm() {
                 onChange={(e) => {
                   updateForm({
                     type: ACTION.SET_NAME,
-                    payload: e.currentTarget.value,
+                    payload: firstToUpper(e.currentTarget.value),
                   });
                 }}
               />
             </label>
 
             <label className="block text-gray-700 font-semibold">
-              City:
+              City
               <input
                 type="text"
+                value={firstToUpper(state.city)}
                 name="city"
                 placeholder="Enter city"
                 required
@@ -120,31 +129,32 @@ export default function NewPropertyForm() {
                 onChange={(e) => {
                   updateForm({
                     type: ACTION.SET_CITY,
-                    payload: e.currentTarget.value,
+                    payload: firstToUpper(e.currentTarget.value),
                   });
                 }}
               />
             </label>
 
             <label className="block text-gray-700 font-semibold">
-              Address:
+              Address
               <input
                 type="text"
                 name="address"
                 placeholder="Enter address"
+                value={firstToUpper(state.address)}
                 required
                 className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 onChange={(e) => {
                   updateForm({
                     type: ACTION.SET_ADDRESS,
-                    payload: e.currentTarget.value,
+                    payload: firstToUpper(e.currentTarget.value),
                   });
                 }}
               />
             </label>
 
             <label className="block text-gray-700 font-semibold">
-              Country:
+              Country
               <select
                 required
                 name="country"
@@ -165,9 +175,27 @@ export default function NewPropertyForm() {
             <div className="mt-4">
               <PropertyDates dispatch={updateForm} />
             </div>
+            <label
+              htmlFor="description"
+              className="font-semibold block text-gray-700"
+            >
+              Describe your property
+            </label>
+            <textarea
+              id="description"
+              rows={6}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              placeholder="Number of rooms, amenities, etc."
+              onChange={(e) => {
+                updateForm({
+                  type: ACTION.SET_DESCRIPTION,
+                  payload: e.currentTarget.value,
+                });
+              }}
+            />
 
             <label className="block text-gray-700 font-semibold">
-              Image URL:
+              Add Image URL
               <div className="flex space-x-2 mt-1">
                 <input
                   type="text"
@@ -191,8 +219,9 @@ export default function NewPropertyForm() {
               Price Per Night:
               <input
                 pattern="[0-9]*"
+                maxLength={4}
                 inputMode="numeric"
-                placeholder="Price per night"
+                placeholder="Price per night in EUR"
                 name="price_per_night"
                 type="text"
                 value={state.price_per_night}
