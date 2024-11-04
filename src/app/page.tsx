@@ -1,8 +1,8 @@
 import { GetManyResponse, Property } from '@/models/interfaces/property';
-import { sendRequest } from '@/lib/helpers/fetch';
+import { sendServerRequest } from '@/lib/helpers/severFetch';
 import HomePropertyList from '@/components/client/lists/HomePropertyList';
 const getPropertyList = async () => {
-  const response: GetManyResponse<Property> = await sendRequest({
+  const response: GetManyResponse<Property> = await sendServerRequest({
     url: '/api/property',
     method: 'GET',
   });
