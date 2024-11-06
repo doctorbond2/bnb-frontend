@@ -17,7 +17,6 @@ export default function CreateAdminForm() {
       admin: true,
     };
 
-    console.log('data:', data);
     const response = await sendRequest({
       url: ROUTES.SECRET_ROUTE,
       method: 'POST',

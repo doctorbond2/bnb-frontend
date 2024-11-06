@@ -21,7 +21,6 @@ export default async function Page() {
     }
     const users = response.filter((user) => !user.deletedAt);
     const deletedUsers = response.filter((user) => user.deletedAt);
-    console.log('deleted: ,', deletedUsers);
     return (
       <div className="p-6 bg-gray-50 min-h-screen">
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">Users</h1>

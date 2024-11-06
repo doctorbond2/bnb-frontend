@@ -29,7 +29,6 @@ export default function AvailablePts({
         alert('Property deleted, reloading page...');
         location.reload();
       }
-      console.log(response);
     } catch (err) {
       console.log(err);
     }
