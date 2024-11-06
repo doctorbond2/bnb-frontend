@@ -19,6 +19,7 @@ export default function DeletedUsers({ userList }: { userList: User[] }) {
         url: ROUTES.ADMIN.USERS_ID,
         method: 'DELETE',
         body: { password: adminPassword },
+        id,
       });
       if (response.status === 204) {
         alert('User deleted, reloading page...');

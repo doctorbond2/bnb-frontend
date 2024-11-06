@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import useStoreData from '@/lib/hooks/useStoreData';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function HPpropertyCard({
   property: { name, images, price_per_night, address, id, host },
@@ -13,10 +14,11 @@ export default function HPpropertyCard({
 }) {
   const router = useRouter();
   const image = images ? images[0] : null;
+  const [isOwner, setIsOwner] = useState(false);
   const { user, getProperty } = useStoreData();
-  const checkIfPropertyIsOwned = (propertyId: string) => {
-    return !!getProperty(propertyId);
-  };
+  useEffect(() => {
+    setIsOwner(!!getProperty(id));
+  }, [user, id, getProperty]);
 
   const bookNow = () => {
     if (!user.id) {
@@ -81,15 +83,15 @@ export default function HPpropertyCard({
             Details
           </Link>
           <button
-            disabled={checkIfPropertyIsOwned(id)}
+            disabled={isOwner}
             onClick={bookNow}
             className={` text-white font-medium py-2 px-4 rounded-md ${
-              checkIfPropertyIsOwned(id)
+              isOwner
                 ? 'bg-green-500 cursor-default'
                 : 'hover:bg-blue-600 transition-colors bg-blue-500'
             }`}
           >
-            {checkIfPropertyIsOwned(id) ? 'Yours' : 'Book Now'}
+            {isOwner ? 'Yours' : 'Book Now'}
           </button>
         </div>
       </div>

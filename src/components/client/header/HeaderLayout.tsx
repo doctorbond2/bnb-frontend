@@ -1,5 +1,6 @@
 'use client';
 import useStoreData from '@/lib/hooks/useStoreData';
+import HeaderSearchBar from './HeaderSearchBar';
 import useStore from '@/lib/hooks/useStore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -38,6 +39,7 @@ export default function HeaderLayout() {
             alt="Search Icon"
             className="object-cover"
           />
+          <HeaderSearchBar />
         </div>
       </div>
 

@@ -16,6 +16,7 @@ export default function InactiveBookingsList({
       const response = await sendRequest({
         url: ROUTES.ADMIN.BOOKINGS_ID,
         method: 'DELETE',
+        id: bookingId,
       });
       console.log(response);
     } catch (err) {

@@ -9,6 +9,7 @@ export interface SendRequestConfig {
   protected?: boolean;
   id?: string;
   query?: SendRequestQuery;
+  searchQuery?: string;
 }
 export interface SendRequestQuery {
   populateBookings?: boolean;
@@ -29,6 +30,9 @@ export const sendRequest = async <T>(
       params.append(key, value);
     });
     config.url = `${config.url}?${params.toString()}`;
+  }
+  if (config.searchQuery) {
+    config.url = `${config.url}?searchQuery=${config.searchQuery}`;
   }
   const URL = `${BaseUrl}${config.url}`;
 
