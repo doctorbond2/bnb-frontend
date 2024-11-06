@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { sendRequest } from '@/lib/helpers/fetch';
-import { debounce } from '@/lib/helpers/debouce';
+
 import SearchUserResult from './SearchUserResult';
 import SearchPropertyResult from './SearchPropertyResult';
 import { Property } from '@/models/interfaces/property';
@@ -11,6 +11,25 @@ import {
   typeguard_isUser as isUser,
 } from '@/lib/helpers/typeGuards';
 export default function HeaderSearchBar() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function debounce<F extends (...args: any[]) => void | Promise<void>>(
+    func: F,
+
+    delay: number
+  ) {
+    let timeoutId: NodeJS.Timeout | number | undefined;
+
+    return (...args: Parameters<F>) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+
+      timeoutId = setTimeout(async () => {
+        await func(...args);
+      }, delay);
+    };
+  }
+
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState<(Property | User)[]>([]);
   const [isSearching, setIsSearching] = useState(false);
