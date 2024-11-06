@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-export async function POST(req: NextRequest) {
+export async function POST() {
   try {
     const timestamp = Math.floor(new Date().getTime() / 1000);
     const apiKey = process.env.CLOUDINARY_API_KEY;
