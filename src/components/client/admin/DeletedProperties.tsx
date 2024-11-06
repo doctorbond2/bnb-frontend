@@ -1,6 +1,7 @@
 'use client';
 import { sendRequest } from '@/lib/helpers/fetch';
 import { Property } from '@/models/interfaces/property';
+import ROUTES from '@/lib/routes';
 
 export default function DeletedProperties({
   properties,
@@ -12,7 +13,7 @@ export default function DeletedProperties({
 
     try {
       const response = await sendRequest({
-        url: `/api/admin/properties/${propertyId}`,
+        url: ROUTES.ADMIN.PROPERTIES_ID,
         method: 'DELETE',
         id: propertyId,
       });

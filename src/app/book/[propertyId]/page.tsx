@@ -1,5 +1,6 @@
 import { Property } from '@/models/interfaces/property';
 import { sendRequest } from '@/lib/helpers/fetch';
+import ROUTES from '@/lib/routes';
 import NewBookingForm from '@/components/client/booking/NewBookingForm';
 export default async function Page({
   params,
@@ -9,7 +10,7 @@ export default async function Page({
   const { propertyId } = params;
   try {
     const propertyToBook: Property = await sendRequest({
-      url: process.env.NEXT_PUBLIC_GET_PROPERTY_BY_ID || '',
+      url: ROUTES.PUBLIC.PROPERTY_BY_ID,
       method: 'GET',
       protected: false,
       id: propertyId,

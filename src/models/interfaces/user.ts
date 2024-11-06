@@ -12,6 +12,7 @@ export interface User {
   email: string;
   phone?: string;
   avatar?: string;
+  hosted_properties?: Property[];
   properties?: Property[];
   bookings?: Booking[];
   deletedAt?: string;

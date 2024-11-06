@@ -1,6 +1,7 @@
 'use client';
 import { RegisterFormData } from '@/models/interfaces/user';
 import { sendRequest } from '@/lib/helpers/fetch';
+import ROUTES from '@/lib/routes';
 export default function CreateAdminForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,7 +19,7 @@ export default function CreateAdminForm() {
 
     console.log('data:', data);
     const response = await sendRequest({
-      url: '/api/createAdmin',
+      url: ROUTES.SECRET_ROUTE,
       method: 'POST',
       body: { ...data },
     });

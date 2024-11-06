@@ -1,12 +1,9 @@
-// import { LoginApiResponse } from '@/redux/thunks/user';
-// import { UserState } from '@/redux/slices/userSlice';
-// function isLoginApiResponse(
-//   response: UserState | LoginApiResponse
-// ): response is LoginApiResponse {
-//   return (
-//     response &&
-//     typeof response.token === 'string' &&
-//     response.user &&
-//     typeof response.user.id === 'string'
-//   );
-// }
+export function typeguard_isFile(value: unknown): value is File {
+  return value instanceof File;
+}
+export function typeguard_isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+export function typeguard_isNumber(value: unknown): value is number {
+  return typeof value === 'number';
+}

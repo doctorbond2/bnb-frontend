@@ -10,6 +10,7 @@ export interface NewPropertyFormState {
   errors: { [key: string]: string };
   imageUrls: string[];
   isSubmitting: boolean;
+  imageFiles: File[];
   submitError: string;
 }
 
@@ -25,6 +26,7 @@ export const initialNewPropertyFormState: NewPropertyFormState = {
   description: '',
   errors: {},
   isSubmitting: false,
+  imageFiles: [],
   submitError: '',
 };
 export enum NewPropertyActionType {
@@ -37,10 +39,12 @@ export enum NewPropertyActionType {
   SET_ERRORS = 'SET_ERRORS',
   SET_ISSUBMITTING = 'SET_ISSUBMITTING',
   SET_DESCRIPTION = 'SET_DESCRIPTION',
-  SET_IMAGE_URLS = 'SET_IMAGEFILES',
+  SET_IMAGE_URLS = 'SET_IMAGE_URLS',
+  SET_IMAGEFILES = 'SET_IMAGEFILES',
   SET_PRICE_PER_NIGHT = 'SET_PRICE_PER_NIGHT',
   RESET_FORM = 'RESET_FORM',
   REMOVE_IMAGE_URL = 'REMOVE_IMAGE_URL',
+  REMOVE_IMAGE_FILE = 'REMOVE_IMAGE_FILE',
   SET_SUBMIT_ERROR = 'SET_SUBMIT_ERROR',
 }
 export interface NewPropertyAction {
@@ -51,7 +55,8 @@ export interface NewPropertyAction {
     | { [key: string]: string }
     | boolean
     | string[]
-    | number;
+    | number
+    | File[];
 }
 
 const newPropertyFormReducer = (
@@ -81,6 +86,17 @@ const newPropertyFormReducer = (
       return { ...state, city: payload as string };
     case NewPropertyActionType.SET_PRICE_PER_NIGHT:
       return { ...state, price_per_night: payload as number };
+    case NewPropertyActionType.SET_IMAGEFILES:
+      return {
+        ...state,
+        imageFiles: [...state.imageFiles, ...(payload as File[])],
+      };
+    case NewPropertyActionType.REMOVE_IMAGE_FILE:
+      const fileIndex = payload as number;
+      return {
+        ...state,
+        imageFiles: state.imageFiles.filter((_, i) => i !== fileIndex),
+      };
     case NewPropertyActionType.SET_NAME:
       return { ...state, name: payload as string };
     case NewPropertyActionType.SET_ADDRESS:

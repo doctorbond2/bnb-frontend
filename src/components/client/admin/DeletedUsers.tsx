@@ -2,6 +2,7 @@
 import { sendRequest } from '@/lib/helpers/fetch';
 import { useState } from 'react';
 import { User } from '@/models/interfaces/user';
+import ROUTES from '@/lib/routes';
 
 export default function DeletedUsers({ userList }: { userList: User[] }) {
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -15,7 +16,7 @@ export default function DeletedUsers({ userList }: { userList: User[] }) {
   const hardDelete = async (id: string) => {
     try {
       const response: { status: number } = await sendRequest({
-        url: `/api/admin/users/${id}`,
+        url: ROUTES.ADMIN.USERS_ID,
         method: 'DELETE',
         body: { password: adminPassword },
       });
@@ -33,7 +34,7 @@ export default function DeletedUsers({ userList }: { userList: User[] }) {
   const hardDeleteMany = async () => {
     try {
       await sendRequest({
-        url: '/api/admin/users',
+        url: ROUTES.ADMIN.USERS,
         method: 'DELETE',
         body: { userIds: selectedUsers, password: adminPassword },
       });
@@ -50,7 +51,7 @@ export default function DeletedUsers({ userList }: { userList: User[] }) {
     const userIds: string[] = userList.map((user) => user.id);
     try {
       await sendRequest({
-        url: '/api/admin/users',
+        url: ROUTES.ADMIN.USERS,
         method: 'DELETE',
         body: { userIds, password: adminPassword },
       });

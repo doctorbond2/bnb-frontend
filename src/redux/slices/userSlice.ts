@@ -6,6 +6,7 @@ import { LocalStorageKeys } from '@/models/enum/localstorage';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch } from '../store';
 import { sendRequest } from '@/lib/helpers/fetch';
+import ROUTES from '@/lib/routes';
 export interface UserState {
   user: User;
   loggedIn: boolean;
@@ -60,7 +61,7 @@ export const checkUserLocalStorage = () => (dispatch: AppDispatch) => {
 export const logout = () => async (dispatch: AppDispatch) => {
   try {
     await sendRequest({
-      url: '/api/auth/logout',
+      url: ROUTES.PUBLIC.LOGOUT,
       method: 'POST',
     });
 

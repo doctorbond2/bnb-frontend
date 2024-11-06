@@ -4,6 +4,7 @@ import { parseCustomerJson } from '@/lib/helpers/json';
 import { Customer } from '@/models/interfaces/booking';
 import { BookingStatus } from '@/models/enum/booking';
 import { sendRequest } from '@/lib/helpers/fetch';
+import ROUTES from '@/lib/routes';
 
 export default function InactiveBookingsList({
   inActiveBookings,
@@ -13,7 +14,7 @@ export default function InactiveBookingsList({
   const handleDeleteBooking = async (bookingId: string) => {
     try {
       const response = await sendRequest({
-        url: `/api/admin/bookings/${bookingId}`,
+        url: ROUTES.ADMIN.BOOKINGS_ID,
         method: 'DELETE',
       });
       console.log(response);
@@ -27,7 +28,7 @@ export default function InactiveBookingsList({
     console.log('deleting all bookings', bookingIds);
     try {
       const response: { status: number } = await sendRequest({
-        url: '/api/admin/bookings',
+        url: ROUTES.ADMIN.BOOKINGS,
         method: 'DELETE',
         body: { bookingIds },
       });

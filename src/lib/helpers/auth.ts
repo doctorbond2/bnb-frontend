@@ -2,11 +2,10 @@ import localStorageHandler from './localStorage';
 import { LocalStorageKeys } from '@/models/enum/localstorage';
 import { RefreshTokenResponse } from '@/redux/thunks/user';
 import { sendRequest } from './fetch';
-
 import { AppDispatch } from '@/redux/store';
 import { refreshToken } from '@/redux/thunks/user';
-
 import * as jose from 'jose';
+import ROUTES from '@/lib/routes';
 const SECRET_KEY = process.env.JWT_SECRET || 'secret';
 export interface TokenPayload {
   id: string;
@@ -84,7 +83,7 @@ export const verifyToken = async (
 export const refreshTokenRequest = async () => {
   try {
     const response: RefreshTokenResponse = await sendRequest({
-      url: '/api/auth/refreshToken',
+      url: ROUTES.PUBLIC.REFRESHTOKEN,
       method: 'POST',
     });
     localStorageHandler.setInStorage(

@@ -6,10 +6,10 @@ import { BookingFormState } from '@/reducer/bookingFormReducer';
 import { validationHelper } from '../helpers/validate';
 import { BookingFormAction as Action } from '@/reducer/bookingFormReducer';
 import { BookingFormActionType as ACTION } from '@/reducer/bookingFormReducer';
-
 import { getHostedProperties } from '@/redux/thunks/property';
 import { Dispatch } from 'react';
 import { sendRequest } from '../helpers/fetch';
+import ROUTES from '@/lib/routes';
 export async function bookProperty(
   e: React.FormEvent<HTMLFormElement>,
   dispatch: AppDispatch,
@@ -70,10 +70,11 @@ export const decideBooking = async (
   try {
     await sendRequest(
       {
-        url: `/api/protected/booking/decide/${bookingId}`,
+        url: ROUTES.GENERAL_PROTECTED.BOOKING_DECIDE_ID,
         method: 'PUT',
         body: { decision },
         protected: true,
+        id: bookingId,
       },
       dispatch
     );
@@ -91,7 +92,7 @@ export const hostCancelBooking = async (
   try {
     await sendRequest(
       {
-        url: `/api/protected/booking/decide/:id`,
+        url: ROUTES.GENERAL_PROTECTED.BOOKING_DECIDE_ID,
         method: 'DELETE',
         body: { decision },
         protected: true,
@@ -105,24 +106,3 @@ export const hostCancelBooking = async (
     throw new Error('Failed to update booking');
   }
 };
-// export const userCancelBooking = async (
-//   bookingId: string,
-//   dispatch: AppDispatch
-// ) => {
-//   try {
-//     await sendRequest(
-//       {
-//         url: `/api/protected/booking/:id`,
-//         method: 'DELETE',
-//         protected: true,
-//         id: bookingId,
-//       },
-//       dispatch
-//     );
-//     await dispatch(getBookings({ dispatch }));
-//     console.log('Booking cancel updated');
-//   } catch (err) {
-//     console.error(err);
-//     throw new Error('Failed to update booking');
-//   }
-// };

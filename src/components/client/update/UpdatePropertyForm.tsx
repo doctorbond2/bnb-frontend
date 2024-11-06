@@ -1,10 +1,14 @@
 'use client';
-import { useReducer, useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useReducer, useEffect, useState, useRef } from 'react';
 import { initialUpdatePropertyFormState as init } from '@/reducer/updatePropertyReducer';
+import { Cloudinary as IMAGE_STORAGE } from '@/lib/helpers/cloudinary';
 import updatePropertyFormReducer from '@/reducer/updatePropertyReducer';
 import { formatSentence } from '@/lib/helpers/convert';
 import ProxyImage from '@/components/server/ProxyImage';
+import GoBackButton from '../buttons/BackButton';
 import PropertyDates from '../property/PropertyDates';
+import { typeguard_isString as isString } from '@/lib/helpers/typeGuards';
 import { UpdatePropertyFormActionType as ACTION } from '@/reducer/updatePropertyReducer';
 import { UpdatePropertyFormData } from '@/models/interfaces/property';
 import { useRouter } from 'next/navigation';
@@ -19,33 +23,35 @@ export default function PropertyUpdateForm({
   const { getProperty, user } = useStoreData();
   const { dispatch, handleDeleteProperty, handleUpdateProperty } = useStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [imageUrlInput, setImageUrlInput] = useState('');
-
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [state, updateForm] = useReducer(updatePropertyFormReducer, init);
   const router = useRouter();
 
   const property = getProperty(propertyId);
 
-  const [state, updateForm] = useReducer(updatePropertyFormReducer, init);
-  const addImageUrl = () => {
-    if (imageUrlInput) {
-      const urlRegex =
-        /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?[^\s]*)?$/;
-
-      if (urlRegex.test(imageUrlInput)) {
-        updateForm({
-          type: ACTION.SET_IMAGE_URLS,
-          payload: [imageUrlInput],
-        });
-        setImageUrlInput('');
-      } else {
-        console.error('Invalid URL format:', imageUrlInput);
-        alert('Please enter a valid URL.');
+  const checkIfFileIsInState = (file: File) => {
+    return state.imageFiles.some((f) => f.name === file.name);
+  };
+  const addImageFile = async (file: File) => {
+    if (file) {
+      if (checkIfFileIsInState(file)) {
+        console.error('File already exists in state:', file);
+        alert('File already added');
+        return;
       }
+      updateForm({
+        type: ACTION.SET_IMAGEFILES,
+        payload: [file],
+      });
+      setSelectedImageFile(null);
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
+      setSelectedImageFile(null);
     }
   };
-  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImageUrlInput(e.target.value);
-  };
+
   useEffect(() => {
     if (property) {
       updateForm({ type: ACTION.SET_NAME, payload: property.name });
@@ -62,8 +68,8 @@ export default function PropertyUpdateForm({
         payload: property.description,
       });
       updateForm({
-        type: ACTION.SET_IMAGE_URLS,
-        payload: property.images?.map((image) => image.url),
+        type: ACTION.PRESET_IMAGE_DISPLAY_LIST,
+        payload: property.images?.map((image) => image.url) || [],
       });
       updateForm({
         type: ACTION.SET_AVAILABLE_FROM,
@@ -115,14 +121,24 @@ export default function PropertyUpdateForm({
           : undefined,
       availableFrom: state.availableFrom || property.availableFrom,
       availableUntil: state.availableUntil || property.availableUntil,
-      imageUrls: state.imageUrls,
       available: state.available,
     };
+    try {
+      if (state.imageFiles.length > 0) {
+        const secure_Urls = await IMAGE_STORAGE.uploadImages(state.imageFiles);
+        updatedData.imageUrls = [...secure_Urls, ...state.imageUrls];
+      } else {
+        updatedData.imageUrls = state.imageUrls;
+      }
 
-    const data = await handleUpdateProperty(updatedData, propertyId);
-    if (data) {
+      const data = await handleUpdateProperty(updatedData, propertyId);
+      if (data) {
+        updateForm({ type: ACTION.SET_ISSUBMITTING, payload: false });
+        router.push(`/user/${user?.id}/profile/hostedProperties`);
+      }
+    } catch (err) {
+      console.log(err);
       updateForm({ type: ACTION.SET_ISSUBMITTING, payload: false });
-      router.push(`/user/${user?.id}/profile/hostedProperties`);
     }
   };
   const handleDelete = async () => {
@@ -139,18 +155,10 @@ export default function PropertyUpdateForm({
 
   return (
     <>
-      <button
-        className="bg-white  px-4 py-3 border-2 rounded-md hover:bg-gray-200"
-        onClick={() => {
-          router.back();
-        }}
-      >
-        {' '}
-        Go back
-      </button>
+      <GoBackButton />
       {property ? (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 rounded-lg">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full">
             <form
               className="space-y-4"
               onSubmit={async (e) => {
@@ -231,13 +239,6 @@ export default function PropertyUpdateForm({
                 </div>
 
                 <label
-                  htmlFor="price_per_night"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Price per Night:
-                </label>
-
-                <label
                   htmlFor="description"
                   className="font-semibold block text-gray-700"
                 >
@@ -256,14 +257,21 @@ export default function PropertyUpdateForm({
                     });
                   }}
                 />
+                <label
+                  htmlFor="price_per_night"
+                  className="block text-gray-700 font-medium mb-2"
+                >
+                  Price per Night:
+                </label>
                 <input
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-[20%] px-4 py-2 border border-gray-300 rounded-lg"
                   pattern="[0-9]*"
+                  maxLength={4}
                   inputMode="numeric"
-                  placeholder="Price per night"
+                  placeholder="€"
                   name="price_per_night"
                   type="text"
-                  value={state.price_per_night}
+                  value={state.price_per_night || ''}
                   onChange={(e) =>
                     updateForm({
                       type: ACTION.SET_PRICE_PER_NIGHT,
@@ -315,53 +323,101 @@ export default function PropertyUpdateForm({
                   className="mr-2 leading-tight"
                 />
               </div>
-              <label className="block text-gray-700 font-semibold">
-                Image URL:
-                <div className="flex space-x-2 mt-1">
-                  <input
-                    type="text"
-                    name="property_images"
-                    placeholder="Image URL"
-                    value={imageUrlInput}
-                    className="p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    onChange={handleImageUrlChange}
-                  />
-                  <button
-                    type="button"
-                    onClick={addImageUrl}
-                    className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
-                  >
-                    Add
-                  </button>
-                </div>
-              </label>
+
+              <div className="flex flex-wrap w-full">
+                <label htmlFor="add-image" className="font-semibold mr-8">
+                  New Image:
+                </label>
+                <input
+                  type="file"
+                  ref={inputRef}
+                  onChange={(e) => {
+                    const files = e.target.files;
+                    if (files && files.length > 0) {
+                      setSelectedImageFile(files[0]);
+                    } else {
+                      setSelectedImageFile(null);
+                    }
+                  }}
+                />
+
+                <button
+                  className={`${
+                    inputRef.current?.files?.length === 0
+                      ? 'bg-gray-300 cursor-default'
+                      : 'bg-blue-500 hover:bg-indigo-600 cursor-pointer'
+                  } text-white px-4 py-2 rounded `}
+                  type="button"
+                  disabled={inputRef.current?.files?.length === 0}
+                  onClick={() => {
+                    if (selectedImageFile) {
+                      addImageFile(selectedImageFile);
+                    }
+                  }}
+                >
+                  Add image
+                </button>
+              </div>
+
               <div
                 id="image-urls-showcase"
                 className="flex flex-wrap border-2 rounded-lg p-2"
               >
-                {state.imageUrls &&
-                  state.imageUrls.map((url: string, index: number) => (
-                    <div
-                      key={url + '-' + index}
-                      className="flex flex-row-reverse w-40 relative"
-                    >
-                      <button
-                        className="w-[10%] bg-red-500 absolute top-0 right-0"
-                        onClick={() => {
-                          updateForm({
-                            type: ACTION.REMOVE_IMAGE_URL,
-                            payload: index,
-                          });
-                          console.log('test', index);
-                        }}
-                      >
-                        X
-                      </button>
-                      <div>
-                        <ProxyImage imageUrl={url} />
-                      </div>
-                    </div>
-                  ))}
+                {state.imageDisplayList &&
+                  state.imageDisplayList.map(
+                    (item: string | File, index: number) => {
+                      if (isString(item)) {
+                        return (
+                          <div
+                            key={item + '-' + index}
+                            className="relative w-[120px] h-[120px] flex-shrink-0 overflow-hidden"
+                          >
+                            <button
+                              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 absolute top-0 left-0"
+                              type="button"
+                              onClick={() => {
+                                updateForm({
+                                  type: ACTION.REMOVE_IMAGE,
+                                  payload: index,
+                                });
+                              }}
+                            >
+                              X
+                            </button>
+                            <ProxyImage imageUrl={item} />
+                            url
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div
+                            key={item.name + '-' + index}
+                            className="relative w-[120px] h-[120px] flex-shrink-0 overflow-hidden"
+                          >
+                            <button
+                              onClick={() => {
+                                updateForm({
+                                  type: ACTION.REMOVE_IMAGE,
+                                  payload: index,
+                                });
+                              }}
+                              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 absolute top-0 left-0"
+                            >
+                              X
+                            </button>
+                            <Image
+                              src={URL.createObjectURL(item)}
+                              alt={item.name}
+                              width={100}
+                              height={100}
+                              className="rounded-md object-cover"
+                            />
+                            file
+                          </div>
+                        );
+                      }
+                    }
+                  )}
               </div>
               <div className="flex justify-center">
                 <button

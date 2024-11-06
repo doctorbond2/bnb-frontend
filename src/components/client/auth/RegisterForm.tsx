@@ -2,6 +2,12 @@
 // import { useState } from 'react';
 import Link from 'next/link';
 import { handleRegister } from '@/lib/handlers/login';
+import {
+  removeSpaceSpecialNumbers as regexNameInput,
+  removeSpaces,
+} from '@/lib/helpers/regex';
+
+import { convertFirstCharToUpperCase as firstToUpper } from '@/lib/helpers/convert';
 import { useRouter } from 'next/navigation';
 import {
   RegisterFormActionType as ACTION,
@@ -13,7 +19,6 @@ import { useReducer } from 'react';
 export default function RegisterForm() {
   const [state, updateForm] = useReducer(registerFormReducer, init);
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log('submitting');
     const validRegister = await handleRegister(e, state, updateForm);
     if (validRegister) {
       router.push('/login');
@@ -22,9 +27,31 @@ export default function RegisterForm() {
   };
   const router = useRouter();
 
+  const handleNameInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: ACTION
+  ) => {
+    const cleanedText = regexNameInput(e.target.value);
+
+    updateForm({
+      type,
+      payload: firstToUpper(cleanedText),
+    });
+  };
+  const handleInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: ACTION
+  ) => {
+    const cleanedValue = removeSpaces(e.target.value);
+
+    updateForm({
+      type,
+      payload: cleanedValue,
+    });
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
         <h1 className="text-2xl font-bold mb-6 text-center">
           Welcome to Spaceshare!
         </h1>
@@ -40,14 +67,11 @@ export default function RegisterForm() {
             <input
               type="text"
               id="firstname"
+              name="firstname"
               value={state.firstName}
               onChange={(e) => {
-                updateForm({
-                  type: ACTION.SET_FIRSTNAME,
-                  payload: e.target.value,
-                });
+                handleNameInput(e, ACTION.SET_FIRSTNAME);
               }}
-              name="firstname"
               placeholder="Enter your firstname"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
@@ -63,11 +87,9 @@ export default function RegisterForm() {
               type="text"
               id="lastname"
               name="lastname"
+              value={state.lastName}
               onChange={(e) => {
-                updateForm({
-                  type: ACTION.SET_LASTNAME,
-                  payload: e.target.value,
-                });
+                handleNameInput(e, ACTION.SET_LASTNAME);
               }}
               placeholder="Enter your lastname"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -84,11 +106,9 @@ export default function RegisterForm() {
               type="text"
               id="username"
               name="username"
+              value={state.username}
               onChange={(e) => {
-                updateForm({
-                  type: ACTION.SET_USERNAME,
-                  payload: e.target.value,
-                });
+                handleInput(e, ACTION.SET_USERNAME);
               }}
               placeholder="Enter your username"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -106,11 +126,9 @@ export default function RegisterForm() {
               type="email"
               id="email"
               name="email"
+              value={state.email}
               onChange={(e) => {
-                updateForm({
-                  type: ACTION.SET_EMAIL,
-                  payload: e.target.value,
-                });
+                handleInput(e, ACTION.SET_EMAIL);
               }}
               placeholder="Enter your email"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -128,11 +146,9 @@ export default function RegisterForm() {
               type="password"
               id="password"
               name="password"
+              value={state.password}
               onChange={(e) => {
-                updateForm({
-                  type: ACTION.SET_PASSWORD,
-                  payload: e.target.value,
-                });
+                handleInput(e, ACTION.SET_PASSWORD);
               }}
               placeholder="Enter your password"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -149,11 +165,9 @@ export default function RegisterForm() {
               type="password"
               id="repeat_password"
               name="repeat_password"
+              value={state.repeat_password}
               onChange={(e) => {
-                updateForm({
-                  type: ACTION.SET_REPEAT_PASSWORD,
-                  payload: e.target.value,
-                });
+                handleInput(e, ACTION.SET_REPEAT_PASSWORD);
               }}
               placeholder="Repeat your password"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"

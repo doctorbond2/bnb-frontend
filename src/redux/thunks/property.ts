@@ -3,6 +3,7 @@ import { sendRequest } from '@/lib/helpers/fetch';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import localStorageHandler from '@/lib/helpers/localStorage';
 import { LocalStorageKeys as key } from '@/models/enum/localstorage';
+import ROUTES from '@/lib/routes';
 import {
   PropertyFormData,
   UpdatePropertyFormData,
@@ -16,7 +17,7 @@ export const getHostedProperties = createAsyncThunk(
     try {
       const data: GetPropertiesApiResponse = await sendRequest(
         {
-          url: '/api/protected/user/properties',
+          url: ROUTES.USER.PROPERTIES,
           method: 'GET',
           protected: true,
         },
@@ -39,7 +40,7 @@ export const createProperty = createAsyncThunk(
     try {
       const data: Property = await sendRequest(
         {
-          url: '/api/protected/property',
+          url: ROUTES.GENERAL_PROTECTED.PROPERTIES,
           method: 'POST',
           body: { ...credentials.data },
           protected: true,
@@ -67,7 +68,7 @@ export const updateProperty = createAsyncThunk(
     try {
       const data: Property = await sendRequest(
         {
-          url: '/api/protected/property/:id',
+          url: ROUTES.GENERAL_PROTECTED.PROPERTY_BY_ID,
           method: 'PUT',
           body: { ...credentials.data },
           protected: true,

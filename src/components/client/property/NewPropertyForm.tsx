@@ -1,17 +1,19 @@
 'use client';
 import countries from '../../../lib/data/countries.json';
+import Image from 'next/image';
 import useStoreData from '@/lib/hooks/useStoreData';
 import useStore from '@/lib/hooks/useStore';
 import { AppDispatch } from '@/redux/store';
 import { PropertyFormData } from '@/models/interfaces/property';
 import { createProperty } from '@/redux/thunks/property';
-import { useState } from 'react';
-import ProxyImage from '@/components/server/ProxyImage';
+import { useState, useRef } from 'react';
+import { Cloudinary as IMAGE_UPLOAD } from '@/lib/helpers/cloudinary';
 import newPropertyFormReducer from '@/reducer/newPropertyReducer';
 import {
   convertFirstCharToUpperCase as firstToUpper,
   formatSentence,
 } from '@/lib/helpers/convert';
+import { removeNumbers } from '@/lib/helpers/regex';
 import { useRouter } from 'next/navigation';
 import PropertyDates from './PropertyDates';
 import {
@@ -23,33 +25,45 @@ import { validationHelper } from '@/lib/helpers/validate';
 
 export default function NewPropertyForm() {
   const [state, updateForm] = useReducer(newPropertyFormReducer, init);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const [imageUrlInput, setImageUrlInput] = useState('');
   const [showModal, setShowModal] = useState(false);
   const { user } = useStoreData();
   const { dispatch } = useStore();
-  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImageUrlInput(e.target.value);
-  };
 
-  const addImageUrl = () => {
-    if (imageUrlInput) {
-      const urlRegex =
-        /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?[^\s]*)?$/;
-      if (urlRegex.test(imageUrlInput)) {
-        console.log('adding image url: ', imageUrlInput);
-        updateForm({
-          type: ACTION.SET_IMAGE_URLS,
-          payload: [imageUrlInput],
-        });
-        setImageUrlInput('');
-      } else {
-        console.error('Invalid URL format:', imageUrlInput);
-        alert('Please enter a valid URL.');
+  const checkIfFileIsInState = (file: File) => {
+    return state.imageFiles.some((f) => f.name === file.name);
+  };
+  const addImageFile = async (file: File) => {
+    if (file) {
+      if (checkIfFileIsInState(file)) {
+        console.error('File already exists in state:', file);
+        alert('File already added');
+        return;
       }
+      console.log('adding image file: ', file);
+      updateForm({
+        type: ACTION.SET_IMAGEFILES,
+        payload: [file],
+      });
+      setSelectedImageFile(null);
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
+      setSelectedImageFile(null);
     }
   };
-
+  const handleInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: ACTION
+  ) => {
+    const cleanedValue = firstToUpper(removeNumbers(e.target.value));
+    updateForm({
+      type,
+      payload: cleanedValue,
+    });
+  };
   const create = async (
     e: React.FormEvent<HTMLFormElement>,
     dispatch: AppDispatch
@@ -71,7 +85,6 @@ export default function NewPropertyForm() {
         `A beautiful home in ${state.city}, ${state.country}`,
       available: true,
       hostId: user.id,
-      imageUrls: state.imageUrls || [],
     };
     const [hasErrors, errors] = validationHelper.validatePropertyForm(formData);
     if (hasErrors) {
@@ -82,6 +95,9 @@ export default function NewPropertyForm() {
     setShowModal(true);
     updateForm({ type: ACTION.SET_ISSUBMITTING, payload: true });
     try {
+      const secure_urls = await IMAGE_UPLOAD.uploadImages(state.imageFiles);
+      formData.imageUrls = secure_urls;
+
       await dispatch(createProperty({ data: formData, dispatch }));
       updateForm({ type: ACTION.RESET_FORM });
       updateForm({ type: ACTION.SET_ISSUBMITTING, payload: false });
@@ -109,10 +125,7 @@ export default function NewPropertyForm() {
                 required
                 className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 onChange={(e) => {
-                  updateForm({
-                    type: ACTION.SET_NAME,
-                    payload: firstToUpper(e.currentTarget.value),
-                  });
+                  handleInput(e, ACTION.SET_NAME);
                 }}
               />
             </label>
@@ -195,27 +208,6 @@ export default function NewPropertyForm() {
             />
 
             <label className="block text-gray-700 font-semibold">
-              Add Image URL
-              <div className="flex space-x-2 mt-1">
-                <input
-                  type="text"
-                  name="property_images"
-                  placeholder="Image URL"
-                  value={imageUrlInput}
-                  className="p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  onChange={handleImageUrlChange}
-                />
-                <button
-                  type="button"
-                  onClick={addImageUrl}
-                  className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
-                >
-                  Add
-                </button>
-              </div>
-            </label>
-
-            <label className="block text-gray-700 font-semibold">
               Price Per Night:
               <input
                 pattern="[0-9]*"
@@ -234,6 +226,67 @@ export default function NewPropertyForm() {
                 }
               />
             </label>
+            <label htmlFor="add-image" className="font-semibold mr-8">
+              Add image
+            </label>
+            <input
+              type="file"
+              ref={inputRef}
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                  setSelectedImageFile(files[0]);
+                } else {
+                  setSelectedImageFile(null);
+                }
+              }}
+            />
+            <button
+              className={`${
+                inputRef.current?.files?.length === 0
+                  ? 'bg-gray-300 cursor-default'
+                  : 'bg-blue-500 hover:bg-indigo-600 cursor-pointer'
+              } text-white px-4 py-2 rounded  `}
+              type="button"
+              disabled={inputRef.current?.files?.length === 0}
+              onClick={() => {
+                if (selectedImageFile) {
+                  addImageFile(selectedImageFile);
+                }
+              }}
+            >
+              Add image
+            </button>
+            <div
+              id="images-showcase"
+              className=" mt-6 flex flex-wrap bg-blue-100 items-start p-4 rounded-md gap-4"
+            >
+              {state.imageFiles.map((file: File, index: number) => (
+                <div
+                  key={file.name + '-' + index}
+                  className="relative w-[120px] h-[120px] flex-shrink-0 overflow-hidden"
+                >
+                  <button
+                    onClick={() => {
+                      updateForm({
+                        type: ACTION.REMOVE_IMAGE_FILE,
+                        payload: index,
+                      });
+                    }}
+                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 absolute top-0 left-0"
+                  >
+                    X
+                  </button>
+                  <Image
+                    src={URL.createObjectURL(file)}
+                    alt={file.name}
+                    width={100}
+                    height={100}
+                    className="rounded-md object-cover"
+                  />
+                </div>
+              ))}
+            </div>
 
             <button
               type="submit"
@@ -242,27 +295,6 @@ export default function NewPropertyForm() {
               Create property
             </button>
           </form>
-
-          <div id="image-urls-showcase" className="space-y-4 mt-6">
-            {state.imageUrls.map((url: string, index: number) => (
-              <div key={url} className="flex items-center space-x-2 w-full">
-                <button
-                  onClick={() => {
-                    updateForm({
-                      type: ACTION.REMOVE_IMAGE_URL,
-                      payload: index,
-                    });
-                  }}
-                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-                >
-                  X
-                </button>
-                <div className="flex-grow">
-                  <ProxyImage imageUrl={url} />
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
       {showModal &&

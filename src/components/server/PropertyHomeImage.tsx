@@ -15,7 +15,7 @@ const ProxyImage = ({ image }: { image: ImageProps }) => {
         src={src}
         alt={image.alt}
         fill
-        className="object-cover"
+        className="object-cover rounded-sm"
         unoptimized
         onError={() => {
           console.log('Error loading image, switching to default.');

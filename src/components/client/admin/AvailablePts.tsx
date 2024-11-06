@@ -1,6 +1,7 @@
 'use client';
 import { sendRequest } from '@/lib/helpers/fetch';
 import { Property } from '@/models/interfaces/property';
+import ROUTES from '@/lib/routes';
 
 export default function AvailablePts({
   properties,
@@ -20,7 +21,7 @@ export default function AvailablePts({
     }
     try {
       const response: { status: number } = await sendRequest({
-        url: '/api/admin/properties/:id',
+        url: ROUTES.ADMIN.PROPERTIES_ID,
         method: 'PUT',
         id: propertyId,
       });

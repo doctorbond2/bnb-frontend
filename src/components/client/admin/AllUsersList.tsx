@@ -1,13 +1,14 @@
 'use client';
 import { User } from '@/models/interfaces/user';
 import { sendRequest } from '@/lib/helpers/fetch';
+import ROUTES from '@/lib/routes';
 
 export default function AllUsersList({ userList }: { userList: User[] }) {
   const softDelete = async (id: string) => {
     if (confirm('Are you sure you want to soft delete this user?')) {
       try {
         await sendRequest({
-          url: `/api/admin/users/:id`,
+          url: ROUTES.ADMIN.USERS_ID,
           method: 'DELETE',
           query: { soft: true },
           id,

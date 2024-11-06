@@ -22,6 +22,10 @@ const config: Config = {
         fadeIn: 'fadeIn 1s ease-in-out forwards',
       },
     },
+    fontFamily: {
+      nanum: ['Nanum Myeongjo', 'sans-serif'],
+      sans: ['Public Sans', 'sans-serif'],
+    },
   },
   plugins: [],
 };

@@ -6,6 +6,7 @@ import { LocalStorageKeys as key } from '@/models/enum/localstorage';
 import localStorageHandler from '@/lib/helpers/localStorage';
 import { AppDispatch } from '../store';
 import { User } from '@/models/interfaces/user';
+import ROUTES from '@/lib/routes';
 
 export interface LoginApiResponse {
   user: User;
@@ -32,7 +33,7 @@ export const loginUser = createAsyncThunk(
   ): Promise<LoginApiResponse | ReturnType<typeof rejectWithValue>> => {
     try {
       const data: LoginApiResponse = await sendRequest({
-        url: '/api/auth/login',
+        url: ROUTES.PUBLIC.LOGIN,
         method: 'POST',
         body: credentials,
       });
@@ -58,7 +59,7 @@ export const updateUser = createAsyncThunk(
     try {
       const response: UpdateUserResponse = await sendRequest(
         {
-          url: '/api/protected/user',
+          url: ROUTES.USER.MAIN,
           method: 'PUT',
           body: { ...credentials.data },
           protected: true,

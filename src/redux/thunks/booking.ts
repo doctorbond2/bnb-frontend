@@ -6,6 +6,7 @@ import { BookingFormData } from '@/models/interfaces/booking';
 import localStorageHandler from '@/lib/helpers/localStorage';
 import { LocalStorageKeys as key } from '@/models/enum/localstorage';
 import { AppDispatch } from '../store';
+import ROUTES from '@/lib/routes';
 type GetBookingsApiResponse = Booking[];
 export const getBookings = createAsyncThunk(
   'bookings/getBookings',
@@ -36,7 +37,7 @@ export const createBooking = createAsyncThunk(
     try {
       const data: Booking = await sendRequest(
         {
-          url: '/api/protected/booking',
+          url: ROUTES.GENERAL_PROTECTED.BOOKINGS,
           method: 'POST',
           body: { ...credentials.data },
           protected: true,
@@ -58,14 +59,14 @@ export const userCancelBooking = createAsyncThunk(
     try {
       const data: Booking = await sendRequest(
         {
-          url: `/api/protected/booking/:id`,
+          url: ROUTES.GENERAL_PROTECTED.BOOKING_BY_ID,
           method: 'DELETE',
           protected: true,
           id: credentials.bookingId,
         },
         credentials.dispatch
       );
-      console.log('replacing with', data);
+
       localStorageHandler.replaceItemInStorageById(key.BOOKINGS_LIST, data);
       return data;
     } catch (err: unknown) {

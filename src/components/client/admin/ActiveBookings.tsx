@@ -4,6 +4,7 @@ import { parseCustomerJson } from '@/lib/helpers/json';
 import { Customer } from '@/models/interfaces/booking';
 import { BookingStatus } from '@/models/enum/booking';
 import { sendRequest } from '@/lib/helpers/fetch';
+import ROUTES from '@/lib/routes';
 
 export default function ActiveBookingsTable({
   activeBookings,
@@ -13,8 +14,9 @@ export default function ActiveBookingsTable({
   const handleCancelBooking = async (bookingId: string) => {
     try {
       await sendRequest({
-        url: `/api/admin/bookings/${bookingId}`,
+        url: ROUTES.ADMIN.BOOKINGS_ID,
         method: 'PUT',
+        id: bookingId,
       });
       alert('Booking Cancelled, reloading page...');
       location.reload();
