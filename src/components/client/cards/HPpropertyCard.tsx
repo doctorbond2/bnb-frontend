@@ -1,6 +1,7 @@
 'use client';
 import CustomImage from '@/components/server/PropertyHomeImage';
 import { Property } from '@/models/interfaces/property';
+import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import useStoreData from '@/lib/hooks/useStoreData';
@@ -69,7 +70,7 @@ export default function HPpropertyCard({
                 href={`/profile/${host.id}`}
                 className="text-blue-500 hover:underline"
               >
-                {host.firstName} {host.lastName}
+                {toUpper(host.firstName)} {toUpper(host.lastName)}
               </Link>
             </span>
           </p>

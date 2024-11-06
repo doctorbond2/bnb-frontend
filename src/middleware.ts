@@ -3,8 +3,6 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const admin = request.cookies.get('admin')?.value;
-  console.log('admin cookie MIDDLEWARE:', admin);
-  console.log('token cookie MIDDLEWARE:', token);
   const protectedRoutes = ['/protected', '/book', '/user/:path*'];
 
   if (token) {

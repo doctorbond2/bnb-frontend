@@ -1,6 +1,7 @@
 'use client';
 import { sendRequest } from '@/lib/helpers/fetch';
 import { useState } from 'react';
+import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import { User } from '@/models/interfaces/user';
 import ROUTES from '@/lib/routes';
 
@@ -100,8 +101,11 @@ export default function DeletedUsers({ userList }: { userList: User[] }) {
           Hard Delete Selected
         </button>
         <button
+          disabled={userList.length < 1}
           onClick={() => openModal('clear')}
-          className="px-4 py-2 bg-red-600 text-white rounded-md"
+          className={`px-4 py-2 ${
+            userList.length < 1 ? 'bg-gray-400' : 'bg-red-500'
+          } text-white rounded-md`}
         >
           Purge
         </button>
@@ -146,7 +150,7 @@ export default function DeletedUsers({ userList }: { userList: User[] }) {
                 />
               </td>
               <td className="py-3 px-4 text-gray-900">
-                {user.firstName} {user.lastName}
+                {toUpper(user.firstName)} {toUpper(user.lastName)}
               </td>
               <td className="py-3 px-4 text-gray-900">{user.email}</td>
               <td className="py-3 px-4 text-gray-700">{user.username}</td>

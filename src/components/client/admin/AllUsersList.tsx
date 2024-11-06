@@ -1,18 +1,23 @@
 'use client';
 import { User } from '@/models/interfaces/user';
 import { sendRequest } from '@/lib/helpers/fetch';
+import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import ROUTES from '@/lib/routes';
 
 export default function AllUsersList({ userList }: { userList: User[] }) {
   const softDelete = async (id: string) => {
     if (confirm('Are you sure you want to soft delete this user?')) {
       try {
-        await sendRequest({
+        const response: { status: number } = await sendRequest({
           url: ROUTES.ADMIN.USERS_ID,
           method: 'DELETE',
           query: { soft: true },
           id,
         });
+        if (response.status === 204) {
+          alert('User soft deleted, reloading page...');
+          location.reload();
+        }
       } catch (err) {
         console.log(err);
       }
@@ -51,7 +56,7 @@ export default function AllUsersList({ userList }: { userList: User[] }) {
           {userList.map((user) => (
             <tr key={user.id} className="border-b">
               <td className="py-3 px-4 text-gray-900 overflow-auto">
-                {user.firstName} {user.lastName}
+                {toUpper(user.firstName)} {toUpper(user.lastName)}
               </td>
               <td className="py-3 px-4 text-gray-700 overflow-auto">
                 {user.admin ? 'Admin' : 'User'}
@@ -59,7 +64,7 @@ export default function AllUsersList({ userList }: { userList: User[] }) {
               <td className="py-3 px-4 text-gray-700 overflow-auto">
                 {user.email}
               </td>
-              <td className="py-3 px-4 text-gray-700 overflow-auto ">
+              <td className="py-3 px-4 text-gray-700 overflow-auto">
                 {user.username}
               </td>
               <td className="py-3 px-4 text-gray-500 overflow-auto">

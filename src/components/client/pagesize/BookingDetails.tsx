@@ -2,6 +2,7 @@
 import { sendRequest } from '@/lib/helpers/fetch';
 import { useEffect, useState } from 'react';
 import { formatDate, parseCustomerJson } from '@/lib/helpers/json';
+import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import { BookingStatus } from '@/models/enum/booking';
 import useStore from '@/lib/hooks/useStore';
 import { useRouter } from 'next/navigation';
@@ -70,7 +71,8 @@ export default function BookingDetails({
               Customer Information
             </h2>
             <p className="text-gray-600">
-              Name: {booking.customer.firstName} {booking.customer.lastName}
+              Name: {toUpper(booking.customer.firstName)}{' '}
+              {toUpper(booking.customer.lastName)}
             </p>
             <p className="text-gray-600">Email: {booking.customer.email}</p>
             <p className="text-gray-600">

@@ -1,6 +1,7 @@
 'use client';
 
 import useStoreData from '@/lib/hooks/useStoreData';
+import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import Link from 'next/link';
 export default function LoggedInUserProfile() {
   const { user } = useStoreData();
@@ -17,7 +18,7 @@ export default function LoggedInUserProfile() {
           <li className="flex items-center">
             <span className="font-medium text-gray-700 w-32">Name:</span>
             <span className="text-gray-900">
-              {user.firstName} {user.lastName}
+              {toUpper(user.firstName)} {toUpper(user.lastName)}
             </span>
           </li>
           <li className="flex items-center">

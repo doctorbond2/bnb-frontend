@@ -1,6 +1,7 @@
 import { sendServerRequest } from '@/lib/helpers/severFetch';
 import { User } from '@/models/interfaces/user';
 import ProxyImage from '@/components/server/PropertyHomeImage';
+import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import Image from 'next/image';
 const getUser = async (userId: string) => {
   const response: User = await sendServerRequest({
@@ -19,7 +20,7 @@ export default async function Page({ params }: { params: { userId: string } }) {
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="bg-white shadow-lg rounded-lg max-w-4xl w-full p-6 text-center">
           <h1 className="text-3xl font-semibold text-gray-800 mb-4">
-            {user.firstName} {user.lastName}
+            {toUpper(user.firstName)} {toUpper(user.lastName)}
           </h1>
           <p className="text-lg text-gray-600 mb-6">
             No. listed homes: {user.hosted_properties?.length || 0}

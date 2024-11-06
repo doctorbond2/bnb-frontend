@@ -5,6 +5,7 @@ import useStoreData from '@/lib/hooks/useStoreData';
 import { BookingStatus } from '@/models/enum/booking';
 import { decideBooking } from '@/lib/handlers/booking';
 import { parseCustomerJson } from '@/lib/helpers/json';
+import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import UserPropertyCard from '../cards/UserPropertyCard';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -65,7 +66,8 @@ export default function UserProperties() {
                         </p>
                       )}
                       <p className="text-gray-800">
-                        {customer.firstName} {customer.lastName}
+                        {toUpper(customer.firstName)}{' '}
+                        {toUpper(customer.lastName)}
                       </p>
                       <button
                         disabled={booking.status !== BookingStatus.PENDING}

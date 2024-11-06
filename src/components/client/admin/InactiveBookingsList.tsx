@@ -3,6 +3,7 @@ import { Booking } from '@/models/interfaces/booking';
 import { parseCustomerJson } from '@/lib/helpers/json';
 import { Customer } from '@/models/interfaces/booking';
 import { BookingStatus } from '@/models/enum/booking';
+import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import { sendRequest } from '@/lib/helpers/fetch';
 import ROUTES from '@/lib/routes';
 
@@ -87,7 +88,7 @@ export default function InactiveBookingsList({
             return (
               <tr key={booking.id} className="border-b">
                 <td className="py-3 px-4 text-gray-900">
-                  {customer.firstName} {customer.lastName}
+                  {toUpper(customer.firstName)} {toUpper(customer.lastName)}
                 </td>
                 <td className="py-3 px-4 text-gray-700">{customer.email}</td>
                 <td className="py-3 px-4">
