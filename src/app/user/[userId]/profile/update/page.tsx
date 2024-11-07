@@ -1,4 +1,8 @@
 import UserUpdateForm from '@/components/client/update/UserUpdateForm';
 export default async function Page() {
-  return <UserUpdateForm />;
+  return (
+    <div>
+      <UserUpdateForm />
+    </div>
+  );
 }

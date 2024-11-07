@@ -45,7 +45,6 @@ export default function HeaderSearchBar() {
       method: 'GET',
       searchQuery: value,
     });
-    console.log(response.data);
     setIsSearching(false);
     setSearchResults(response.data);
   };

@@ -57,7 +57,7 @@ export default function NewBookingForm({
               state
             );
             if (result) {
-              router.push(`/user/${user.id}/profile`);
+              router.push(`/user/${user.id}/profile/bookings`);
             }
           }}
           className="space-y-6"

@@ -13,15 +13,6 @@ export default function ProfilePageLayout() {
       {user ? (
         <>
           <LoggedInUserProfile />
-          <div className="flex just">
-            <button
-              onClick={() => {
-                console.log('asd');
-              }}
-            >
-              Delete account
-            </button>
-          </div>
         </>
       ) : (
         <div>Loading...</div>
