@@ -24,7 +24,10 @@ import { useReducer } from 'react';
 import { validationHelper } from '@/lib/helpers/validate';
 
 export default function NewPropertyForm() {
-  const [state, updateForm] = useReducer(newPropertyFormReducer, init);
+  const [state, updateForm] = useReducer(newPropertyFormReducer, {
+    ...init,
+    country: 'Sweden',
+  });
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -171,6 +174,7 @@ export default function NewPropertyForm() {
               <select
                 required
                 name="country"
+                value={state.country}
                 className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 onChange={(e) => {
                   updateForm({

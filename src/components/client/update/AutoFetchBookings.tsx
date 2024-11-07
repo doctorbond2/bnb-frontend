@@ -21,13 +21,14 @@ export default function BookingFetcher() {
       !lastFetchTimestamp ||
       now - parseInt(lastFetchTimestamp) > REFRESH_INTERVAL
     ) {
-      dispatch(getBookings({ dispatch: dispatch }));
-      dispatch(getHostedProperties({ dispatch: dispatch }));
+      dispatch(getBookings({ dispatch }));
+      dispatch(getHostedProperties({ dispatch }));
       localStorage.setItem(LAST_FETCH_KEY, now.toString());
     }
 
     const intervalId = setInterval(() => {
-      dispatch(getBookings({ dispatch: dispatch }));
+      dispatch(getBookings({ dispatch }));
+      dispatch(getHostedProperties({ dispatch }));
       localStorage.setItem(LAST_FETCH_KEY, Date.now().toString());
     }, REFRESH_INTERVAL);
 

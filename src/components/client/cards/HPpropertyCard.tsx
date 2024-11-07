@@ -60,7 +60,7 @@ export default function HPpropertyCard({
           <h2 className="text-xl font-bold text-gray-800 truncate">{name}</h2>
           <p className="text-gray-600 mt-2">{address}</p>
           <p className="text-gray-800 font-semibold mt-2">
-            ${price_per_night}{' '}
+            €{price_per_night}{' '}
             <span className="text-sm font-normal">/night</span>
           </p>
           <p className="text-gray-700 mt-2">

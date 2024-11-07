@@ -1,7 +1,9 @@
 'use client';
 import { sendRequest } from '@/lib/helpers/fetch';
 import { Property } from '@/models/interfaces/property';
+import { Booking } from '@/models/interfaces/booking';
 import ROUTES from '@/lib/routes';
+import { BookingStatus } from '@/models/enum/booking';
 
 export default function AvailablePts({
   properties,
@@ -10,10 +12,14 @@ export default function AvailablePts({
 }) {
   const handleSoftDelete = async (
     propertyId: string,
-    propertyBookings: number
+    propertyBookings: Booking[]
   ) => {
+    const activeBookings = propertyBookings.filter(
+      (booking) =>
+        booking.status !== 'cancelled' && booking.status !== 'rejected'
+    );
     const decision =
-      propertyBookings > 0
+      activeBookings.length > 0
         ? confirm('Are you sure? Property has bookings')
         : confirm('Are you sure?');
     if (!decision) {
@@ -33,6 +39,18 @@ export default function AvailablePts({
       console.log(err);
     }
   };
+  const getActiveBookingsLength = (bookings: Booking[]) => {
+    console.log(
+      properties[0].bookings,
+      properties[1].bookings,
+      properties[2].bookings
+    );
+    return bookings.filter(
+      (booking) =>
+        booking.status !== BookingStatus.CANCELLED &&
+        booking.status !== BookingStatus.REJECTED
+    ).length;
+  };
 
   return (
     <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
@@ -42,13 +60,14 @@ export default function AvailablePts({
             Name
           </th>
           <th className="py-2 px-4 text-left text-gray-700 font-medium">
-            Price per Night
+            Price
+          </th>
+          <th className="py-2 px-4 text-left text-gray-700 font-medium">ID</th>
+          <th className="py-2 px-4 text-left text-gray-700 font-medium">
+            Images
           </th>
           <th className="py-2 px-4 text-left text-gray-700 font-medium">
-            Property ID
-          </th>
-          <th className="py-2 px-4 text-left text-gray-700 font-medium">
-            Number of Images
+            Bookings
           </th>
           <th className="py-2 px-4 text-left text-gray-700 font-medium">
             Actions
@@ -66,14 +85,15 @@ export default function AvailablePts({
             <td className="py-3 px-4 text-gray-700">
               {property.images?.length ? property.images.length : '0'}
             </td>
+            <td className="py-3 px-4 text-gray-700">
+              {getActiveBookingsLength(property.bookings)}
+            </td>
             <td className="py-3 px-4 space-x-2">
               <button
                 className={`px-3 py-1 rounded-md ${
                   !!property.deletedAt ? 'bg-gray-400' : 'bg-red-500'
                 }`}
-                onClick={() =>
-                  handleSoftDelete(property.id, property.bookings.length)
-                }
+                onClick={() => handleSoftDelete(property.id, property.bookings)}
                 disabled={!!property.deletedAt}
               >
                 Soft Delete

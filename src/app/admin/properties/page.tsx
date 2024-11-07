@@ -19,10 +19,10 @@ export default async function Page() {
     const response: Property[] = await getData();
 
     const availableProperties = response.filter(
-      (property) => property.available
+      (property) => property.available && !property.deletedAt
     );
     const unAvailableProperties = response.filter(
-      (property) => !property.available
+      (property) => !property.available && !property.deletedAt
     );
     const deletedProperties = response.filter((property) => property.deletedAt);
     if (!response || response.length < 1) {
