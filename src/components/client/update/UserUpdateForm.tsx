@@ -1,6 +1,8 @@
 'use client';
 import { useReducer, useEffect, useState } from 'react';
 import updateUserFormReducer from '@/reducer/updateUserReducer';
+import { useRouter } from 'next/navigation';
+import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import { updateUser } from '@/redux/thunks/user';
 import {
   UpdateUserFormState,
@@ -11,6 +13,7 @@ import useStore from '@/lib/hooks/useStore';
 
 export default function UserUpdateForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const { user } = useStoreData();
   const { dispatch } = useStore();
 
@@ -26,7 +29,7 @@ export default function UserUpdateForm() {
   };
 
   const [state, updateForm] = useReducer(updateUserFormReducer, init);
-
+  const router = useRouter();
   const submit = async () => {
     updateForm({ type: ACTION.SET_ISSUBMITTING, payload: true });
     if (!state.existing_password) return;
@@ -56,16 +59,22 @@ export default function UserUpdateForm() {
         dispatch,
       })
     );
-
     if (data) {
       updateForm({ type: ACTION.SET_ISSUBMITTING, payload: false });
+      router.push(`/user/${user.id}/profile`);
     }
   };
 
   useEffect(() => {
     if (user) {
-      updateForm({ type: ACTION.SET_FIRSTNAME, payload: user.firstName });
-      updateForm({ type: ACTION.SET_LASTNAME, payload: user.lastName });
+      updateForm({
+        type: ACTION.SET_FIRSTNAME,
+        payload: toUpper(user.firstName),
+      });
+      updateForm({
+        type: ACTION.SET_LASTNAME,
+        payload: toUpper(user.lastName),
+      });
       updateForm({ type: ACTION.SET_USERNAME, payload: user.username });
       updateForm({ type: ACTION.SET_EMAIL, payload: user.email });
     }

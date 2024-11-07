@@ -59,7 +59,7 @@ export default class ROUTES {
       '/api/protected/booking/:id',
     BOOKING_DECIDE_ID:
       process.env.NEXT_PUBLIC_PROTECTED_BOOKING_DECIDE_ID ||
-      '/api/protected/booking/:id/decide',
+      '/api/protected/booking/decide/:id',
   };
 
   static logMissingEnv() {

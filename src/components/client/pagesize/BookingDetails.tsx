@@ -84,6 +84,10 @@ export default function BookingDetails({
             <h2 className="text-xl font-semibold mb-2 text-gray-700">
               Booking Information
             </h2>
+            <p className="text-gray-600">
+              Host: {toUpper(booking.property?.host.firstName ?? '')}{' '}
+              {toUpper(booking.property?.host.lastName ?? '')}{' '}
+            </p>
             <p className="text-gray-600">Property: {booking.property?.name}</p>
             <p className="text-gray-600">
               Price per night: ${booking.property?.price_per_night}

@@ -6,7 +6,9 @@ import bookingFormReducer, {
 } from '@/reducer/bookingFormReducer';
 import DatePicker from './DatePicker';
 import { bookProperty } from '@/lib/handlers/booking';
+import useStoreData from '@/lib/hooks/useStoreData';
 import { BookingFormActionType as ACTION } from '@/reducer/bookingFormReducer';
+import { useRouter } from 'next/navigation';
 import { Property } from '@/models/interfaces/property';
 
 export default function NewBookingForm({
@@ -17,7 +19,13 @@ export default function NewBookingForm({
   property: Property;
 }) {
   const { dispatch } = useStore();
+  const { user } = useStoreData();
 
+  const [state, updateForm] = useReducer(
+    bookingFormReducer,
+    initialBookingFormState
+  );
+  const router = useRouter();
   const formatDate = (dateString: Date): string => {
     if (dateString) {
       const date = new Date(dateString);
@@ -27,12 +35,6 @@ export default function NewBookingForm({
     }
     return '';
   };
-
-  const [state, updateForm] = useReducer(
-    bookingFormReducer,
-    initialBookingFormState
-  );
-
   if (!property || !property.availableFrom || !property.availableUntil) {
     return <div className="text-center text-gray-500">Property not found</div>;
   }
@@ -45,9 +47,19 @@ export default function NewBookingForm({
         </h2>
 
         <form
-          onSubmit={async (e) =>
-            await bookProperty(e, dispatch, updateForm, propertyId, state)
-          }
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const result = await bookProperty(
+              e,
+              dispatch,
+              updateForm,
+              propertyId,
+              state
+            );
+            if (result) {
+              router.push(`/user/${user.id}/profile`);
+            }
+          }}
           className="space-y-6"
         >
           <label

@@ -54,8 +54,10 @@ export async function bookProperty(
       createBooking({ data: bookingDetails, dispatch })
     );
     console.log('Booking created:', result);
+    return true;
   } catch (err) {
     console.log(err);
+
     throw new Error('Failed to create booking');
   } finally {
     updateForm({ type: ACTION.SET_ISSUBMITTING, payload: false });

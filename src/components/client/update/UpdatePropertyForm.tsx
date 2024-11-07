@@ -385,7 +385,6 @@ export default function PropertyUpdateForm({
                               X
                             </button>
                             <ProxyImage imageUrl={item} />
-                            url
                           </div>
                         );
                       } else {
@@ -412,7 +411,6 @@ export default function PropertyUpdateForm({
                               height={100}
                               className="rounded-md object-cover"
                             />
-                            file
                           </div>
                         );
                       }

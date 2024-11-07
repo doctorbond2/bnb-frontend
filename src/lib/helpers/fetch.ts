@@ -35,7 +35,7 @@ export const sendRequest = async <T>(
     config.url = `${config.url}?searchQuery=${config.searchQuery}`;
   }
   const URL = `${BaseUrl}${config.url}`;
-
+  console.log('URL:', URL);
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
