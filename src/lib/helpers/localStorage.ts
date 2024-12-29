@@ -81,6 +81,26 @@ function clearBothTokens(): void {
   clearToken();
   clearRefreshToken();
 }
+function getToken(): string | null {
+  const token = getfromStorage<string>(LocalStorageKeys.TOKEN);
+  return token;
+}
+function getRefreshToken(): string | null {
+  const refreshToken = getfromStorage<string>(LocalStorageKeys.REFRESHTOKEN);
+  return refreshToken;
+}
+function getApiKey(): string | null {
+  const apiKey = getfromStorage<string>(LocalStorageKeys.API_KEY);
+  return apiKey;
+}
+function setApiKey(apiKey: string): void {
+  setInStorage(LocalStorageKeys.API_KEY, apiKey);
+}
+function setAuth(token: string, refreshToken: string, apiKey: string): void {
+  setToken(token);
+  setRefreshToken(refreshToken);
+  setApiKey(apiKey);
+}
 const localStorageHandler = {
   setInStorage,
   getfromStorage,
@@ -94,5 +114,10 @@ const localStorageHandler = {
   clearToken,
   clearRefreshToken,
   clearBothTokens,
+  getToken,
+  getRefreshToken,
+  getApiKey,
+  setApiKey,
+  setAuth,
 };
 export default localStorageHandler;

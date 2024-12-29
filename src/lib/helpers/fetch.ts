@@ -1,6 +1,7 @@
 import { AppDispatch } from '@/redux/store';
 import { RETRY_REFRESHTOKEN } from './handleTokenRefresh';
 import { handleApiError as apiError } from './error';
+import localStorageHandler from './localStorage';
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export interface SendRequestConfig {
   url: string;
@@ -36,9 +37,10 @@ export const sendRequest = async <T>(
     config.url = `${config.url}?searchQuery=${config.searchQuery}`;
   }
   const URL = `${BaseUrl}${config.url}`;
-  console.log('URL:', URL);
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
+    Authorization: `Bearer ${localStorageHandler.getToken() || ''}`,
+    'x-api-key': localStorageHandler.getApiKey() || '',
   };
 
   const options: RequestInit = {
@@ -52,7 +54,10 @@ export const sendRequest = async <T>(
 
     if (response.status === 401 && config.protected && dispatch) {
       console.log('401 error, retrying with refresh token');
-      return await RETRY_REFRESHTOKEN(dispatch, options, URL, headers);
+      return await RETRY_REFRESHTOKEN(dispatch, options, URL, {
+        ...headers,
+        refreshToken: localStorageHandler.getRefreshToken() || '',
+      });
     }
 
     if (!response.ok) {

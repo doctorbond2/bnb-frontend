@@ -94,6 +94,8 @@ export const refreshTokenRequest = async () => {
       LocalStorageKeys.TOKEN_EXPIRY,
       response.tokenExpiry
     );
+    localStorageHandler.setToken(response.token);
+
     return response;
   } catch {
     throw new Error('Failed to refresh token');

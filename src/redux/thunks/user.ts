@@ -14,6 +14,9 @@ export interface LoginApiResponse {
   status?: number;
   tokenExpiry: number;
   refreshTokenExpiry: number;
+  token: string;
+  refreshToken: string;
+  xApiKey: string;
 }
 export interface UpdateUserResponse {
   user: User;
@@ -24,6 +27,8 @@ export interface RefreshTokenResponse {
   status: number;
   tokenExpiry: number;
   refreshTokenExpiry: number;
+  token: string;
+  refreshToken: string;
 }
 export const loginUser = createAsyncThunk(
   'user/loginUser',
@@ -39,6 +44,7 @@ export const loginUser = createAsyncThunk(
       });
       localStorageHandler.setInStorage(key.USER_STATE, data.user);
       localStorageHandler.setInStorage(key.TOKEN_EXPIRY, data.tokenExpiry);
+      localStorageHandler.setAuth(data.token, data.refreshToken, data.xApiKey);
       localStorageHandler.setInStorage(
         key.REFRESHTOKEN_EXPIRY,
         data.refreshTokenExpiry
@@ -81,6 +87,8 @@ export const refreshToken = createAsyncThunk(
         url: '/api/auth/refreshToken',
         method: 'POST',
       });
+      localStorageHandler.setToken(response.token);
+      localStorageHandler.setRefreshToken(response.refreshToken);
       localStorageHandler.setInStorage(
         key.REFRESHTOKEN_EXPIRY,
         response.refreshTokenExpiry
