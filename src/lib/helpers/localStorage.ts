@@ -97,6 +97,7 @@ function setApiKey(apiKey: string): void {
   setInStorage(LocalStorageKeys.API_KEY, apiKey);
 }
 function setAuth(token: string, refreshToken: string, apiKey: string): void {
+  console.log('Setting auth', token, refreshToken, apiKey);
   setToken(token);
   setRefreshToken(refreshToken);
   setApiKey(apiKey);

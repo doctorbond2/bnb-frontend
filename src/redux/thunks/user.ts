@@ -14,9 +14,11 @@ export interface LoginApiResponse {
   status?: number;
   tokenExpiry: number;
   refreshTokenExpiry: number;
-  token: string;
-  refreshToken: string;
-  xApiKey: string;
+  auth: {
+    token: string;
+    refreshToken: string;
+    xApiKey: string;
+  };
 }
 export interface UpdateUserResponse {
   user: User;
@@ -42,9 +44,14 @@ export const loginUser = createAsyncThunk(
         method: 'POST',
         body: credentials,
       });
+      console.log('data', data);
       localStorageHandler.setInStorage(key.USER_STATE, data.user);
       localStorageHandler.setInStorage(key.TOKEN_EXPIRY, data.tokenExpiry);
-      localStorageHandler.setAuth(data.token, data.refreshToken, data.xApiKey);
+      localStorageHandler.setAuth(
+        data.auth.token,
+        data.auth.refreshToken,
+        data.auth.xApiKey
+      );
       localStorageHandler.setInStorage(
         key.REFRESHTOKEN_EXPIRY,
         data.refreshTokenExpiry

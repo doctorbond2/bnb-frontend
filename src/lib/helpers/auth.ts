@@ -85,6 +85,11 @@ export const refreshTokenRequest = async () => {
     const response: RefreshTokenResponse = await sendRequest({
       url: ROUTES.PUBLIC.REFRESHTOKEN,
       method: 'POST',
+      body: {
+        refreshToken: localStorageHandler.getfromStorage<string>(
+          LocalStorageKeys.REFRESHTOKEN
+        ),
+      },
     });
     localStorageHandler.setInStorage(
       LocalStorageKeys.REFRESHTOKEN_EXPIRY,
