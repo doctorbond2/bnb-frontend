@@ -2,17 +2,18 @@
 import { User } from '@/models/interfaces/user';
 import { sendRequest } from '@/lib/helpers/fetch';
 import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 
 export default function AllUsersList({ userList }: { userList: User[] }) {
   const softDelete = async (id: string) => {
     if (confirm('Are you sure you want to soft delete this user?')) {
       try {
         const response: { status: number } = await sendRequest({
-          url: ROUTES.ADMIN.USERS_ID,
+          url: AppRoutes.ADMIN.USERS_ID,
           method: 'DELETE',
           query: { soft: true },
           id,
+          additionalHeaders: { 'admin-access': 'true' },
         });
         if (response.status === 204) {
           alert('User soft deleted, reloading page...');

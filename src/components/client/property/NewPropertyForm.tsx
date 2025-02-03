@@ -29,6 +29,7 @@ export default function NewPropertyForm() {
     country: 'Sweden',
   });
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
@@ -38,6 +39,7 @@ export default function NewPropertyForm() {
   const checkIfFileIsInState = (file: File) => {
     return state.imageFiles.some((f) => f.name === file.name);
   };
+
   const addImageFile = async (file: File) => {
     if (file) {
       if (checkIfFileIsInState(file)) {
@@ -45,16 +47,17 @@ export default function NewPropertyForm() {
         alert('File already added');
         return;
       }
-      console.log('adding image file: ', file);
       updateForm({
         type: ACTION.SET_IMAGEFILES,
         payload: [file],
       });
+
+      setImagePreviews((prev) => [...prev, URL.createObjectURL(file)]);
+
       setSelectedImageFile(null);
       if (inputRef.current) {
         inputRef.current.value = '';
       }
-      setSelectedImageFile(null);
     }
   };
   const handleInput = (
@@ -265,9 +268,9 @@ export default function NewPropertyForm() {
               id="images-showcase"
               className=" mt-6 flex flex-wrap bg-blue-100 items-start p-4 rounded-md gap-4"
             >
-              {state.imageFiles.map((file: File, index: number) => (
+              {imagePreviews.map((preview, index) => (
                 <div
-                  key={file.name + '-' + index}
+                  key={index}
                   className="relative w-[120px] h-[120px] flex-shrink-0 overflow-hidden"
                 >
                   <button
@@ -276,14 +279,17 @@ export default function NewPropertyForm() {
                         type: ACTION.REMOVE_IMAGE_FILE,
                         payload: index,
                       });
+                      setImagePreviews((prev) =>
+                        prev.filter((_, i) => i !== index)
+                      ); // Remove preview
                     }}
                     className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 absolute top-0 left-0"
                   >
                     X
                   </button>
                   <Image
-                    src={URL.createObjectURL(file)}
-                    alt={file.name}
+                    src={preview}
+                    alt={`Preview ${index}`}
                     width={100}
                     height={100}
                     className="rounded-md object-cover"

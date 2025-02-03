@@ -5,7 +5,7 @@ import { Customer } from '@/models/interfaces/booking';
 import { BookingStatus } from '@/models/enum/booking';
 import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import { sendRequest } from '@/lib/helpers/fetch';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 
 export default function ActiveBookingsTable({
   activeBookings,
@@ -15,9 +15,10 @@ export default function ActiveBookingsTable({
   const handleCancelBooking = async (bookingId: string) => {
     try {
       await sendRequest({
-        url: ROUTES.ADMIN.BOOKINGS_ID,
+        url: AppRoutes.ADMIN.BOOKINGS_ID,
         method: 'PUT',
         id: bookingId,
+        additionalHeaders: { 'admin-access': 'true' },
       });
       alert('Booking Cancelled, reloading page...');
       location.reload();

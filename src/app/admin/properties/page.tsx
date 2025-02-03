@@ -10,6 +10,9 @@ const getData = async () => {
   const response: Property[] | undefined = await sendServerRequest({
     url: '/api/admin/properties',
     method: 'GET',
+    additionalHeaders: {
+      'admin-access': 'true',
+    },
   });
 
   return response || [];

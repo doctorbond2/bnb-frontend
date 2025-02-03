@@ -7,7 +7,7 @@ import { BookingStatus } from '@/models/enum/booking';
 import useStore from '@/lib/hooks/useStore';
 import { useRouter } from 'next/navigation';
 import { Booking } from '@/models/interfaces/booking';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 
 export default function BookingDetails({
   bookingId,
@@ -26,7 +26,7 @@ export default function BookingDetails({
     try {
       const bookingData: Booking = await sendRequest(
         {
-          url: ROUTES.GENERAL_PROTECTED.BOOKING_BY_ID,
+          url: AppRoutes.GENERAL_PROTECTED.BOOKING_BY_ID,
           method: 'GET',
           protected: true,
           id: bookingId,

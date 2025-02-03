@@ -6,7 +6,7 @@ import { LocalStorageKeys } from '@/models/enum/localstorage';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch } from '../store';
 import { sendRequest } from '@/lib/helpers/fetch';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 export interface UserState {
   user: User;
   loggedIn: boolean;
@@ -59,9 +59,10 @@ export const checkUserLocalStorage = () => (dispatch: AppDispatch) => {
   }
 };
 export const logout = () => async (dispatch: AppDispatch) => {
+  console.log(AppRoutes.PUBLIC.LOGOUT);
   try {
     await sendRequest({
-      url: ROUTES.PUBLIC.LOGOUT,
+      url: AppRoutes.PUBLIC.LOGOUT,
       method: 'POST',
     });
 
@@ -74,6 +75,10 @@ export const logout = () => async (dispatch: AppDispatch) => {
       LocalStorageKeys.PROPERTY_LIST,
       LocalStorageKeys.REFRESHTOKEN_EXPIRY,
       LocalStorageKeys.TOKEN_EXPIRY,
+      LocalStorageKeys.TOKEN,
+      LocalStorageKeys.REFRESHTOKEN,
+      LocalStorageKeys.API_KEY,
+      LocalStorageKeys.ADMIN_ACCESS,
     ]);
   } catch (error) {
     console.error('Failed to log out:', error);

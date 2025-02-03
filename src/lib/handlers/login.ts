@@ -6,7 +6,7 @@ import { RegisterFormData } from '@/models/interfaces/user';
 import { sendRequest } from '../helpers/fetch';
 import { validationHelper as validate } from '../helpers/validate';
 import { LoginApiResponse } from '@/redux/thunks/user';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 import {
   RegisterFormAction as ACTION,
   RegisterFormActionType as ACTIONTYPE,
@@ -80,7 +80,7 @@ export const handleRegister = async (
 
   try {
     await sendRequest({
-      url: ROUTES.PUBLIC.REGISTER,
+      url: AppRoutes.PUBLIC.REGISTER,
       method: 'POST',
       body: { ...registerDetails },
     });

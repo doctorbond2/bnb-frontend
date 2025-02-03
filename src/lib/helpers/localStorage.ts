@@ -53,11 +53,7 @@ function replaceItemInStorageById<T extends { id: string }>(
   const newArray = oldArray.map((item: T) =>
     item.id === newItem.id ? newItem : item
   );
-  console.log('new array:', newArray);
-  console.log(
-    'Item replaced: ',
-    newArray.find((item) => item.id === newItem.id)
-  );
+
   localStorage.setItem(key, JSON.stringify(newArray));
 }
 function addItemToListInStorage<T>(key: LocalStorageKeys, item: T): void {
@@ -81,6 +77,9 @@ function clearBothTokens(): void {
   clearToken();
   clearRefreshToken();
 }
+function setAdminAccess(): void {
+  localStorage.setItem(LocalStorageKeys.ADMIN_ACCESS, 'true');
+}
 function getToken(): string | null {
   const token = getfromStorage<string>(LocalStorageKeys.TOKEN);
   return token;
@@ -96,11 +95,19 @@ function getApiKey(): string | null {
 function setApiKey(apiKey: string): void {
   setInStorage(LocalStorageKeys.API_KEY, apiKey);
 }
-function setAuth(token: string, refreshToken: string, apiKey: string): void {
+function setAuth(
+  token: string,
+  refreshToken: string,
+  apiKey: string,
+  admin?: boolean
+): void {
   console.log('Setting auth', token, refreshToken, apiKey);
   setToken(token);
   setRefreshToken(refreshToken);
   setApiKey(apiKey);
+  if (admin) {
+    setAdminAccess();
+  }
 }
 const localStorageHandler = {
   setInStorage,
@@ -120,5 +127,6 @@ const localStorageHandler = {
   getApiKey,
   setApiKey,
   setAuth,
+  setAdminAccess,
 };
 export default localStorageHandler;

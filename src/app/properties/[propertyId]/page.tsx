@@ -1,7 +1,7 @@
 import { sendServerRequest } from '@/lib/helpers/severFetch';
 import { Property } from '@/models/interfaces/property';
 import GoBackButton from '@/components/client/buttons/BackButton';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 import PropertyImageShowcase from '@/components/client/property/PropertyImageShowcase';
 export default async function PropertyDetailPage({
   params,
@@ -9,7 +9,7 @@ export default async function PropertyDetailPage({
   params: { propertyId: string };
 }) {
   const response: Property = await sendServerRequest({
-    url: ROUTES.PUBLIC.PROPERTY_BY_ID,
+    url: AppRoutes.PUBLIC.PROPERTY_BY_ID,
     method: 'GET',
     id: params.propertyId,
   });

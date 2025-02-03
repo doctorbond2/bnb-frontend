@@ -1,7 +1,7 @@
 'use client';
 import { sendRequest } from '@/lib/helpers/fetch';
 import { Property } from '@/models/interfaces/property';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 
 export default function UnavailablePts({
   properties,
@@ -11,9 +11,10 @@ export default function UnavailablePts({
   const handleSoftDelete = async (propertyId: string) => {
     try {
       const response = await sendRequest({
-        url: ROUTES.ADMIN.PROPERTIES_ID,
+        url: AppRoutes.ADMIN.PROPERTIES_ID,
         method: 'DELETE',
         id: propertyId,
+        additionalHeaders: { 'admin-access': 'true' },
       });
       console.log(response);
     } catch (err) {

@@ -5,7 +5,7 @@ import { sendRequest } from './fetch';
 import { AppDispatch } from '@/redux/store';
 import { refreshToken } from '@/redux/thunks/user';
 import * as jose from 'jose';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 const SECRET_KEY = process.env.JWT_SECRET || 'secret';
 export interface TokenPayload {
   id: string;
@@ -83,7 +83,7 @@ export const verifyToken = async (
 export const refreshTokenRequest = async () => {
   try {
     const response: RefreshTokenResponse = await sendRequest({
-      url: ROUTES.PUBLIC.REFRESHTOKEN,
+      url: AppRoutes.PUBLIC.REFRESHTOKEN,
       method: 'POST',
       body: {
         refreshToken: localStorageHandler.getfromStorage<string>(

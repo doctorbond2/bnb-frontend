@@ -9,7 +9,7 @@ import { BookingFormActionType as ACTION } from '@/reducer/bookingFormReducer';
 import { getHostedProperties } from '@/redux/thunks/property';
 import { Dispatch } from 'react';
 import { sendRequest } from '../helpers/fetch';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 export async function bookProperty(
   e: React.FormEvent<HTMLFormElement>,
   dispatch: AppDispatch,
@@ -72,7 +72,7 @@ export const decideBooking = async (
   try {
     await sendRequest(
       {
-        url: ROUTES.GENERAL_PROTECTED.BOOKING_DECIDE_ID,
+        url: AppRoutes.GENERAL_PROTECTED.BOOKING_DECIDE_ID,
         method: 'PUT',
         body: { decision },
         protected: true,
@@ -94,7 +94,7 @@ export const hostCancelBooking = async (
   try {
     await sendRequest(
       {
-        url: ROUTES.GENERAL_PROTECTED.BOOKING_DECIDE_ID,
+        url: AppRoutes.GENERAL_PROTECTED.BOOKING_DECIDE_ID,
         method: 'DELETE',
         body: { decision },
         protected: true,

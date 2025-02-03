@@ -4,6 +4,7 @@ import Link from 'next/link';
 import useStore from '@/lib/hooks/useStore';
 import { useRouter } from 'next/navigation';
 import { handleLogin } from '@/lib/handlers/login';
+import AppRoutes from '@/lib/routes';
 
 export default function LoginForm() {
   const [loginType, setLoginType] = useState<string>('username');
@@ -15,6 +16,7 @@ export default function LoginForm() {
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
+    console.log('Login route: ', AppRoutes.PUBLIC.LOGIN);
     setIsLoggingIn(true);
     const success = await handleLogin(e, dispatch);
     if (success) {

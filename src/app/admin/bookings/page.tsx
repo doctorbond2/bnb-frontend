@@ -10,6 +10,9 @@ const getData = async () => {
   const response: Booking[] | undefined = await sendServerRequest({
     url: '/api/admin/bookings',
     method: 'GET',
+    additionalHeaders: {
+      'admin-access': 'true',
+    },
   });
   return response || [];
 };

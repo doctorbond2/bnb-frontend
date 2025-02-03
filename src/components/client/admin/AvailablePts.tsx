@@ -2,7 +2,7 @@
 import { sendRequest } from '@/lib/helpers/fetch';
 import { Property } from '@/models/interfaces/property';
 import { Booking } from '@/models/interfaces/booking';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 import { BookingStatus } from '@/models/enum/booking';
 
 export default function AvailablePts({
@@ -27,9 +27,10 @@ export default function AvailablePts({
     }
     try {
       const response: { status: number } = await sendRequest({
-        url: ROUTES.ADMIN.PROPERTIES_ID,
+        url: AppRoutes.ADMIN.PROPERTIES_ID,
         method: 'PUT',
         id: propertyId,
+        additionalHeaders: { 'admin-access': 'true' },
       });
       if (response.status === 204) {
         alert('Property deleted, reloading page...');

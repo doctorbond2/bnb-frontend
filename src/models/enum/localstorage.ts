@@ -7,4 +7,5 @@ export enum LocalStorageKeys {
   TOKEN_EXPIRY = 'token-expiry',
   REFRESHTOKEN_EXPIRY = 'refreshToken-expiry',
   API_KEY = '||||||||||||||',
+  ADMIN_ACCESS = 'admin-access',
 }

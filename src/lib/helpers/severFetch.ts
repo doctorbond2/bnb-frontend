@@ -11,6 +11,7 @@ interface SendRequestConfig {
   protected?: boolean;
   id?: string;
   query?: SendRequestQuery;
+  additionalHeaders?: Record<string, string>;
 }
 
 export const sendServerRequest = async <T>(
@@ -32,6 +33,7 @@ export const sendServerRequest = async <T>(
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Cookie: cookies().toString(),
+    ...config.additionalHeaders,
   };
 
   const options: RequestInit = {

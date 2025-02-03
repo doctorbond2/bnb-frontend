@@ -74,7 +74,7 @@ export default function UserUpdateForm() {
   const deleteAccount = async (id: string) => {
     const response: { status: number } = await sendRequest(
       {
-        url: '/api/protected/user/:id',
+        url: 'api/protected/user/:id',
         method: 'DELETE',
         id,
         protected: true,
@@ -88,12 +88,11 @@ export default function UserUpdateForm() {
     }
   };
   const handleDeleteCheck = async (id: string) => {
-    console.log('checking status', id);
     const response: {
       data: { hosted_properties: Property[]; bookings: Booking[] };
       status: number;
     } = await sendRequest({
-      url: '/api/protected/user/:id',
+      url: 'api/protected/user/:id',
       id,
       method: 'GET',
       protected: true,

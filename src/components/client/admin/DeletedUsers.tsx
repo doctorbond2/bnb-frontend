@@ -3,7 +3,7 @@ import { sendRequest } from '@/lib/helpers/fetch';
 import { useState } from 'react';
 import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import { User } from '@/models/interfaces/user';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 
 export default function DeletedUsers({ userList }: { userList: User[] }) {
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -17,10 +17,11 @@ export default function DeletedUsers({ userList }: { userList: User[] }) {
   const hardDelete = async (id: string) => {
     try {
       const response: { status: number } = await sendRequest({
-        url: ROUTES.ADMIN.USERS_ID,
+        url: AppRoutes.ADMIN.USERS_ID,
         method: 'DELETE',
         body: { password: adminPassword },
         id,
+        additionalHeaders: { 'admin-access': 'true' },
       });
       if (response.status === 204) {
         alert('User deleted, reloading page...');
@@ -36,9 +37,10 @@ export default function DeletedUsers({ userList }: { userList: User[] }) {
   const hardDeleteMany = async () => {
     try {
       await sendRequest({
-        url: ROUTES.ADMIN.USERS,
+        url: AppRoutes.ADMIN.USERS,
         method: 'DELETE',
         body: { userIds: selectedUsers, password: adminPassword },
+        additionalHeaders: { 'admin-access': 'true' },
       });
       alert('Users hard deleted, reloading page...');
       location.reload();
@@ -53,9 +55,10 @@ export default function DeletedUsers({ userList }: { userList: User[] }) {
     const userIds: string[] = userList.map((user) => user.id);
     try {
       await sendRequest({
-        url: ROUTES.ADMIN.USERS,
+        url: AppRoutes.ADMIN.USERS,
         method: 'DELETE',
         body: { userIds, password: adminPassword },
+        additionalHeaders: { 'admin-access': 'true' },
       });
       alert('All users hard deleted, reloading page...');
       location.reload();

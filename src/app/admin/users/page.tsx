@@ -9,6 +9,9 @@ const getData = async () => {
   const response: User[] | undefined = await sendServerRequest({
     url: '/api/admin/users',
     method: 'GET',
+    additionalHeaders: {
+      'admin-access': 'true',
+    },
   });
 
   return response || [];

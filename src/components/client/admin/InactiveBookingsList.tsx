@@ -5,7 +5,7 @@ import { Customer } from '@/models/interfaces/booking';
 import { BookingStatus } from '@/models/enum/booking';
 import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import { sendRequest } from '@/lib/helpers/fetch';
-import ROUTES from '@/lib/routes';
+import AppRoutes from '@/lib/routes';
 
 export default function InactiveBookingsList({
   inActiveBookings,
@@ -15,9 +15,10 @@ export default function InactiveBookingsList({
   const handleDeleteBooking = async (bookingId: string) => {
     try {
       const response = await sendRequest({
-        url: ROUTES.ADMIN.BOOKINGS_ID,
+        url: AppRoutes.ADMIN.BOOKINGS_ID,
         method: 'DELETE',
         id: bookingId,
+        additionalHeaders: { 'admin-access': 'true' },
       });
       console.log(response);
     } catch (err) {
@@ -30,9 +31,10 @@ export default function InactiveBookingsList({
     console.log('deleting all bookings', bookingIds);
     try {
       const response: { status: number } = await sendRequest({
-        url: ROUTES.ADMIN.BOOKINGS,
+        url: AppRoutes.ADMIN.BOOKINGS,
         method: 'DELETE',
         body: { bookingIds },
+        additionalHeaders: { 'admin-access': 'true' },
       });
       console.log(response.status);
     } catch (err) {

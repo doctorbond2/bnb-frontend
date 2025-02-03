@@ -11,6 +11,7 @@ export interface SendRequestConfig {
   id?: string;
   query?: SendRequestQuery;
   searchQuery?: string;
+  additionalHeaders?: Record<string, string>;
 }
 export interface SendRequestQuery {
   populateBookings?: boolean;
@@ -41,6 +42,7 @@ export const sendRequest = async <T>(
     'Content-Type': 'application/json',
     Authorization: `Bearer ${localStorageHandler.getToken() || ''}`,
     'x-api-key': localStorageHandler.getApiKey() || '',
+    ...config.additionalHeaders,
   };
 
   const options: RequestInit = {
