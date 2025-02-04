@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { sendRequest } from '@/lib/helpers/fetch';
+import Image from 'next/image';
 
 import SearchUserResult from './SearchUserResult';
 import SearchPropertyResult from './SearchPropertyResult';
@@ -41,7 +42,7 @@ export default function HeaderSearchBar() {
     }
     setIsSearching(true);
     const response: { data: Property[]; status: number } = await sendRequest({
-      url: `/api/search`,
+      url: `api/search`,
       method: 'GET',
       searchQuery: value,
     });
@@ -56,6 +57,13 @@ export default function HeaderSearchBar() {
   };
   return (
     <div className="relative flex items-center">
+      <Image
+        src="/images/search_icon.png"
+        width={24}
+        height={24}
+        alt="Search Icon"
+        className="object-cover "
+      />
       <input
         maxLength={50}
         type="text"
@@ -65,14 +73,12 @@ export default function HeaderSearchBar() {
         className="border border-gray-300 rounded-lg p-1 w-64"
       />
       {isSearching && <div className="ml-2">Searching...</div>}
-      {searchResults.length > 0 && (
+      {searchResults.length > 0 && searchValue.length > 0 && (
         <div className="absolute top-full mt-1 left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
           {searchResults.map((result) => {
             if (isProperty(result)) {
-              console.log('returning property');
               return <SearchPropertyResult key={result.id} property={result} />;
             } else if (isUser(result)) {
-              console.log('returning user');
               return <SearchUserResult key={result.id} user={result} />;
             }
           })}

@@ -1,5 +1,5 @@
 'use client';
-import CustomImage from '@/components/server/PropertyHomeImage';
+// import CustomImage from '@/components/server/PropertyHomeImage';
 import { Property } from '@/models/interfaces/property';
 import { convertFirstCharToUpperCase as toUpper } from '@/lib/helpers/convert';
 import { useRouter } from 'next/navigation';
@@ -40,8 +40,15 @@ export default function HPpropertyCard({
         onClick={() => router.push(`/properties/${id}`)}
       >
         {image ? (
-          <CustomImage image={image} />
+          <Image
+            src={image.url}
+            alt={image.alt}
+            fill
+            className="object-cover"
+            unoptimized
+          />
         ) : (
+          // <CustomImage image={image} />
           <div className="w-full h-full border-2 border-gray-500 rounded-sm">
             <Image
               src="/images/No_Photo_Available.jpg"

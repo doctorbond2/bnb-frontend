@@ -31,14 +31,7 @@ export default function HeaderLayout() {
             Spaceshare
           </h1>
         </Link>
-        <div className="w-fit ml-5">
-          <Image
-            src="/images/search_icon.png"
-            width={24}
-            height={24}
-            alt="Search Icon"
-            className="object-cover"
-          />
+        <div className="flex lg:flex-row  ml-5  ">
           <HeaderSearchBar />
         </div>
       </div>
